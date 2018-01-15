@@ -1,6 +1,14 @@
 var contentApiLib = require('./content-api');
+var contentTypesLib = require('./content-types');
+var enumTypesLib = require('./enum-types');
+var genericTypesLib = require('./generic-types');
+var inputTypesLib = require('./input-types');
 
 exports.createContentApi = function (context) {
+    enumTypesLib.createEnumTypes(context);
+    inputTypesLib.createInputTypes(context);
+    genericTypesLib.createGenericTypes(context);
+    contentTypesLib.createContentTypeTypes(context);
     return contentApiLib.createContentApiType(context || createContext());
 };
 
