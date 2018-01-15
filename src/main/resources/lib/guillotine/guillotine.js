@@ -18,21 +18,21 @@ function createContext() {
     return {
         types: {},
         dictionary: [],
-        nameSet: {},
+        nameCountMap: {},
         contentTypeMap: {},
-        addObjectType: function (objectType) {
+        addDictionaryType: function (objectType) {
             this.dictionary.push(objectType);
         },
-        putContentType: function (name, objectType) {
+        putContentTypeType: function (name, objectType) {
             this.contentTypeMap[name] = objectType;
         },
         uniqueName: function (name) {
             var uniqueName = name;
-            if (this.nameSet[name]) {
-                this.nameSet[uniqueName]++;
-                uniqueName = name + '_' + this.nameSet[uniqueName];
+            if (this.nameCountMap[name]) {
+                this.nameCountMap[uniqueName]++;
+                uniqueName = name + '_' + this.nameCountMap[uniqueName];
             } else {
-                this.nameSet[uniqueName] = 1;
+                this.nameCountMap[uniqueName] = 1;
             }
             return uniqueName;
         }

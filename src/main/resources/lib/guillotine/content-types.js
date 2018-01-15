@@ -19,7 +19,7 @@ exports.createContentTypeTypes = function (context) {
 
             //Generates the object type for this content type
             var contentTypeObjectType = generateContentTypeObjectType(context, contentType);
-            context.addObjectType(contentTypeObjectType);
+            context.addDictionaryType(contentTypeObjectType);
         });
 };
 
@@ -67,7 +67,7 @@ function generateContentTypeObjectType(context, contentType) {
     } : undefined;
 
     var contentTypeObjectType = graphQlLib.createObjectType(createContentTypeTypeParams);
-    context.putContentType(contentType.name, contentTypeObjectType);
+    context.putContentTypeType(contentType.name, contentTypeObjectType);
     return contentTypeObjectType;
 }
 

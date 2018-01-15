@@ -550,7 +550,7 @@ exports.createGenericTypes = function (context) {
             }
         }
     });
-    context.addObjectType(context.types.formItemSetType);
+    context.addDictionaryType(context.types.formItemSetType);
 
     context.types.formLayoutType = graphQlLib.createObjectType({
         name: context.uniqueName('FormLayout'),
@@ -571,7 +571,7 @@ exports.createGenericTypes = function (context) {
             }
         }
     });
-    context.addObjectType(context.types.formLayoutType);
+    context.addDictionaryType(context.types.formLayoutType);
 
     context.types.formOptionSetOptionType = graphQlLib.createObjectType({
         name: context.uniqueName('FormOptionSetOption'),
@@ -626,7 +626,7 @@ exports.createGenericTypes = function (context) {
             }
         }
     });
-    context.addObjectType(context.types.formOptionSetType);
+    context.addDictionaryType(context.types.formOptionSetType);
 
     context.types.formInputType = graphQlLib.createObjectType({
         name: context.uniqueName('FormInput'),
@@ -671,7 +671,7 @@ exports.createGenericTypes = function (context) {
             }
         }
     });
-    context.addObjectType(context.types.formInputType);
+    context.addDictionaryType(context.types.formInputType);
 
     context.types.contentTypeType = graphQlLib.createObjectType({
         name: context.uniqueName('ContentType'),
