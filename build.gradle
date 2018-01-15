@@ -2,3 +2,15 @@ plugins {
     id 'java'
     id 'maven'
 }
+
+dependencies {
+    compile "com.enonic.lib:graphql:0.5.2"
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        url 'http://repo.enonic.com/public'
+    }
+}
