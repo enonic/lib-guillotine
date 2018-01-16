@@ -14,7 +14,7 @@ var imageContentTypeRegexp = /^media:image$/;
 exports.createContentTypeTypes = function (context) {
 
     //For each content type
-    exports.getAllowedContentTypes().
+    exports.getAllowedContentTypes(context).
         forEach(function (contentType) {
 
             //Generates the object type for this content type
@@ -23,8 +23,8 @@ exports.createContentTypeTypes = function (context) {
         });
 };
 
-exports.getAllowedContentTypes = function () {
-    var allowedContentTypeRegexp = generateAllowedContentTypeRegexp();
+exports.getAllowedContentTypes = function (context) {
+    var allowedContentTypeRegexp = generateAllowedContentTypeRegexp(context);
     return contentLib.getTypes().
         filter(function (contentType) {
             return contentType.name.match(allowedContentTypeRegexp);
@@ -37,10 +37,17 @@ exports.getAllowedContentType = function (name) {
     return contentType && contentType.name.match(allowedContentTypeRegexp) ? contentType : null;
 }
 
-function generateAllowedContentTypeRegexp() {
+function generateAllowedContentTypeRegexp(context) {
     var siteConfigs = utilLib.forceArray(portalLib.getSite().data.siteConfig);
     var siteApplicationKeys = siteConfigs.map(function (applicationConfigEntry) {
-        return '|' + applicationConfigEntry.applicationKey.replace(/\./g, '\\.');
+        return applicationConfigEntry.applicationKey;
+    }).filter(function(applicationKey){ 
+        if (context.options.applicationFilter) {
+            return context.options.applicationFilter.indexOf(applicationKey) !== -1;
+        }
+        return true;
+    }).map(function (applicationKey) {
+        return '|' + applicationKey.replace(/\./g, '\\.');
     }).join('');
     return new RegExp('^(?:base|media|portal' + siteApplicationKeys + '):');
 }
