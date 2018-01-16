@@ -12,8 +12,10 @@ exports.createContext = createContext;
 
 function createSchema(options) {
     var context = createContext();
-    for (var optionKey in options) {
-        context.options[optionKey] = options[optionKey];
+    if (options) {
+        for (var optionKey in options) {
+            context.options[optionKey] = options[optionKey];
+        }
     }
 
     createTypes(context);
