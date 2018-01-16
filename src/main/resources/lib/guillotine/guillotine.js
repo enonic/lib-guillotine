@@ -1,18 +1,40 @@
+var graphQlLib = require('/lib/graphql');
+
+var rootQueryLib = require('./root-query');
 var contentApiLib = require('./content-api');
 var contentTypesLib = require('./content-types');
 var enumTypesLib = require('./enum-types');
 var genericTypesLib = require('./generic-types');
 var inputTypesLib = require('./input-types');
 
-exports.createContentApi = function (context, options) {
+exports.createSchema = createSchema;
+exports.createContentApi = createContentApi;
+exports.createContext = createContext;
+
+function createSchema(options) {
+    var context = createContext();
+    for (var optionKey in options) {
+        context.options[optionKey] = options[optionKey];
+    }
+
+    createTypes(context);
+    return graphQlLib.createSchema({
+        query: rootQueryLib.createRootQueryType(context),
+        dictionary: context.dictionary
+    });
+}
+
+function createContentApi(context) {
+    createTypes(context);
+    return contentApiLib.createContentApiType(context || createContext());
+}
+
+function createTypes(context) {
     enumTypesLib.createEnumTypes(context);
     inputTypesLib.createInputTypes(context);
     genericTypesLib.createGenericTypes(context);
     contentTypesLib.createContentTypeTypes(context);
-    return contentApiLib.createContentApiType(context || createContext());
-};
-
-exports.createContext = createContext;
+}
 
 function createContext() {
     return {
@@ -21,7 +43,7 @@ function createContext() {
         nameCountMap: {},
         contentTypeMap: {},
         options: {
-          applicationFilter: [app.name]  
+            applicationFilter: [app.name]
         },
         addDictionaryType: function (objectType) {
             this.dictionary.push(objectType);
@@ -39,10 +61,10 @@ function createContext() {
             }
             return uniqueName;
         },
-        getOption: function(name) {
+        getOption: function (name) {
             return this.options[name];
         },
-        putOption: function(name, value) {
+        putOption: function (name, value) {
             this.options[name] = value;
         }
     };
