@@ -1,5 +1,4 @@
-var graphQlLib = require('/lib/graphql');
-
+var graphQlLib = require('./graphql');
 var rootQueryLib = require('./root-query');
 var contentApiLib = require('./content-api');
 var contentTypesLib = require('./content-types');

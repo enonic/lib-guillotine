@@ -1,9 +1,8 @@
-var graphQlLib = require('/lib/graphql');
-
+var graphQlLib = require('./graphql');
 var contentApiLib = require('./content-api');
 
 exports.createRootQueryType = function (context) {
-    return graphQlLib.createObjectType({
+    return graphQlLib.createObjectType(context, {
         name: context.uniqueName('Query'),
         fields: {
             guillotine: {

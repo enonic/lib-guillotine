@@ -1,4 +1,4 @@
-var graphQlLib = require('/lib/graphql');
+var graphQlLib = require('./graphql');
 
 exports.createEnumTypes = function (context) {
     context.types.urlTypeType = graphQlLib.createEnumType({

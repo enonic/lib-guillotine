@@ -1,4 +1,4 @@
-var graphQlLib = require('/lib/graphql');
+var graphQlLib = require('./graphql');
 
 exports.createInputTypes = function (context) {
     context.types.processHtmlType = graphQlLib.createInputObjectType({

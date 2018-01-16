@@ -1,7 +1,7 @@
-var graphQlLib = require('/lib/graphql');
 var contentLib = require('/lib/xp/content');
 var portalLib = require('/lib/xp/portal');
 
+var graphQlLib = require('./graphql');
 var genericTypesLib = require('./generic-types');
 var namingLib = require('./naming');
 var securityLib = require('./security');
@@ -73,7 +73,7 @@ function generateContentTypeObjectType(context, contentType) {
         type: generateContentDataObjectType(context, contentType)
     } : undefined;
 
-    var contentTypeObjectType = graphQlLib.createObjectType(createContentTypeTypeParams);
+    var contentTypeObjectType = graphQlLib.createObjectType(context, createContentTypeTypeParams);
     context.putContentTypeType(contentType.name, contentTypeObjectType);
     return contentTypeObjectType;
 }
@@ -142,7 +142,7 @@ function generateContentDataObjectType(context, contentType) {
             resolve: generateFormItemResolveFunction(formItem)
         }
     });
-    return graphQlLib.createObjectType(createContentTypeDataTypeParams);
+    return graphQlLib.createObjectType(context, createContentTypeDataTypeParams);
 }
 
 function getFormItems(form) {
@@ -203,7 +203,7 @@ function generateItemSetObjectType(context, contentType, itemSet) {
             resolve: generateFormItemResolveFunction(item)
         }
     });
-    return graphQlLib.createObjectType(createItemSetTypeParams);
+    return graphQlLib.createObjectType(context, createItemSetTypeParams);
 }
 
 function generateInputObjectType(context, input) {
@@ -277,7 +277,7 @@ function generateOptionSetObjectType(context, contentType, optionSet) {
             }
         }
     });
-    return graphQlLib.createObjectType(createOptionSetTypeParams);
+    return graphQlLib.createObjectType(context, createOptionSetTypeParams);
 }
 
 function generateOptionSetEnum(context, optionSet, optionSetName) {

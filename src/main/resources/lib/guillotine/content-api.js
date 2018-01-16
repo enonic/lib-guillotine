@@ -1,14 +1,14 @@
 var contentLib = require('/lib/xp/content');
 var portalLib = require('/lib/xp/portal');
-var graphQlLib = require('/lib/graphql');
 var graphQlConnectionLib = require('/lib/graphql-connection');
 
+var graphQlLib = require('./graphql');
 var contentTypesLib = require('./content-types');
 var securityLib = require('./security');
 var validationLib = require('./validation');
 
 exports.createContentApiType = function (context) {
-    return graphQlLib.createObjectType({
+    return graphQlLib.createObjectType(context, {
         name: context.uniqueName('ContentApi'),
         description: 'Content API',
         fields: {
