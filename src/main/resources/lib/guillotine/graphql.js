@@ -9,6 +9,9 @@ exports.createObjectType = function (context, params) {
     if (creationCallback) {
         creationCallback(params);
     }
+    if (context.options.creationCallback) {
+        context.options.creationCallback(params);
+    }
     return graphQlLib.createObjectType(params);
 };
 
