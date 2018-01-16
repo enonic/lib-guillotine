@@ -151,13 +151,13 @@ exports.createContentApiType = function (context) {
                     name: graphQlLib.nonNull(graphQlLib.GraphQLString)
                 },
                 resolve: function (env) {
-                    return contentTypesLib.getAllowedContentType(env.args.name);
+                    return contentTypesLib.getAllowedContentType(context, env.args.name);
                 }
             },
             getTypes: {
                 type: graphQlLib.list(context.types.contentTypeType),
                 resolve: function () {
-                    return contentTypesLib.getAllowedContentTypes();
+                    return contentTypesLib.getAllowedContentTypes(context);
                 }
             }
         }
