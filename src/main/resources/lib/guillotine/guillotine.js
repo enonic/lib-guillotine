@@ -4,7 +4,7 @@ var enumTypesLib = require('./enum-types');
 var genericTypesLib = require('./generic-types');
 var inputTypesLib = require('./input-types');
 
-exports.createContentApi = function (context) {
+exports.createContentApi = function (context, options) {
     enumTypesLib.createEnumTypes(context);
     inputTypesLib.createInputTypes(context);
     genericTypesLib.createGenericTypes(context);
@@ -20,6 +20,9 @@ function createContext() {
         dictionary: [],
         nameCountMap: {},
         contentTypeMap: {},
+        options: {
+          applicationFilter: [app.name]  
+        },
         addDictionaryType: function (objectType) {
             this.dictionary.push(objectType);
         },
@@ -35,6 +38,12 @@ function createContext() {
                 this.nameCountMap[uniqueName] = 1;
             }
             return uniqueName;
+        },
+        getOption: function(name) {
+            return this.options[name];
+        },
+        putOption: function(name, value) {
+            this.options[name] = value;
         }
     };
 }
