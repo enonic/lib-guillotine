@@ -9,8 +9,8 @@ var validationLib = require('./validation');
 
 exports.createContentApiType = function (context) {
     return graphQlLib.createObjectType(context, {
-        name: context.uniqueName('ContentApi'),
-        description: 'Content API',
+        name: context.uniqueName('HeadlessCms'),
+        description: 'Headless CMS',
         fields: {
             get: {
                 type: context.types.contentType,

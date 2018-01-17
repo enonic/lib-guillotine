@@ -759,12 +759,19 @@ exports.createGenericTypes = function (context) {
     context.types.contentType = graphQlLib.createInterfaceType({
         name: context.uniqueName('Content'),
         typeResolver: function (content) {
-            return context.contentTypeMap[content.type];
+            return context.contentTypeMap[content.type] || context.types.untypedContentType;
         },
         description: 'Content.',
         fields: exports.generateGenericContentFields(context)
     });
     context.types.contentConnectionType = graphQlConnectionLib.createConnectionType(context.types.contentType);
+
+    context.types.untypedContentType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('UntypedContent'),
+        description: 'Untyped content.',
+        interfaces: [context.types.contentType],
+        fields: exports.generateGenericContentFields(context)
+    });
 };
 
 function getUserStoreName(principalKey) {
