@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'maven'
+    id 'com.enonic.defaults' version '1.0.3'
 }
 
 dependencies {
