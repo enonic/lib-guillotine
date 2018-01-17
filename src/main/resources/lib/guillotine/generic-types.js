@@ -49,6 +49,12 @@ exports.generateGenericContentFields = function (context) {
         valid: {
             type: graphQlLib.GraphQLBoolean
         },
+        dataAsJson: {
+            type: graphQlLib.GraphQLString,
+            resolve: function (env) {
+                return JSON.stringify(env.source.data);
+            }
+        },
         x: {
             type: graphQlLib.list(context.types.extraDataType),
             resolve: function (env) {
