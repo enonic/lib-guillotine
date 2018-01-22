@@ -7,7 +7,7 @@ var genericTypesLib = require('./generic-types');
 var inputTypesLib = require('./input-types');
 
 exports.createSchema = createSchema;
-exports.createContentApi = createContentApi;
+exports.createHeadlessCms = createContentApi;
 exports.createContext = createContext;
 
 function createSchema(options) {
