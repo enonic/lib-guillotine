@@ -42,12 +42,13 @@ dependencies {
 === Step2: Schema generation
 
 The library handles two cases:
-. You want to generate the entire GraphQL schema with possibilities to modify and extend it.
-.. Use the function `createSchema`
-.. See examples 1 and 2 below
-. You have an existing GraphQL schema and you with to integrate Guillotine types to this schema.
-.. Use the function `createContext` and `createHeadlessCms`
-.. See example 3
+
+* You want to generate the entire GraphQL schema with possibilities to modify and extend it.
+** Use the function `createSchema`
+** See examples 1 and 2 below
+* You have an existing GraphQL schema and you with to integrate Guillotine types to this schema.
+** Use the function `createContext` and `createHeadlessCms`
+** See example 3
 
 ==== Example 1: Generate a service with the default guillotine schema
 
