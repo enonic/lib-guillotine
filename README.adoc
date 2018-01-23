@@ -28,7 +28,7 @@ Including the ability to follow references, child items and access media directl
 
 To build this project, execute the following:
 
-[source,gradle]
+[source,bash]
 ----
 ./gradlew clean build
 ----
