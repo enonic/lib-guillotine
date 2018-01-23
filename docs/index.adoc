@@ -19,7 +19,7 @@ repositories {
         url 'http://repo.enonic.com/public'
     }
 }
-....
+----
 
 Then add the following dependency (where ``<version>`` is the actual version to use):
 
