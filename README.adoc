@@ -1,9 +1,6 @@
 = Guillotine library
 
-Guillotine library exposes the read-only part of the Enonic Content API, including access to the Enonic query language.
-Guillotine dynamically analyzes all available content types in the site and generates a GraphQL API specific to your site.
-This gives you direct, typed and documented access to all content within the site.
-Including the ability to follow references, child items and access media directly.
+include::docs/text/description.adoc[]
 
 == Compatibility
 
