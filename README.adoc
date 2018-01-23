@@ -1,6 +1,7 @@
 = Guillotine library
 
 include::docs/text/description.adoc[]
+[[include:pagename]]
 
 == Compatibility
 
