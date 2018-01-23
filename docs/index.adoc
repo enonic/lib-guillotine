@@ -1,0 +1,27 @@
+= Guillotine library - Documentation
+
+Guillotine library exposes the read-only part of the Enonic Content API, including access to the Enonic query language.
+Guillotine dynamically analyzes all available content types in the site and generates a GraphQL API specific to your site.
+This gives you direct, typed and documented access to all content within the site.
+Including the ability to follow references, child items and access media directly.
+
+== Usage
+
+You will need to add Enonic repository to the repository list:
+
+....
+repositories {
+    maven {
+        url 'http://repo.enonic.com/public'
+    }
+}
+....
+
+Then add the following dependency (where ``<version>`` is the actual version to use):
+
+....
+dependencies {
+    include 'com.enonic.lib:lib-sql:<version>'
+}
+....
+

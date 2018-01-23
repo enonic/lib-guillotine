@@ -1,0 +1,26 @@
+= Guillotine library
+
+[![License](https://img.shields.io/github/license/enonic/lib-guillotine.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+Guillotine library exposes the read-only part of the Enonic Content API, including access to the Enonic query language.
+Guillotine dynamically analyzes all available content types in the site and generates a GraphQL API specific to your site.
+This gives you direct, typed and documented access to all content within the site.
+Including the ability to follow references, child items and access media directly.
+
+== Compatibility
+
+| Version | XP Version | Dependency                   |
+|---------|------------|------------------------------|
+| 0.5.0   | 6.3.x      | com.enonic.lib:lib-sql:0.5.0 |
+| 0.6.0   | 6.8.x      | com.enonic.lib:lib-sql:0.6.0 |
+
+== Build
+
+To build this project, execute the following:
+
+```
+./gradlew clean build
+```
+
+== link:docs/index.adoc[Documentation]
+
