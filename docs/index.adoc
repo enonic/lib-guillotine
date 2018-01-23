@@ -1,12 +1,19 @@
 = Guillotine library - Documentation
 
-include::text/description.adoc[]
+Guillotine library exposes the read-only part of the Enonic Content API, 
+including access to the Enonic query language. 
+Guillotine dynamically analyzes all available content types in the site and 
+generates a GraphQL API specific to your site. 
+This gives you direct, typed and documented access to all content within the site. 
+Including the ability to follow references, child items and access media directly.
 
 == Usage
 
-You will need to add Enonic repository to the repository list:
+To include the library in your Enonic XP application, 
+you will need to add the Enonic repository to the repository list:
 
-....
+[source,gradle]
+----
 repositories {
     maven {
         url 'http://repo.enonic.com/public'
@@ -16,9 +23,10 @@ repositories {
 
 Then add the following dependency (where ``<version>`` is the actual version to use):
 
-....
+[source,gradle]
+----
 dependencies {
     include 'com.enonic.lib:lib-sql:<version>'
 }
-....
+----
 

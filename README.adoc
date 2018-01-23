@@ -24,9 +24,10 @@ include::docs/text/description.adoc[]
 
 To build this project, execute the following:
 
-```
+[source,gradle]
+----
 ./gradlew clean build
-```
+----
 
 == link:docs/index.adoc[Documentation]
 
