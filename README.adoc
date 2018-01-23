@@ -7,13 +7,20 @@ Including the ability to follow references, child items and access media directl
 
 == Compatibility
 
-|Version |XP Version |Dependency |
-| 0.5.0
-| 6.3.x
-|com.enonic.lib:lib-sql:0.5.0
+[cols="1,1,3", options="header"]
+|===
+|Version
+|XP Version
+|Dependency
+
+|0.5.0
+|6.3.x
+|om.enonic.lib:lib-sql:0.5.0
+
 |0.6.0 
 |6.8.x 
 |com.enonic.lib:lib-sql:0.6.0
+|===
 
 == Build
 
