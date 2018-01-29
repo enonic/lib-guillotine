@@ -44,7 +44,7 @@ function createContext() {
         nameCountMap: {},
         contentTypeMap: {},
         options: {
-            applicationFilter: [app.name]
+            applications: [app.name]
         },
         addDictionaryType: function (objectType) {
             this.dictionary.push(objectType);

@@ -1,0 +1,80 @@
+= Guillotine library - Documentation
+
+Guillotine library exposes the read-only part of the Enonic Content API, 
+including access to the Enonic query language. 
+Guillotine dynamically analyzes all available content types in the site and 
+generates a GraphQL API specific to your site. 
+This gives you direct, typed and documented access to all content within the site. 
+Including the ability to follow references, child items and access media directly.
+
+== GraphQL
+GraphQL is query language developed by Facebook. 
+This technology allows Guillotine to provide a single and exhaustive API 
+while allowing you to retrieve all the content information you need in one request without any superfluous information
+
+http://graphql.org/learn/[Learn more about GraphQL...]
+
+== Usage
+
+=== Step1: Include the library
+
+To include the library in your Enonic XP application, 
+you will first need to add the Enonic repository to the repository list:
+
+[source,gradle]
+----
+repositories {
+    maven {
+        url 'http://repo.enonic.com/public'
+    }
+}
+----
+
+Then add the following dependency (where `<version>` is the actual version to use):
+
+[source,gradle]
+----
+dependencies {
+    include 'com.enonic.lib:lib-sql:<version>'
+}
+----
+
+=== Step2: Schema generation
+
+The library handles two cases:
+
+* You want to generate the entire GraphQL schema with possibilities to modify and extend it.
+** Use the function `createSchema`
+** See examples 1 and 2 below
+* You have an existing GraphQL schema and you with to integrate Guillotine types to this schema.
+** Use the function `createContext` and `createHeadlessCms`
+** See example 3
+
+==== Example 1: Generate a service with the default guillotine schema
+
+Create an Enonic XP service file (example: /services/graphql/graphql.js) with the following code:
+./services/graphql/graphql.js
+[source,javascript]
+----
+var guillotineLib = require('/lib/guillotine'); <1>
+var graphQlLib = require('/lib/graphql'); <1>
+
+var schema;
+exports.post = function (req) {
+    schema = schema || guillotineLib.createSchema(); <2>
+    var body = JSON.parse(req.body);
+    var result = graphQlLib.execute(schema, body.query, body.variables); <3>
+    return {
+        contentType: 'application/json',
+        body: result
+    };
+};
+----
+<1> Require the guillotine and graphql libraries. The GraphQL is already included with Guillotine and does not need to be added to your Gradle file
+<2> Creates a schema if the schema does not exist
+<3> Executes the query received in the body of the request
+
+You now have a GraphQL endpoint. See GraphiQL below to try out your GraphQL endpoint
+
+
+
