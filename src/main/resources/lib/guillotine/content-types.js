@@ -38,15 +38,7 @@ exports.getAllowedContentType = function (name) {
 }
 
 function generateAllowedContentTypeRegexp(context) {
-    var siteConfigs = utilLib.forceArray(portalLib.getSite().data.siteConfig);
-    var siteApplicationKeys = siteConfigs.map(function (applicationConfigEntry) {
-        return applicationConfigEntry.applicationKey;
-    }).filter(function(applicationKey){ 
-        if (context.options.applicationFilter) {
-            return context.options.applicationFilter.indexOf(applicationKey) !== -1;
-        }
-        return true;
-    }).map(function (applicationKey) {
+    var siteApplicationKeys = context.options.applications.map(function (applicationKey) {
         return '|' + applicationKey.replace(/\./g, '\\.');
     }).join('');
     return new RegExp('^(?:base|media|portal' + siteApplicationKeys + '):');
