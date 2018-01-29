@@ -7,10 +7,10 @@ for (var exportKey in graphQlLib) {
 exports.createObjectType = function (context, params) {
     var creationCallback = context.options.creationCallbacks && context.options.creationCallbacks[params.name];
     if (creationCallback) {
-        creationCallback(params);
+        creationCallback(context, params);
     }
     if (context.options.creationCallback) {
-        context.options.creationCallback(params);
+        context.options.creationCallback(context, params);
     }
     return graphQlLib.createObjectType(params);
 };
