@@ -177,3 +177,14 @@ The easiest way to manually explore a GraphQL API and test GraphQL queries is to
 
 link:graphiql.html[Learn more about GraphiQL...]
 
+
+== Client
+
+To use your GraphQL service, your application will send all its requests to the same endpoint.
+Example: "http://localhost:8080/mysite/mypage/_/service/com.enonic.app.myapp/graphql".
+
+The service is expecting to receive a POST request with inside its body:
+* A mandatory "query" String
+* An optional "variables" Object
+
+image::images/client.png[Request]
