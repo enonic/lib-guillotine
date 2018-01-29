@@ -13,7 +13,16 @@ GraphQL is a query language developed by Facebook.
 This technology allows Guillotine to provide a single and exhaustive API 
 while allowing you to retrieve all the content information you need in one request without any superfluous information
 
-http://graphql.org/learn/[Learn more about GraphQL...]
+http://graphql.org/learn[Learn more about GraphQL...]
+
+== GraphQL - Enonic XP Library
+
+A library has been implemented to facilitate the creation of a GraphQL service on Enonic XP: `lib-graphql`.
+Guillotine uses this library internally. The comprehension of the library is not necessary if you are using the default schema of Guillotine.
+
+But if you decide to extend the schema with custom types, we recommend to learn more about it by following the link below:
+
+https://github.com/enonic/lib-graphql[Learn more about the GraphQL library...]
 
 == Usage
 
@@ -157,4 +166,14 @@ The resolution function will query contents of type post having the current auth
 These are only examples. You could also modify the type 'Query' and add an entire new API next to the Headless CMS API. 
 
 
+==== Example 3: Integrate the Headless CMS to your existing schema
+
+TODO
+
+
+== GraphiQL
+
+The easiest way to manually explore a GraphQL API and test GraphQL queries is to use GraphiQL
+
+link:graphiql.html[Learn more about GraphiQL...]
 
