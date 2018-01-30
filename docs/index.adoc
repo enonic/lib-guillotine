@@ -134,7 +134,7 @@ fetch('{{graphqlServiceUrl}}', {
 ----
 
 
-== Extend & modify Guillotine schema
+== Extend the schema
 
 The default Guillotine schema provides fields based on the content type schemas.
 But you might want to add/modify/delete fields (new retrieval methods, search in a separate database, virtual fields, ...).
@@ -221,15 +221,56 @@ The resolution function will query contents of type post having the current auth
 These are only examples. You could also modify the type 'Query' and add an entire new API next to the Headless CMS API. 
 
 
-== Integrate the Headless CMS to your existing schema
+== Integrate Headless CMS type to an existing schema
 
-You have an existing GraphQL schema and you wish to integrate Guillotine types to this schema.
-** Use the functions `createContext` and `createHeadlessCms`
-** See example 3
+You may have an existing GraphQL schema and wish to integrate Guillotine types to this schema. 
+In that case, use the functions `createContext` and `createHeadlessCms` instead of `createSchema`
 
 ==== Example
 
-TODO
+./services/graphql/graphql.js
+[source,javascript]
+----
+var guillotineLib = require('/lib/guillotine');
+var graphQlLib = require('/lib/graphql');
+
+var schema = createSchema();
+
+exports.post = function (req) {
+    var body = JSON.parse(req.body);
+    var result = graphQlLib.execute(schema, body.query, body.variables);
+    return {
+        contentType: 'application/json',
+        body: result
+    };
+};
+
+function createSchema() {
+    var context = guillotineLib.createContext(); <1>
+    return graphQlLib.createSchema({
+        query: createRootQueryType(context),
+        dictionary: context.dictionary <2>
+    });
+}
+
+function createRootQueryType(context) {
+    return graphQlLib.createObjectType({
+        name: 'Query',
+        fields: {
+            guillotine: {
+                type: guillotineLib.createHeadlessCmsType(context), <3>
+                resolve: function () {
+                    return {};
+                }
+            }
+        }
+    });
+}
+----
+<1> Creates the context necessary to create Guillotine types.
+<2> Passes the dictionary to the schema creation. The use of a dictionary is necessary to define interfaces implementations.
+<3> Creates the Guillotine Headless CMS type
+
 
 
 
