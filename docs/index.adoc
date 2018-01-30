@@ -7,40 +7,31 @@ generates a GraphQL API specific to your site.
 This gives you direct, typed and documented access to all content within the site. 
 Including the ability to follow references, child items and access media directly.
 
-== GraphQL
 
+[NOTE] 
+.GraphQL
+==== 
 GraphQL is a query language developed by Facebook. 
 This technology allows Guillotine to provide a single and exhaustive API 
 while allowing you to retrieve all the content information you need in one request without any superfluous information
 
 http://graphql.org/learn[Learn more about GraphQL...]
-
-== GraphQL - Enonic XP Library
-
-A library has been implemented to facilitate the creation of a GraphQL service on Enonic XP: `lib-graphql`.
-Guillotine uses this library internally. The comprehension of the library is not necessary if you are using the default schema of Guillotine.
-
-But if you decide to extend the schema with custom types, we recommend to learn more about it by following the link below:
-
-https://github.com/enonic/lib-graphql[Learn more about the GraphQL library...]
+====
 
 == Usage
 
-=== Step1: Include the library
+=== Step 1: Include the library
 
-To include the library in your Enonic XP application, 
-you will first need to add the Enonic repository to the repository list:
+* Check that the Enonic repository is in the list of repositories
 
 [source,gradle]
 ----
 repositories {
-    maven {
-        url 'http://repo.enonic.com/public'
-    }
+    xp.enonicRepo()
 }
 ----
 
-Add the following dependency (where `<version>` is the actual version to use):
+* Add the following dependency (where `<version>` is the actual version to use):
 
 [source,gradle]
 ----
@@ -49,20 +40,17 @@ dependencies {
 }
 ----
 
-=== Step2: Schema generation
+=== Step 2: Create a GraphQL endpoint
 
-The library handles two cases:
+A GraphQL endpoint consists of 2 parts:
 
-* You want to generate the entire GraphQL schema with possibilities to modify and extend it.
-** Use the function `createSchema`
-** See examples 1 and 2 below
-* You have an existing GraphQL schema and you wish to integrate Guillotine types to this schema.
-** Use the functions `createContext` and `createHeadlessCms`
-** See example 3
+* Schema creation - To create a schema, call the library function `createSchema`. 
+By default, guillotine will create a GraphQL schema containing the built-in content types and the content types defined by your application.
+* Query execution - Handle POST requests, parse their body to retrieve the GraphQL query and variables and execute these query and variables against the schema
 
-==== Example 1: Create a service using the default guillotine schema
+==== Create a service using the default guillotine schema
 
-Create an Enonic XP service file (example: /services/graphql/graphql.js) with the following code:
+* Create an Enonic XP service file /services/graphql/graphql.js` with the following content:
 
 ./services/graphql/graphql.js
 [source,javascript]
@@ -72,9 +60,9 @@ var graphQlLib = require('/lib/graphql'); <1>
 
 var schema = guillotineLib.createSchema(); <2>
 
-exports.post = function (req) {
-    var body = JSON.parse(req.body);
-    var result = graphQlLib.execute(schema, body.query, body.variables); <3>
+exports.post = function (req) { <3>
+    var body = JSON.parse(req.body); <4>
+    var result = graphQlLib.execute(schema, body.query, body.variables); <5>
     return {
         contentType: 'application/json',
         body: result
@@ -84,16 +72,86 @@ exports.post = function (req) {
 <1> Requires the Guillotine and GraphQL libraries. 
 The GraphQL library is already included with Guillotine and does not need to be added to your Gradle file
 <2> Creates the GraphQL schema the first time the service is called. 
-<3> On a POST request, executes the query and variables received in the body of the request
+<3> Handles POST requests
+<4> Parses the JSON body to retrieve the GraphQL query and variables
+<5> Executes the query and variables against the schema created
 
-You now have a GraphQL endpoint. See GraphiQL below to try out your GraphQL endpoint
+You now have a GraphQL endpoint.
 
 
-==== Example 2: Create a service using an extended guillotine schema
+=== Step 3: Use your GraphQL endpoint
+
+==== GraphiQL
+
+The easiest way to manually explore a GraphQL API and test GraphQL queries is to use GraphiQL
+
+link:graphiql.html[Learn more about GraphiQL...]
+
+==== Client
+
+To use your GraphQL service, your client will send all its requests to the same service.
+The service is expecting to receive a POST request with inside its body:
+
+* A mandatory "query" String
+* An optional "variables" Object
+
+===== Example: Generate a service URL from a controller
+
+[source,javascript]
+----
+var portalLib = require('/lib/xp/portal');
+var graphqlServiceUrl = portalLib.serviceUrl({
+    service: 'graphql'
+});
+----
+
+===== Example: Fetch data from client javascript
+[source,javascript]
+----
+const query = `query($path:ID!){
+    guillotine {
+        get(key:$path) {
+            displayName
+            type
+        }
+    }
+}`;
+
+const variables = {
+    'path': '/mycontentpath'
+};
+
+fetch('{{graphqlServiceUrl}}', {
+    method: 'POST',
+    body: JSON.stringify({
+        query: query,
+        variables: variables
+    }),
+    credentials: 'same-origin'
+})
+    .then(response => response.json())
+    .then(console.log);
+----
+
+
+== Extend & modify Guillotine schema
 
 The default Guillotine schema provides fields based on the content type schemas.
 But you might want to add new retrieval methods, search in a separate database, add virtual fields, ...
 The guillotine is entirely configurable by letting you modify the parameters of each type before they get created.
+
+[NOTE] 
+.GraphQL - Enonic XP Library
+==== 
+A library has been implemented to facilitate the creation of a GraphQL service on Enonic XP: `lib-graphql`.
+Guillotine uses this library internally. The comprehension of the library is not necessary if you are using the default schema of Guillotine.
+
+But if you decide to extend the schema with custom types, we recommend to learn more about it by following the link below:
+
+https://github.com/enonic/lib-graphql[Learn more about the GraphQL library...]
+====
+
+=== Example
 
 In this example using blog posts and authors, we want the following:
 
@@ -166,25 +224,15 @@ The resolution function will query contents of type post having the current auth
 These are only examples. You could also modify the type 'Query' and add an entire new API next to the Headless CMS API. 
 
 
+== Integrate the Headless CMS to your existing schema
+
+* You have an existing GraphQL schema and you wish to integrate Guillotine types to this schema.
+** Use the functions `createContext` and `createHeadlessCms`
+** See example 3
+
 ==== Example 3: Integrate the Headless CMS to your existing schema
 
 TODO
 
 
-== GraphiQL
 
-The easiest way to manually explore a GraphQL API and test GraphQL queries is to use GraphiQL
-
-link:graphiql.html[Learn more about GraphiQL...]
-
-
-== Client
-
-To use your GraphQL service, your application will send all its requests to the same endpoint.
-Example: "http://localhost:8080/mysite/mypage/_/service/com.enonic.app.myapp/graphql".
-
-The service is expecting to receive a POST request with inside its body:
-* A mandatory "query" String
-* An optional "variables" Object
-
-image::images/client.png[Request]
