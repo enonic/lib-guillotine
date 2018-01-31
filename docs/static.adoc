@@ -31,11 +31,11 @@ This documentation lists and describes all static GraphQL types
 |===
 |Name(Arguments):Type | Description
 
-|content: <<ContentAPI>>
+|guillotine: <<HeadlessCms>>
 |Type gathering all content retrieval requests
 |===
 
-=== ContentAPI 
+=== HeadlessCms 
 
 Gathers all content retrieval requests. 
 
@@ -100,7 +100,7 @@ Gathers all content retrieval requests.
 
 === Content
 
-Abstract type of all contents.
+Interface of all contents.
 
 ==== Fields
 |===

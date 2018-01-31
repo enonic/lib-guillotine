@@ -1,6 +1,6 @@
 = Guillotine library - Documentation
 
-Guillotine library exposes the read-only part of the Enonic Content API, 
+The guillotine library exposes the read-only part of the Enonic Content API, 
 including access to the Enonic query language. 
 Guillotine dynamically analyzes all available content types in applications and 
 generates a GraphQL API specific to your site. 
@@ -42,11 +42,11 @@ dependencies {
 
 === Step 2: Create a GraphQL endpoint
 
-A GraphQL endpoint consists of 2 parts:
+* Schema creation - Call the guillotine function `createSchema`. 
+By default, guillotine will generate a GraphQL schema containing the built-in content types and the content types defined by your application.
+* Query execution - Handle POST requests, parse their body to retrieve the GraphQL query and variables and execute these query and 
+variables against the schema using the graphql function `execute`.
 
-* Schema creation - To create a schema, call the library function `createSchema`. 
-By default, guillotine will create a GraphQL schema containing the built-in content types and the content types defined by your application.
-* Query execution - Handle POST requests, parse their body to retrieve the GraphQL query and variables and execute these query and variables against the schema
 
 ==== Create a service using the default guillotine schema
 
@@ -140,7 +140,7 @@ The `HeadlessCms` type gathers fields allowing to retrieve contents or related d
 
 === Content
 
-The type `Content` is an interface with multiple implementations generated from built-in content types but also from content types defined in your application.
+The type `Content` is an interface with multiple implementations generated from built-in content types but also from content types defined by your application.
 All types implementing `Content` share the same fields at the exception of the field `data` defined for each implementation type.
 
 
@@ -153,7 +153,7 @@ By default, each content has the following relations:
 * children: Link to the child contents
 * site: Link to the nearest site content
 
-On top of that, every ContentSelector, MediaUploader, AttachmentUploader or ImageSelector defined in your content type definitions will 
+Moreover, every ContentSelector, MediaUploader, AttachmentUploader or ImageSelector defined in your content type form will 
 be converted to a link to the related content(s).
 
 ==== Example: Children 
@@ -252,7 +252,9 @@ link:static.html[Static GraphQL types documentation]
 The default Guillotine schema provides fields based on the content type schemas.
 But you might want to add/modify/delete fields (new retrieval methods, search in a separate database, virtual fields, ...).
 
-The guillotine schema is entirely configurable by letting you modify the parameters of each type before they get created.
+The guillotine schema is entirely configurable. 
+When creating a schema, you can define a listener for a type. 
+This listener will be called before the type is created and given the possibility to modify the type creation parameters.
 
 [NOTE] 
 .GraphQL - Enonic XP Library
@@ -266,7 +268,7 @@ https://github.com/enonic/lib-graphql[Learn more about the GraphQL library...]
 
 === Example
 
-In this example, we want the following:
+In this example, we have types Author and Post generated. But we wish to apply the following modifications:
 
 * Author should have a new field "fullName" that is the concatenation of firstName and lastName
 * Author data field "email" should require admin rights to be retrieved.
@@ -303,7 +305,7 @@ var schema = guillotineLib.createSchema({
                         filters: {
                             hasValue: {
                                 field: "data.author",
-                                values: [ env.source._id]
+                                values: [env.source._id]
                             }
                         }
                     }).hits;
@@ -322,7 +324,7 @@ exports.post = function (req) {
     };
 };
 ----
-<1> Pass a callback that will be called before the creation of the specified GraphQL type. 
+<1> Passes a callback that will be called before the creation of the specified GraphQL type. 
 It receives the Guillotine context and the object type creation parameters.
 <2> Adds a new string field "fullName" concatenating two other fields.
 The resolution function will query contents of type post having the current author ID as field "data.author"
@@ -337,7 +339,7 @@ These are only examples. You could also modify the type 'Query' and add an entir
 == Integrate Headless CMS type to an existing schema
 
 You may have an existing GraphQL schema and wish to integrate Guillotine types to this schema. 
-In that case, use the functions `createContext` and `createHeadlessCms` instead of `createSchema`
+In that case, use the functions `createContext` and `createHeadlessCmsType` instead of `createSchema`
 
 ==== Example
 
@@ -381,7 +383,7 @@ function createRootQueryType(context) {
 }
 ----
 <1> Creates the context necessary to create Guillotine types.
-<2> Passes the dictionary to the schema creation. The use of a dictionary is necessary to define interfaces implementations.
+<2> Passes the dictionary to the schema creation. The use of a dictionary is necessary to define interface implementations.
 <3> Creates the Guillotine Headless CMS type
 
 
