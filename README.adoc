@@ -15,9 +15,9 @@ Including the ability to follow references, child items and access media directl
 |XP Version
 |Dependency
 
-|0.3.2
+|0.4.0
 |6.10.x
-|com.enonic.lib:lib-guillotine:0.3.2
+|com.enonic.lib:lib-guillotine:0.4.0
 |===
 
 == Build
