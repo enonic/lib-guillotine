@@ -1,4 +1,4 @@
-= Guillotine library - Documentation
+= Guillotine library
 
 The guillotine library exposes the read-only part of the Enonic Content API, 
 including access to the Enonic query language. 
