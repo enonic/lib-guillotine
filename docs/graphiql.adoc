@@ -11,7 +11,7 @@ The easiest way to manually explore a GraphQL API and test GraphQL queries is to
 
 image::images/graphiql.png[GraphiQL,768,384]
 
-==== User Interface
+== User Interface
 
 * The field 'Service Location' specifies the location of the GraphQL service. 
 +
@@ -20,7 +20,7 @@ By default, it is prefilled with one of your configured sites for the branch "dr
 * The center panel displays the result of the query execution
 * The right panel is used to display a documentation generated from the GraphQL API.
 
-==== Usage example
+== Usage example
 
 * Write the query below inside the left panel.
 +
