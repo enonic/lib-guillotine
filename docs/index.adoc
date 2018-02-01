@@ -1,4 +1,4 @@
-= Guillotine library
+= Guillotine Headless CMS library
 
 The guillotine library exposes the read-only part of the Enonic Content API, 
 including access to the Enonic query language. 
@@ -7,14 +7,10 @@ generates a GraphQL API specific to your site.
 This gives you direct, typed and documented access to all content within the site. 
 Including the ability to follow references, child items and access media directly.
 
-
-[NOTE] 
+[NOTE]
 ==== 
-GraphQL is a query language developed by Facebook. 
-This technology allows Guillotine to provide a single and exhaustive API 
-while allowing you to retrieve all the content information you need in one request without any superfluous information
-
-http://graphql.org/learn[Learn more about GraphQL...]
+If you do not need to integrate directly with your application, consider using 
+https://market.enonic.com/vendors/enonic/guillotine-headless-cms[the Guillotine application...]
 ====
 
 == Usage
@@ -73,6 +69,15 @@ You now have a GraphQL endpoint.
 == Browse you API using GraphiQL
 
 The easiest way to manually explore a GraphQL API and test GraphQL queries is to use GraphiQL
+
+[NOTE] 
+==== 
+GraphQL is a query language developed by Facebook. 
+This technology allows Guillotine to provide a single and exhaustive API 
+while allowing you to retrieve all the content information you need in one request without any superfluous information
+
+http://graphql.org/learn[Learn more about GraphQL...]
+====
 
 === Installation 
 
@@ -181,10 +186,7 @@ By default, each content has the following relations:
 Moreover, every ContentSelector, MediaUploader, AttachmentUploader or ImageSelector defined in your content type form will 
 be converted to a link to the related content(s).
 
-==== Example: Children 
-
-Query example: Retrieve the display name of the current content and the display name of its direct children
-
+.Query example: Retrieve the display name of the current content and the display name of its direct children
 ----
 {
   guillotine {
@@ -198,10 +200,8 @@ Query example: Retrieve the display name of the current content and the display 
 }
 ----
 
-==== Example: ContentSelector
 
-Query example: Retrieve the blog posts. For each post, return its display name and the display name of the related author
-
+.Query example: Retrieve the blog posts. For each post, return its display name and the display name of the related author
 ----
 {
   guillotine {
@@ -224,10 +224,9 @@ Query example: Retrieve the blog posts. For each post, return its display name a
 Enonic XP can edit images at runtime.
 Guillotine uses this functionality by generating, on every image, a field "imageUrl" generating a URL pointing to the processed image.
 
-==== Example: Scaled Image URL
 
-Query example: Retrieve the image contents and generate absolute URLs to these images cropped to 800x200px
 
+.*Example: Scaled Image URL* - Retrieve the image contents and generate absolute URLs to these images cropped to 800x200px
 ----
 {
   guillotine {
