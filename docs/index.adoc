@@ -244,10 +244,7 @@ Guillotine uses this functionality by generating, on every image, a field "image
 
 HTML fields are generated with a parameter "processHtml" allowing to replace abstract internal links by generated URLs. 
 
-==== Example: Process HTML
-
-Query example: Retrieve the Superhero blog posts. For each post, return its author display name, tags and processed content.
-
+.*Example: Process HTML* - Retrieve the Superhero blog posts. For each post, return its author display name, tags and processed content.
 ----
 {
   guillotine {
