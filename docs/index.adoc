@@ -126,8 +126,7 @@ The service is expecting to receive a POST request with inside its body:
 * A mandatory "query" String
 * An optional "variables" Object
 
-=== Example: Generate a service URL from a controller
-
+.Example: Generate a service URL from a controller
 [source,javascript]
 ----
 var portalLib = require('/lib/xp/portal');
@@ -136,7 +135,7 @@ var graphqlServiceUrl = portalLib.serviceUrl({
 });
 ----
 
-=== Example: Fetch data from a javascript client
+.Example: Fetch data from a javascript client
 [source,javascript]
 ----
 const query = `query($path:ID!){
