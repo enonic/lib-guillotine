@@ -81,13 +81,13 @@ You now have a GraphQL endpoint.
 
 == How to use your GraphQL endpoint
 
-==== GraphiQL
+=== GraphiQL
 
 The easiest way to manually explore a GraphQL API and test GraphQL queries is to use GraphiQL
 
 link:graphiql.html[Learn more about GraphiQL...]
 
-==== Client
+=== Client
 
 To use your GraphQL service, your client will send all its requests to the same service.
 The service is expecting to receive a POST request with inside its body:
@@ -95,7 +95,7 @@ The service is expecting to receive a POST request with inside its body:
 * A mandatory "query" String
 * An optional "variables" Object
 
-===== Example: Generate a service URL from a controller
+==== Example: Generate a service URL from a controller
 
 [source,javascript]
 ----
@@ -105,7 +105,7 @@ var graphqlServiceUrl = portalLib.serviceUrl({
 });
 ----
 
-===== Example: Fetch data from a javascript client
+==== Example: Fetch data from a javascript client
 [source,javascript]
 ----
 const query = `query($path:ID!){
