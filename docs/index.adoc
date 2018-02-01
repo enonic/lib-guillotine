@@ -135,9 +135,6 @@ fetch('{{graphqlServiceUrl}}', {
 
 == Guillotine GraphQL API
 
-At the root of the default Guillotine schema is a type `Query` with a field `guillotine` of type `HeadlessCms`.
-The `HeadlessCms` type gathers fields allowing to retrieve contents or related data.
-
 link:api.html[Learn more about the GraphQL API...]
 
 == How to extend the schema
