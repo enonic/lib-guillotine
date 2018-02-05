@@ -31,11 +31,11 @@ exports.getAllowedContentTypes = function (context) {
         });
 };
 
-exports.getAllowedContentType = function (name) {
+exports.getAllowedContentType = function (context, name) {
     var allowedContentTypeRegexp = generateAllowedContentTypeRegexp();
     var contentType = contentLib.getType(name);
     return contentType && contentType.name.match(allowedContentTypeRegexp) ? contentType : null;
-}
+};
 
 function generateAllowedContentTypeRegexp(context) {
     var siteApplicationKeys = context.options.applications.map(function (applicationKey) {
