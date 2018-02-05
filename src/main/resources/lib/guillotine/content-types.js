@@ -32,7 +32,7 @@ exports.getAllowedContentTypes = function (context) {
 };
 
 exports.getAllowedContentType = function (context, name) {
-    var allowedContentTypeRegexp = generateAllowedContentTypeRegexp();
+    var allowedContentTypeRegexp = generateAllowedContentTypeRegexp(context);
     var contentType = contentLib.getType(name);
     return contentType && contentType.name.match(allowedContentTypeRegexp) ? contentType : null;
 };
