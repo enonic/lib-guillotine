@@ -9,8 +9,7 @@ Including the ability to follow references, child items and access media directl
 
 [NOTE]
 ==== 
-If you do not need to integrate directly with your application, consider using 
-https://market.enonic.com/vendors/enonic/guillotine-headless-cms[the Guillotine application...]
+Consider using https://market.enonic.com/vendors/enonic/guillotine-headless-cms[the Guillotine app] if you don't want to integrate or customize Guillotine specifically for your project.
 ====
 
 == Usage
