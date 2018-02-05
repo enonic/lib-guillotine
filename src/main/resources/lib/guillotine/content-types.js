@@ -309,10 +309,10 @@ function generateFormItemResolveFunction(formItem) {
         return function (env) {
             var value = env.source[formItem.name];
 
-            if (env.args.processHtml) {
+            if (value && env.args.processHtml) {
                 value = portalLib.processHtml({value: value, type: env.args.processHtml.type});
             }
-            if ('Input' == formItem.formItemType &&
+            if (value && 'Input' == formItem.formItemType &&
                 ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector'].indexOf(formItem.inputType) !== -1) {
                 var content = contentLib.get({key: value});
                 value = securityLib.filterForbiddenContent(content);
