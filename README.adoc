@@ -17,7 +17,7 @@ Including the ability to follow references, child items and access media directl
 
 |1.0.0
 |6.10.x
-|com.enonic.lib:lib-guillotine:1.0.0-B1
+|com.enonic.lib:lib-guillotine:1.0.0
 |===
 
 == Build
