@@ -1,4 +1,4 @@
-= Guillotine Headless CMS library
+= Guillotine Library - API and custom integrations
 
 The guillotine library exposes the read-only part of the Enonic Content API, 
 including access to the Enonic query language. 
