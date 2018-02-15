@@ -1,4 +1,4 @@
-= Guillotine Library - API and custom integrations
+= The Guillotine Library - For customized deployments
 
 Simply add this library to your app to expose a powerful dynamically generated read-only GraphQL API of all your editorial content. Guillotine dynamically analyzes all available content types in the app and generates a GraphQL API specific to your site. This gives you direct, typed and documented access to all content within the site. Including the ability to follow references, child items and access media directly.
 
