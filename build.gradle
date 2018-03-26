@@ -6,7 +6,10 @@ plugins {
 }
 
 dependencies {
-    compile "com.enonic.lib:graphql:0.5.2"
+    compile 'com.enonic.lib:graphql:0.5.2'
+    compile "com.enonic.xp:lib-auth:${xpVersion}"
+    compile "com.enonic.xp:lib-content:${xpVersion}"
+    compile "com.enonic.xp:lib-portal:${xpVersion}"
 }
 
 repositories {
