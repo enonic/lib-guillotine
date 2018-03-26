@@ -80,7 +80,7 @@ http://graphql.org/learn[Learn more about GraphQL...]
 * Click on "Install"
 * Open the admin tool "GraphiQL"
 
-image::images/graphiql.png[GraphiQL,768,384]
+image::images/graphiql.png[GraphiQL,1024,612]
 
 === User Interface
 
@@ -110,7 +110,7 @@ This query can be read as: Retrieve the display name and type of the current con
 }
 ----
 
-image::images/graphiql-example.png[Example,768,384]
+image::images/graphiql-example.png[Example,1024,612]
 
 == Accessing the API with Javascript
 
