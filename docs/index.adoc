@@ -31,7 +31,7 @@ dependencies {
 
 === Step 2: Create a GraphQL endpoint
 
-* Create an Enonic XP service file /services/graphql/graphql.js` with the following content:
+* Create an Enonic XP service file `/services/graphql/graphql.js` with the following content:
 
 ./services/graphql/graphql.js
 [source,javascript]
@@ -76,8 +76,8 @@ http://graphql.org/learn[Learn more about GraphQL...]
 === Installation 
 
 * Open the admin tool "Applications"
-* Search for the "graphiql" application
-* Click on "install"
+* Search for the "GraphiQL" application
+* Click on "Install"
 * Open the admin tool "GraphiQL"
 
 image::images/graphiql.png[GraphiQL,768,384]
@@ -255,3 +255,7 @@ HTML fields are generated with a parameter "processHtml" allowing to replace abs
   }
 }
 ----
+
+== link:custom.adoc[Customizing the schema]
+
+== link:api.adoc[Guillotine API]
