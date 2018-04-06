@@ -33,5 +33,5 @@ To build this project, execute the following:
 ./gradlew clean build
 ----
 
-== link:docs/index.adoc[Documentation]
+== https://github.com/enonic/app-guillotine/tree/master/docs/index.adoc[Documentation]
 
