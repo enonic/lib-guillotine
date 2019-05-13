@@ -192,10 +192,10 @@ exports.createGenericTypes = function (context) {
                     return env.source.split(':', 2)[0];
                 }
             },
-            userStore: {
+            idProvider: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
-                    return getUserStoreName(env.source);
+                    return getIdProviderName(env.source);
                 }
             },
             principalId: {
@@ -780,7 +780,7 @@ exports.createGenericTypes = function (context) {
     });
 };
 
-function getUserStoreName(principalKey) {
+function getIdProviderName(principalKey) {
     var groups = principalKeyRegexp.exec(principalKey);
     return groups[2] || null;
 }
