@@ -28,6 +28,14 @@ Including the ability to follow references, child items and access media directl
 |com.enonic.lib:lib-guillotine:1.0.0
 |===
 
+== Breaking changes
+
+=== Breaking changes in 2.0
+
+- Type "PrincipalKey": Field "userStore" renamed to "idProvider"
+- Type "Component": Field "controller" renamed to "descriptor"
+- Type "Component": Field "name" removed
+
 == Build
 
 To build this project, execute the following:
