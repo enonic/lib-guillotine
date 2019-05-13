@@ -369,9 +369,6 @@ exports.createGenericTypes = function (context) {
         name: context.uniqueName('Component'),
         description: 'Component.',
         fields: {
-            name: {
-                type: graphQlLib.GraphQLString
-            },
             path: {
                 type: graphQlLib.GraphQLString
             },
@@ -424,7 +421,7 @@ exports.createGenericTypes = function (context) {
             template: {
                 type: graphQlLib.GraphQLString
             },
-            controller: {
+            descriptor: {
                 type: graphQlLib.GraphQLString
             },
             config: {
