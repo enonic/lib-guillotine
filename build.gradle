@@ -9,7 +9,7 @@ dependencies {
     compile "com.enonic.xp:lib-auth:${xpVersion}"
     compile "com.enonic.xp:lib-content:${xpVersion}"
     compile "com.enonic.xp:lib-portal:${xpVersion}"
-    compile 'com.enonic.lib:lib-graphql:1.0.0-RC2'
+    compile 'com.enonic.lib:lib-graphql:1.0.0'
 }
 
 repositories {
