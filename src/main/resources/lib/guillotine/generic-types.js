@@ -20,10 +20,22 @@ exports.generateGenericContentFields = function (context) {
             type: graphQlLib.nonNull(graphQlLib.GraphQLString)
         },
         creator: {
-            type: context.types.principalKeyType
+            type: context.types.principalKeyType,
+            resolve: function (env) {
+                if (!securityLib.canAccessCmsData()) {
+                    throw 'Unauthorized'
+                }
+                return env.source.creator;
+            }
         },
         modifier: {
-            type: context.types.principalKeyType
+            type: context.types.principalKeyType,
+            resolve: function (env) {
+                if (!securityLib.canAccessCmsData()) {
+                    throw 'Unauthorized'
+                }
+                return env.source.modifier;
+            }
         },
         createdTime: {
             type: graphQlLib.GraphQLString
@@ -32,7 +44,13 @@ exports.generateGenericContentFields = function (context) {
             type: graphQlLib.GraphQLString
         },
         owner: {
-            type: context.types.principalKeyType
+            type: context.types.principalKeyType,
+            resolve: function (env) {
+                if (!securityLib.canAccessCmsData()) {
+                    throw 'Unauthorized'
+                }
+                return env.source.owner;
+            }
         },
         type: {
             type: graphQlLib.GraphQLString
@@ -159,6 +177,9 @@ exports.generateGenericContentFields = function (context) {
         permissions: {
             type: context.types.permissionsType,
             resolve: function (env) {
+                if (!securityLib.canAccessCmsData()) {
+                    throw 'Unauthorized'
+                }
                 return contentLib.getPermissions({
                     key: env.source._id
                 });
@@ -394,8 +415,8 @@ exports.createGenericTypes = function (context) {
                 type: graphQlLib.list(graphQlLib.reference('Region')),
                 resolve: function (env) {
                     return env.source.regions && Object.keys(env.source.regions).map(function (key) {
-                            return env.source.regions[key];
-                        });
+                        return env.source.regions[key];
+                    });
                 }
             }
         }
@@ -434,8 +455,8 @@ exports.createGenericTypes = function (context) {
                 type: graphQlLib.list(context.types.pageRegionType),
                 resolve: function (env) {
                     return env.source.regions && Object.keys(env.source.regions).map(function (key) {
-                            return env.source.regions[key];
-                        });
+                        return env.source.regions[key];
+                    });
                 }
             },
             fragment: {
