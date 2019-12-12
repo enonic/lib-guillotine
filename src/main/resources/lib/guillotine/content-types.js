@@ -314,8 +314,7 @@ function generateFormItemResolveFunction(formItem) {
             }
             if (value && 'Input' == formItem.formItemType &&
                 ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector'].indexOf(formItem.inputType) !== -1) {
-                var content = contentLib.get({key: value});
-                value = securityLib.filterForbiddenContent(content);
+                value = contentLib.get({key: value});
             }
             return value;
         };
@@ -334,8 +333,7 @@ function generateFormItemResolveFunction(formItem) {
             if ('Input' == formItem.formItemType &&
                 ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector'].indexOf(formItem.inputType) !== -1) {
                 values = values.map(function (value) {
-                    var content = contentLib.get({key: value});
-                    return securityLib.filterForbiddenContent(content);
+                    return contentLib.get({key: value});
                 }).filter(function (content) {
                     return content != null
                 });
