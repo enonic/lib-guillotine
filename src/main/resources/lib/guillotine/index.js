@@ -3,7 +3,7 @@ var rootQueryLib = require('./root-query');
 var contentApiLib = require('./content-api');
 var contentTypesLib = require('./content-types');
 var enumTypesLib = require('./enum-types');
-var genericTypesLib = require('./generic-types');
+var genericTypesLib = require('./generic/generic-types');
 var inputTypesLib = require('./input-types');
 
 exports.createSchema = createSchema;

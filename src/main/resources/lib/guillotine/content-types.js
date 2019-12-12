@@ -2,7 +2,7 @@ var contentLib = require('/lib/xp/content');
 var portalLib = require('/lib/xp/portal');
 
 var graphQlLib = require('./graphql');
-var genericTypesLib = require('./generic-types');
+var genericTypesLib = require('./generic/generic-types');
 var namingLib = require('./naming');
 var securityLib = require('./security');
 var utilLib = require('./util');

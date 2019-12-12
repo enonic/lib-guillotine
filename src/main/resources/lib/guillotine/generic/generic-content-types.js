@@ -1,0 +1,70 @@
+var graphQlLib = require('../graphql');
+
+exports.generateTypes = function (context) {
+    context.types.geoPointType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('GeoPoint'),
+        description: 'GeoPoint.',
+        fields: {
+            value: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source;
+                }
+            },
+            latitude: {
+                type: graphQlLib.GraphQLFloat,
+                resolve: function (env) {
+                    return env.source.split(',', 2)[0];
+                }
+            },
+            longitude: {
+                type: graphQlLib.GraphQLFloat,
+                resolve: function (env) {
+                    return env.source.split(',', 2)[1];
+                }
+            }
+        }
+    });
+
+    context.types.mediaFocalPointType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('MediaFocalPoint'),
+        description: 'Media focal point.',
+        fields: {
+            x: {
+                type: graphQlLib.GraphQLFloat
+            },
+            y: {
+                type: graphQlLib.GraphQLFloat
+            }
+        }
+    });
+
+    context.types.mediaUploaderType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('MediaUploader'),
+        description: 'Media uploader.',
+        fields: {
+            attachment: {
+                type: graphQlLib.GraphQLString
+            },
+            focalPoint: {
+                type: context.types.mediaFocalPointType
+            }
+        }
+    });
+
+    context.types.siteConfiguratorType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('SiteConfigurator'),
+        description: 'Site configurator.',
+        fields: {
+            applicationKey: {
+                type: graphQlLib.GraphQLString
+            },
+            config: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return JSON.stringify(env.source.config);
+                }
+            }
+        }
+    });
+};
