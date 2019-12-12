@@ -1,5 +1,7 @@
 var graphQlConnectionLib = require('/lib/graphql-connection');
 var contentLib = require('/lib/xp/content');
+var contextLib = require('/lib/xp/context');
+var nodeLib = require('/lib/xp/node');
 var portalLib = require('/lib/xp/portal');
 
 var aclTypesLib = require('./acl-types');
@@ -11,6 +13,7 @@ var pageTypesLib = require('./page-types');
 var graphQlLib = require('../graphql');
 var securityLib = require('../security');
 var validationLib = require('../validation');
+var utilLib = require('../util');
 
 
 exports.generateGenericContentFields = function (context) {
@@ -94,6 +97,17 @@ exports.generateGenericContentFields = function (context) {
         },
         page: {
             type: context.types.pageType
+        },
+        components: {
+            type: graphQlLib.list(context.types.flatComponentType),
+            resolve: function (env) {
+                var context = contextLib.get();
+                var node = nodeLib.connect({
+                    repoId: context.repository,
+                    branch: context.branch
+                }).get(env.source._id);
+                return utilLib.forceArray(node.components);
+            }
         },
         attachments: {
             type: graphQlLib.list(context.types.attachmentType),
