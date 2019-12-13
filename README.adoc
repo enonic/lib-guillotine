@@ -15,6 +15,10 @@ Including the ability to follow references, child items and access media directl
 |XP Version
 |Dependency
 
+|3.0.0
+|7.0.0
+|com.enonic.lib:lib-guillotine:3.0.0
+
 |2.0.0
 |7.0.0
 |com.enonic.lib:lib-guillotine:2.0.0
@@ -29,6 +33,10 @@ Including the ability to follow references, child items and access media directl
 |===
 
 == Breaking changes
+
+=== Breaking changes in 3.0
+
+- Type "Content": Fields "creator", "modifier", "owner" and "permissions" needs one of the following roles: "cms.cm.app", "cms.admin" or "system.admin"
 
 === Breaking changes in 2.0
 
