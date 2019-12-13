@@ -36,7 +36,7 @@ Including the ability to follow references, child items and access media directl
 
 === Breaking changes in 3.0
 
-- Type "Content": Fields "creator", "modifier", "owner" and "permissions" needs one of the following roles: "cms.cm.app", "cms.admin" or "system.admin"
+- Type "Content": Fields "creator", "modifier", "owner" and "permissions" need one of the following roles: "cms.cm.app", "cms.admin" or "system.admin"
 
 === Breaking changes in 2.0
 
