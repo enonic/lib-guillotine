@@ -5,10 +5,9 @@ var nodeLib = require('/lib/xp/node');
 var portalLib = require('/lib/xp/portal');
 
 var aclTypesLib = require('./acl-types');
-var flatPageTypesLib = require('./flat-page-types');
+var flatPageTypesLib = require('./page-types');
 var formTypesLib = require('./form-types');
 var genericContentTypesLib = require('./generic-content-types');
-var pageTypesLib = require('./page-types');
 
 var graphQlLib = require('../graphql');
 var securityLib = require('../security');
@@ -95,8 +94,11 @@ exports.generateGenericContentFields = function (context) {
                 return extraDatas;
             }
         },
-        page: {
-            type: context.types.pageType
+        pageAsJson: {
+            type: graphQlLib.GraphQLString,
+            resolve: function (env) {
+                return JSON.stringify(env.source.page);
+            }
         },
         components: {
             type: graphQlLib.list(context.types.flatComponentType),

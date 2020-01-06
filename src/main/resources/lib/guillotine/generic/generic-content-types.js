@@ -59,7 +59,7 @@ exports.generateTypes = function (context) {
             applicationKey: {
                 type: graphQlLib.GraphQLString
             },
-            config: {
+            configAsJson: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
                     return JSON.stringify(env.source.config);

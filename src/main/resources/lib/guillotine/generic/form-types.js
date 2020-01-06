@@ -210,7 +210,7 @@ exports.generateTypes = function (context) {
             defaultValue: {
                 type: context.types.defaultValueType
             },
-            config: {
+            configAsJson: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
                     return JSON.stringify(env.source.config);
