@@ -115,8 +115,6 @@ exports.generateGenericContentFields = function (context) {
                 const nodeId = resolveTemplate && pageTypesLib.hasPageTemplate(env.source)
                                ? pageTypesLib.resolvePageTemplateId(env.source)
                                : env.source._id;
-                log.info('resolveTemplate' + resolveTemplate);
-                log.info('nodeId' + nodeId);
                 if (!nodeId) {
                     return null;
                 }

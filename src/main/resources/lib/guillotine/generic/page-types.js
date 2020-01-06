@@ -175,11 +175,6 @@ function hasPageTemplate(content) {
 }
 
 function resolveTemplate(content) {
-    const template = doResolveTemplate(content);
-    return template == null ? null : __.toNativeObject(template);
-}
-
-function doResolveTemplate(content) {
     if ('portal:page-template' === content.type) {
         return content;
     }
@@ -213,7 +208,8 @@ function getDefaultPageTemplate(content) {
     const bean = __.newBean('com.enonic.lib.guillotine.GetDefaultPageTemplateBean');
     bean.siteId = portalLib.getSite()._id;
     bean.contentType = content.type;
-    return bean.execute()
+    const template = bean.execute();
+    return template == null ? null : __.toNativeObject(template);
 }
 
 exports.resolveTemplate = resolveTemplate;
