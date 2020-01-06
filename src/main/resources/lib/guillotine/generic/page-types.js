@@ -156,36 +156,39 @@ exports.generateTypes = function (context) {
         description: 'Component.',
         fields: {
             automatic: {
-                type: graphQlLib.nonNull(graphQlLib.GraphQLBoolean),
-                resolve: (env) => {
-                    return !env.source.page || Object.keys(env.source.page).length == 0
-                }
+                type: graphQlLib.nonNull(graphQlLib.GraphQLBoolean)
             },
             template: {
-                type: graphQlLib.reference('Content'),
-                resolve: (env) => resolveTemplate(env.source)
+                type: graphQlLib.reference('Content')
             }
         }
     });
 };
 
-function hasPageTemplate(content) {
-    return 'portal:page-template' === content.type || !content.page || Object.keys(content.page).length == 0 ||
-           (content.page && content.page.template);
-}
-
-function resolveTemplate(content) {
+function resolvePageTemplate(content) {
     if ('portal:page-template' === content.type) {
-        return content;
+        return {
+            automatic: false,
+            template: content
+        };
     }
 
     if (!content.page || Object.keys(content.page).length == 0) {
-        return getDefaultPageTemplate(content);
+        const defaultPageTemplate = getDefaultPageTemplate(content)
+        return defaultPageTemplate == null ? null : {
+            automatic: true,
+            template: defaultPageTemplate
+        };
     }
 
     if (content.page && content.page.template) {
-        return contentLib.get({key: content.page.template})
+        const template = contentLib.get({key: content.page.template});
+        return template == null ? null : {
+            automatic: false,
+            template: template
+        };
     }
+
     return null;
 }
 
@@ -212,6 +215,5 @@ function getDefaultPageTemplate(content) {
     return template == null ? null : __.toNativeObject(template);
 }
 
-exports.resolveTemplate = resolveTemplate;
+exports.resolvePageTemplate = resolvePageTemplate;
 exports.resolvePageTemplateId = resolvePageTemplateId;
-exports.hasPageTemplate = hasPageTemplate;

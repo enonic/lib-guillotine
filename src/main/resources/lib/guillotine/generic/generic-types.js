@@ -102,7 +102,9 @@ exports.generateGenericContentFields = function (context) {
         },
         pageTemplate: {
             type: context.types.pageTemplateType,
-            resolve: (env) => pageTypesLib.hasPageTemplate(env.source) ? env.source : null
+            resolve: (env) => {
+                return pageTypesLib.resolvePageTemplate(env.source);
+            }
         },
         components: {
             type: graphQlLib.list(context.types.componentType),
@@ -110,14 +112,8 @@ exports.generateGenericContentFields = function (context) {
                 resolveTemplate: graphQlLib.GraphQLBoolean
             },
             resolve: function (env) {
-
-                const resolveTemplate = env.args.resolveTemplate === false ? false : true;
-                const nodeId = resolveTemplate && pageTypesLib.hasPageTemplate(env.source)
-                               ? pageTypesLib.resolvePageTemplateId(env.source)
-                               : env.source._id;
-                if (!nodeId) {
-                    return null;
-                }
+                const pageTemplate = env.args.resolveTemplate === false ? null : pageTypesLib.resolvePageTemplate(env.source);
+                const nodeId = pageTemplate == null ? env.source._id : pageTemplate._id;
                 var context = contextLib.get();
                 var node = nodeLib.connect({
                     repoId: context.repository,
