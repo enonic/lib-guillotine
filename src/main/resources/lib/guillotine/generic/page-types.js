@@ -167,33 +167,55 @@ exports.generateTypes = function (context) {
             }
         }
     });
-
-    function resolveTemplate(content) {
-        const template = doResolveTemplate(content);
-        return template == null ? null : __.toNativeObject(template);
-    }
-
-    function doResolveTemplate(content) {
-        if ('portal:page-template' === content.type) {
-            return content;
-        }
-
-        if (!content.page || Object.keys(content.page).length == 0) {
-            //Get Default page template
-            const bean = __.newBean('com.enonic.lib.guillotine.GetDefaultPageTemplateBean');
-            bean.siteId = portalLib.getSite()._id;
-            bean.contentType = content.type;
-            return bean.execute();
-        }
-
-        if (content.page && content.page.template) {
-            //Get related template
-            return contentLib.get({key: content.page.template})
-        }
-    }
 };
 
-exports.hasPageTemplate = function (content) {
+function hasPageTemplate(content) {
     return 'portal:page-template' === content.type || !content.page || Object.keys(content.page).length == 0 ||
            (content.page && content.page.template);
-};
+}
+
+function resolveTemplate(content) {
+    const template = doResolveTemplate(content);
+    return template == null ? null : __.toNativeObject(template);
+}
+
+function doResolveTemplate(content) {
+    if ('portal:page-template' === content.type) {
+        return content;
+    }
+
+    if (!content.page || Object.keys(content.page).length == 0) {
+        return getDefaultPageTemplate(content);
+    }
+
+    if (content.page && content.page.template) {
+        return contentLib.get({key: content.page.template})
+    }
+    return null;
+}
+
+function resolvePageTemplateId(content) {
+    if ('portal:page-template' === content.type) {
+        return content._id;
+    }
+
+    if (!content.page || Object.keys(content.page).length == 0) {
+        const template = getDefaultPageTemplate(content);
+        return template == null ? null : template._id;
+    }
+
+    if (content.page && content.page.template) {
+        return content.page.template;
+    }
+}
+
+function getDefaultPageTemplate(content) {
+    const bean = __.newBean('com.enonic.lib.guillotine.GetDefaultPageTemplateBean');
+    bean.siteId = portalLib.getSite()._id;
+    bean.contentType = content.type;
+    return bean.execute()
+}
+
+exports.resolveTemplate = resolveTemplate;
+exports.resolvePageTemplateId = resolvePageTemplateId;
+exports.hasPageTemplate = hasPageTemplate;

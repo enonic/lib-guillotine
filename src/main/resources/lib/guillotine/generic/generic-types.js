@@ -106,13 +106,26 @@ exports.generateGenericContentFields = function (context) {
         },
         components: {
             type: graphQlLib.list(context.types.componentType),
+            args: {
+                resolveTemplate: graphQlLib.GraphQLBoolean
+            },
             resolve: function (env) {
+
+                const resolveTemplate = env.args.resolveTemplate === false ? false : true;
+                const nodeId = resolveTemplate && pageTypesLib.hasPageTemplate(env.source)
+                               ? pageTypesLib.resolvePageTemplateId(env.source)
+                               : env.source._id;
+                log.info('resolveTemplate' + resolveTemplate);
+                log.info('nodeId' + nodeId);
+                if (!nodeId) {
+                    return null;
+                }
                 var context = contextLib.get();
                 var node = nodeLib.connect({
                     repoId: context.repository,
                     branch: context.branch
-                }).get(env.source._id);
-                return utilLib.forceArray(node.components);
+                }).get(nodeId);
+                return utilLib.forceArray(node && node.components);
             }
         },
         attachments: {
