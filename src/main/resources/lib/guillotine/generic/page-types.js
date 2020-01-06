@@ -1,4 +1,5 @@
 var contentLib = require('/lib/xp/content');
+var portalLib = require('/lib/xp/portal');
 
 var graphQlLib = require('../graphql');
 
@@ -72,7 +73,7 @@ exports.generateTypes = function (context) {
     });
 
     context.types.imageComponentDataType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('FlatImageComponentData'),
+        name: context.uniqueName('ImageComponentData'),
         description: 'Image component data.',
         fields: {
             id: {
@@ -118,35 +119,81 @@ exports.generateTypes = function (context) {
         }
     });
 
-
     context.types.componentType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('Component'),
         description: 'Component.',
         fields: {
             type: {
-                type: graphQlLib.nonNull(context.types.flatComponentTypeType)
+                type: graphQlLib.nonNull(context.types.componentTypeType)
             },
             path: {
                 type: graphQlLib.nonNull(graphQlLib.GraphQLString)
             },
             page: {
-                type: context.types.flatPageComponentDataType
+                type: context.types.pageComponentDataType
             },
             layout: {
-                type: context.types.flatDescriptorBasedComponentDataType
+                type: context.types.layoutComponentDataType
             },
             image: {
-                type: context.types.flatImageComponentDataType
+                type: context.types.imageComponentDataType
             },
             part: {
-                type: context.types.flatDescriptorBasedComponentDataType
+                type: context.types.partComponentDataType
             },
             text: {
-                type: context.types.flatTextComponentDataType
+                type: context.types.textComponentDataType
             },
             fragment: {
-                type: context.types.flatFragmentComponentDataType
+                type: context.types.fragmentComponentDataType
             }
         }
     });
+
+
+    context.types.pageTemplateType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('PageTemplate'),
+        description: 'Component.',
+        fields: {
+            automatic: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLBoolean),
+                resolve: (env) => {
+                    return !env.source.page || Object.keys(env.source.page).length == 0
+                }
+            },
+            template: {
+                type: graphQlLib.reference('Content'),
+                resolve: (env) => resolveTemplate(env.source)
+            }
+        }
+    });
+
+    function resolveTemplate(content) {
+        const template = doResolveTemplate(content);
+        return template == null ? null : __.toNativeObject(template);
+    }
+
+    function doResolveTemplate(content) {
+        if ('portal:page-template' === content.type) {
+            return content;
+        }
+
+        if (!content.page || Object.keys(content.page).length == 0) {
+            //Get Default page template
+            const bean = __.newBean('com.enonic.lib.guillotine.GetDefaultPageTemplateBean');
+            bean.siteId = portalLib.getSite()._id;
+            bean.contentType = content.type;
+            return bean.execute();
+        }
+
+        if (content.page && content.page.template) {
+            //Get related template
+            return contentLib.get({key: content.page.template})
+        }
+    }
+};
+
+exports.hasPageTemplate = function (content) {
+    return 'portal:page-template' === content.type || !content.page || Object.keys(content.page).length == 0 ||
+           (content.page && content.page.template);
 };

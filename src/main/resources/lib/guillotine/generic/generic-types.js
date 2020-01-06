@@ -5,7 +5,7 @@ var nodeLib = require('/lib/xp/node');
 var portalLib = require('/lib/xp/portal');
 
 var aclTypesLib = require('./acl-types');
-var flatPageTypesLib = require('./page-types');
+var pageTypesLib = require('./page-types');
 var formTypesLib = require('./form-types');
 var genericContentTypesLib = require('./generic-content-types');
 
@@ -100,8 +100,12 @@ exports.generateGenericContentFields = function (context) {
                 return JSON.stringify(env.source.page);
             }
         },
+        pageTemplate: {
+            type: context.types.pageTemplateType,
+            resolve: (env) => pageTypesLib.hasPageTemplate(env.source) ? env.source : null
+        },
         components: {
-            type: graphQlLib.list(context.types.flatComponentType),
+            type: graphQlLib.list(context.types.componentType),
             resolve: function (env) {
                 var context = contextLib.get();
                 var node = nodeLib.connect({
@@ -212,10 +216,9 @@ exports.generateGenericContentFields = function (context) {
 exports.createGenericTypes = function (context) {
 
     aclTypesLib.generateTypes(context);
-    flatPageTypesLib.generateTypes(context);
+    pageTypesLib.generateTypes(context);
     formTypesLib.generateTypes(context);
     genericContentTypesLib.generateTypes(context);
-    pageTypesLib.generateTypes(context);
 
     context.types.publishInfoType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PublishInfo'),
