@@ -109,7 +109,8 @@ exports.generateGenericContentFields = function (context) {
         components: {
             type: graphQlLib.list(context.types.componentType),
             args: {
-                resolveTemplate: graphQlLib.GraphQLBoolean
+                resolveTemplate: graphQlLib.GraphQLBoolean,
+                resolveFragment: graphQlLib.GraphQLBoolean,
             },
             resolve: function (env) {
                 const pageTemplate = env.args.resolveTemplate === false ? null : pageTypesLib.resolvePageTemplate(env.source);
@@ -119,7 +120,12 @@ exports.generateGenericContentFields = function (context) {
                     repoId: context.repository,
                     branch: context.branch
                 }).get(nodeId);
-                return utilLib.forceArray(node && node.components);
+
+                let components = utilLib.forceArray(node && node.components);
+                if (env.args.resolveFragment !== false) {
+                    components = pageTypesLib.inlineFragmentComponents(components);
+                }
+                return components;
             }
         },
         attachments: {

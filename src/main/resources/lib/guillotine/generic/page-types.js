@@ -1,7 +1,10 @@
 var contentLib = require('/lib/xp/content');
+var contextLib = require('/lib/xp/context');
+var nodeLib = require('/lib/xp/node');
 var portalLib = require('/lib/xp/portal');
 
 var graphQlLib = require('../graphql');
+var utilLib = require('../util');
 
 exports.generateTypes = function (context) {
 
@@ -215,5 +218,28 @@ function getDefaultPageTemplate(content) {
     return template == null ? null : __.toNativeObject(template);
 }
 
+function inlineFragmentComponents(components) {
+    const inlinedComponents = [];
+    components.forEach(component => {
+        if ('fragment' == component.type) {
+            const fragmentId = component.fragment.id;
+
+            var context = contextLib.get();
+            var fragment = nodeLib.connect({
+                repoId: context.repository,
+                branch: context.branch
+            }).get(fragmentId);
+            utilLib.forceArray(fragment.components).forEach((fragmentComponent) => {
+                fragmentComponent.path = component.path + fragmentComponent.path.substr(1);
+                inlinedComponents.push(fragmentComponent);
+            });
+        } else {
+            inlinedComponents.push(component);
+        }
+    });
+    return inlinedComponents;
+}
+
 exports.resolvePageTemplate = resolvePageTemplate;
 exports.resolvePageTemplateId = resolvePageTemplateId;
+exports.inlineFragmentComponents = inlineFragmentComponents;
