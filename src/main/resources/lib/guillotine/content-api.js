@@ -6,6 +6,7 @@ var graphQlLib = require('./graphql');
 var contentTypesLib = require('./content-types');
 var securityLib = require('./security');
 var validationLib = require('./validation');
+var wildcardLib = require('./wildcard');
 
 exports.createContentApiType = function (context) {
     return graphQlLib.createObjectType(context, {
@@ -17,6 +18,7 @@ exports.createContentApiType = function (context) {
                 args: {
                     key: graphQlLib.GraphQLID
                 },
+
                 resolve: getContent
             },
             getChildren: {
@@ -110,8 +112,9 @@ exports.createContentApiType = function (context) {
                 },
                 resolve: function (env) {
                     validationLib.validateArguments(env.args);
+                    const query = wildcardLib.replaceSitePath(env.args.query, '/content' + portalLib.getSite()._path)
                     return contentLib.query({
-                        query: securityLib.adaptQuery(env.args.query),
+                        query: securityLib.adaptQuery(query),
                         start: env.args.offset,
                         count: env.args.first,
                         sort: env.args.sort,
@@ -166,8 +169,9 @@ exports.createContentApiType = function (context) {
 
 function getContent(env) {
     if (env.args.key) {
+        const key = wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
         var content = contentLib.get({
-            key: env.args.key
+            key: key
         });
         return content && securityLib.filterForbiddenContent(content);
     } else {
