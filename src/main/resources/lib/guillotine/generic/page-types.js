@@ -36,8 +36,13 @@ exports.generateTypes = function (context) {
                 resolve: function (env) {
                     return JSON.stringify(env.source.config);
                 }
+            },
+            template: {
+                type: graphQlLib.reference('Content'),
+                resolve: function (env) {
+                    return env.source.template ? contentLib.get({key: env.source.template}) : null;
+                }
             }
-
         }
     });
 
@@ -227,7 +232,7 @@ function inlineFragmentContentComponents(container) {
 
                         fragmentContent.fragment.path = component.path;
                         prefixContentComponentPaths(fragmentContent.fragment, component.path);
-                        
+
                         //No need to call recursively as a fragment cannot contain a fragment
 
                     }
