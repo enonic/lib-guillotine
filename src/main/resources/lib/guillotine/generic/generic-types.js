@@ -113,7 +113,7 @@ exports.generateGenericContentFields = function (context) {
                 resolveFragment: graphQlLib.GraphQLBoolean,
             },
             resolve: function (env) {
-                const pageTemplate = env.args.resolveTemplate === false ? null : pageTypesLib.resolvePageTemplate(env.source);
+                const pageTemplate = env.args.resolveTemplate === false ? null : pageTypesLib.resolvePageTemplate(env.source).template;
                 const nodeId = pageTemplate == null ? env.source._id : pageTemplate._id;
                 var context = contextLib.get();
                 var node = nodeLib.connect({

@@ -26,7 +26,7 @@ exports.generateTypes = function (context) {
         description: 'Page component data.',
         fields: {
             descriptor: {
-                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+                type: graphQlLib.GraphQLString
             },
             customized: {
                 type: graphQlLib.GraphQLBoolean
@@ -230,7 +230,7 @@ function inlineFragmentComponents(components) {
                 branch: context.branch
             }).get(fragmentId);
             utilLib.forceArray(fragment.components).forEach((fragmentComponent) => {
-                fragmentComponent.path = component.path + fragmentComponent.path.substr(1);
+                fragmentComponent.path = component.path + (fragmentComponent.path === '/' ? '' : fragmentComponent.path);
                 inlinedComponents.push(fragmentComponent);
             });
         } else {
