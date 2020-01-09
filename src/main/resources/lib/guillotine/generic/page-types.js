@@ -152,44 +152,19 @@ exports.generateTypes = function (context) {
             }
         }
     });
-
-
-    context.types.pageTemplateType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('PageTemplate'),
-        description: 'Component.',
-        fields: {
-            automatic: {
-                type: graphQlLib.nonNull(graphQlLib.GraphQLBoolean)
-            },
-            template: {
-                type: graphQlLib.reference('Content')
-            }
-        }
-    });
 };
 
 function resolvePageTemplate(content) {
     if ('portal:page-template' === content.type) {
-        return {
-            automatic: false,
-            template: content
-        };
+        return content;
     }
 
     if (!content.page || Object.keys(content.page).length == 0) {
-        const defaultPageTemplate = getDefaultPageTemplate(content)
-        return defaultPageTemplate == null ? null : {
-            automatic: true,
-            template: defaultPageTemplate
-        };
+        return getDefaultPageTemplate(content);
     }
 
     if (content.page && content.page.template) {
-        const template = contentLib.get({key: content.page.template});
-        return template == null ? null : {
-            automatic: false,
-            template: template
-        };
+        return contentLib.get({key: content.page.template});
     }
 
     return null;
