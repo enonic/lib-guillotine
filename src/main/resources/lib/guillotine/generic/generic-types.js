@@ -96,8 +96,13 @@ exports.generateGenericContentFields = function (context) {
         },
         pageAsJson: {
             type: graphQlLib.GraphQLString,
+            args: {
+                resolveTemplate: graphQlLib.GraphQLBoolean,
+                resolveFragment: graphQlLib.GraphQLBoolean,
+            },
             resolve: function (env) {
-                return JSON.stringify(env.source.page);
+                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
+                return JSON.stringify(pageTemplate == null ? env.source.page : pageTemplate.page);
             }
         },
         pageTemplate: {
@@ -113,7 +118,7 @@ exports.generateGenericContentFields = function (context) {
                 resolveFragment: graphQlLib.GraphQLBoolean,
             },
             resolve: function (env) {
-                const pageTemplate = env.args.resolveTemplate === false ? null : pageTypesLib.resolvePageTemplate(env.source);
+                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
                 const nodeId = pageTemplate == null ? env.source._id : pageTemplate._id;
                 var context = contextLib.get();
                 var node = nodeLib.connect({
