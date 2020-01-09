@@ -225,9 +225,10 @@ function inlineFragmentContentComponents(container) {
                     if (fragmentContent) {
                         region.components[componentIndex] = fragmentContent.fragment;
 
-
                         fragmentContent.fragment.path = component.path;
                         prefixContentComponentPaths(fragmentContent.fragment, component.path);
+                        
+                        //No need to call recursively as a fragment cannot contain a fragment
 
                     }
                 } else if ('layout' == component.type) {
