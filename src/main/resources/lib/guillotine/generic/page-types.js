@@ -215,6 +215,46 @@ function inlineFragmentComponents(components) {
     return inlinedComponents;
 }
 
+function inlineFragmentContentComponents(container) {
+    if (container && container.regions) {
+        Object.keys(container.regions).forEach(regionName => {
+            const region = container.regions[regionName];
+            utilLib.forceArray(region.components).forEach((component, componentIndex) => {
+                if ('fragment' == component.type) {
+                    const fragmentContent = contentLib.get({key: component.fragment});
+                    if (fragmentContent) {
+                        region.components[componentIndex] = fragmentContent.fragment;
+
+
+                        fragmentContent.fragment.path = component.path;
+                        prefixContentComponentPaths(fragmentContent.fragment, component.path);
+
+                    }
+                } else if ('layout' == component.type) {
+                    inlineFragmentContentComponents(component);
+                }
+            });
+
+        });
+    }
+}
+
+function prefixContentComponentPaths(container, prefix) {
+    if (container && container.regions) {
+        Object.keys(container.regions).forEach(regionName => {
+            const region = container.regions[regionName];
+            utilLib.forceArray(region.components).forEach((component) => {
+                component.path = prefix + component.path;
+
+                if ('layout' == component.type) {
+                    prefixContentComponentPaths(component, prefix);
+                }
+            });
+        });
+    }
+}
+
 exports.resolvePageTemplate = resolvePageTemplate;
 exports.resolvePageTemplateId = resolvePageTemplateId;
 exports.inlineFragmentComponents = inlineFragmentComponents;
+exports.inlineFragmentContentComponents = inlineFragmentContentComponents;

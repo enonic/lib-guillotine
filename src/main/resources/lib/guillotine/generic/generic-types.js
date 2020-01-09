@@ -102,7 +102,11 @@ exports.generateGenericContentFields = function (context) {
             },
             resolve: function (env) {
                 const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
-                return JSON.stringify(pageTemplate == null ? env.source.page : pageTemplate.page);
+                let page = pageTemplate == null ? env.source.page : pageTemplate.page;
+                if (env.args.resolveFragment !== false && page && page.regions) {
+                    pageTypesLib.inlineFragmentContentComponents(page);
+                }
+                return JSON.stringify(page);
             }
         },
         pageTemplate: {
