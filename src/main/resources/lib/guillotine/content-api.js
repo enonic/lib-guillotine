@@ -19,7 +19,7 @@ exports.createContentApiType = function (context) {
                     key: graphQlLib.GraphQLID
                 },
 
-                resolve: getContent
+                resolve: (env) => getContent(env, context)
             },
             getChildren: {
                 type: graphQlLib.list(context.types.contentType),
@@ -31,7 +31,7 @@ exports.createContentApiType = function (context) {
                 },
                 resolve: function (env) {
                     validationLib.validateArguments(env.args);
-                    var parent = getContent(env);
+                    var parent = getContent(env, context);
                     if (parent) {
                         return contentLib.getChildren({
                             key: parent._id,
@@ -54,7 +54,7 @@ exports.createContentApiType = function (context) {
                 },
                 resolve: function (env) {
                     validationLib.validateArguments(env.args);
-                    var parent = getContent(env);
+                    var parent = getContent(env, context);
                     if (parent) {
                         var start = env.args.after ? parseInt(graphQlConnectionLib.decodeCursor(env.args.after)) + 1 : 0;
                         var getChildrenResult = contentLib.getChildren({
@@ -85,7 +85,7 @@ exports.createContentApiType = function (context) {
                     key: graphQlLib.GraphQLID
                 },
                 resolve: function (env) {
-                    var content = getContent(env);
+                    var content = getContent(env, context);
                     if (content) {
                         return contentLib.getPermissions({
                             key: content._id
@@ -114,7 +114,7 @@ exports.createContentApiType = function (context) {
                     validationLib.validateArguments(env.args);
                     const query = wildcardLib.replaceSitePath(env.args.query, '/content' + portalLib.getSite()._path)
                     return contentLib.query({
-                        query: securityLib.adaptQuery(query),
+                        query: securityLib.adaptQuery(query, context),
                         start: env.args.offset,
                         count: env.args.first,
                         sort: env.args.sort,
@@ -135,7 +135,7 @@ exports.createContentApiType = function (context) {
                     validationLib.validateArguments(env.args);
                     var start = env.args.after ? parseInt(graphQlConnectionLib.decodeCursor(env.args.after)) + 1 : 0;
                     var queryResult = contentLib.query({
-                        query: securityLib.adaptQuery(env.args.query),
+                        query: securityLib.adaptQuery(env.args.query, context),
                         start: start,
                         count: env.args.first,
                         sort: env.args.sort,
@@ -167,13 +167,13 @@ exports.createContentApiType = function (context) {
     });
 };
 
-function getContent(env) {
+function getContent(env, context) {
     if (env.args.key) {
         const key = wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
         var content = contentLib.get({
             key: key
         });
-        return content && securityLib.filterForbiddenContent(content);
+        return content && securityLib.filterForbiddenContent(content, context);
     } else {
         return portalLib.getContent();
     }
