@@ -5,10 +5,9 @@ var nodeLib = require('/lib/xp/node');
 var portalLib = require('/lib/xp/portal');
 
 var aclTypesLib = require('./acl-types');
-var flatPageTypesLib = require('./flat-page-types');
+var pageTypesLib = require('./page-types');
 var formTypesLib = require('./form-types');
 var genericContentTypesLib = require('./generic-content-types');
-var pageTypesLib = require('./page-types');
 
 var graphQlLib = require('../graphql');
 var securityLib = require('../security');
@@ -95,18 +94,47 @@ exports.generateGenericContentFields = function (context) {
                 return extraDatas;
             }
         },
-        page: {
-            type: context.types.pageType
+        pageAsJson: {
+            type: graphQlLib.GraphQLString,
+            args: {
+                resolveTemplate: graphQlLib.GraphQLBoolean,
+                resolveFragment: graphQlLib.GraphQLBoolean,
+            },
+            resolve: function (env) {
+                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
+                let page = pageTemplate == null ? env.source.page : pageTemplate.page;
+                if (env.args.resolveFragment !== false && page && page.regions) {
+                    pageTypesLib.inlineFragmentContentComponents(page);
+                }
+                return JSON.stringify(page);
+            }
+        },
+        pageTemplate: {
+            type: graphQlLib.reference('Content'),
+            resolve: (env) => {
+                return pageTypesLib.resolvePageTemplate(env.source);
+            }
         },
         components: {
-            type: graphQlLib.list(context.types.flatComponentType),
+            type: graphQlLib.list(context.types.componentType),
+            args: {
+                resolveTemplate: graphQlLib.GraphQLBoolean,
+                resolveFragment: graphQlLib.GraphQLBoolean,
+            },
             resolve: function (env) {
+                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
+                const nodeId = pageTemplate == null ? env.source._id : pageTemplate._id;
                 var context = contextLib.get();
                 var node = nodeLib.connect({
                     repoId: context.repository,
                     branch: context.branch
-                }).get(env.source._id);
-                return utilLib.forceArray(node.components);
+                }).get(nodeId);
+
+                let components = utilLib.forceArray(node && node.components);
+                if (env.args.resolveFragment !== false) {
+                    components = pageTypesLib.inlineFragmentComponents(components);
+                }
+                return components;
             }
         },
         attachments: {
@@ -210,10 +238,9 @@ exports.generateGenericContentFields = function (context) {
 exports.createGenericTypes = function (context) {
 
     aclTypesLib.generateTypes(context);
-    flatPageTypesLib.generateTypes(context);
+    pageTypesLib.generateTypes(context);
     formTypesLib.generateTypes(context);
     genericContentTypesLib.generateTypes(context);
-    pageTypesLib.generateTypes(context);
 
     context.types.publishInfoType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PublishInfo'),

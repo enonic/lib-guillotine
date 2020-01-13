@@ -11,13 +11,7 @@ exports.createHeadlessCmsType = createContentApi;
 exports.createContext = createContext;
 
 function createSchema(options) {
-    var context = createContext();
-    if (options) {
-        for (var optionKey in options) {
-            context.options[optionKey] = options[optionKey];
-        }
-    }
-
+    var context = createContext(options);
     createTypes(context);
     return graphQlLib.createSchema({
         query: rootQueryLib.createRootQueryType(context),
@@ -37,15 +31,13 @@ function createTypes(context) {
     contentTypesLib.createContentTypeTypes(context);
 }
 
-function createContext() {
-    return {
+function createContext(options) {
+    const context = {
         types: {},
         dictionary: [],
         nameCountMap: {},
         contentTypeMap: {},
-        options: {
-            applications: [app.name]
-        },
+        options: {},
         addDictionaryType: function (objectType) {
             this.dictionary.push(objectType);
         },
@@ -69,4 +61,14 @@ function createContext() {
             this.options[name] = value;
         }
     };
+
+    if (options) {
+        for (var optionKey in options) {
+            context.options[optionKey] = options[optionKey];
+        }
+    }
+    context.options.applications = context.options.applications || [app.name];
+    context.options.allowPaths = context.options.allowPaths || [];
+
+    return context;
 }
