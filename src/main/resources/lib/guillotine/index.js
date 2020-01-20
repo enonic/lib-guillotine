@@ -1,5 +1,6 @@
 var graphQlLib = require('./graphql');
 var rootQueryLib = require('./root-query');
+var rootSubscriptionLib = require('./root-subscription');
 var contentApiLib = require('./content-api');
 var contentTypesLib = require('./content-types');
 var enumTypesLib = require('./enum-types');
@@ -15,6 +16,7 @@ function createSchema(options) {
     createTypes(context);
     return graphQlLib.createSchema({
         query: rootQueryLib.createRootQueryType(context),
+        subscription: rootSubscriptionLib.createRootSubscriptionType(context),
         dictionary: context.dictionary
     });
 }
