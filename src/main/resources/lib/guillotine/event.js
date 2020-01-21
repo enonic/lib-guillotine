@@ -9,6 +9,12 @@ function createEventObjectType(context) {
             type: {
                 type: graphQlLib.GraphQLString
             },
+            timestamp: {
+                type: graphQlLib.GraphQLString
+            },
+            localOrigin: {
+                type: graphQlLib.GraphQLBoolean
+            },
             distributed: {
                 type: graphQlLib.GraphQLBoolean
             },
