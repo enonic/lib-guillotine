@@ -11,7 +11,7 @@ dependencies {
     compile "com.enonic.xp:lib-context:${xpVersion}"
     compile "com.enonic.xp:lib-node:${xpVersion}"
     compile "com.enonic.xp:lib-portal:${xpVersion}"
-    compile 'com.enonic.lib:lib-graphql:1.1.0-A3'
+    compile 'com.enonic.lib:lib-graphql:1.1.0'
 }
 
 repositories {
