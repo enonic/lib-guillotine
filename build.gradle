@@ -12,7 +12,7 @@ dependencies {
     compile "com.enonic.xp:lib-event:${xpVersion}"
     compile "com.enonic.xp:lib-node:${xpVersion}"
     compile "com.enonic.xp:lib-portal:${xpVersion}"
-    compile 'com.enonic.lib:lib-graphql:1.1.1-B2'
+    compile 'com.enonic.lib:lib-graphql:1.1.1'
 }
 
 repositories {
