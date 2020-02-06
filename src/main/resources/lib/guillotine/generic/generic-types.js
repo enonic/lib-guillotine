@@ -26,6 +26,11 @@ exports.generateGenericContentFields = function (context) {
         _path: {
             type: graphQlLib.nonNull(graphQlLib.GraphQLString)
         },
+        _references: {
+            type: graphQlLib.list(graphQlLib.reference('Content')),
+            resolve: (env) => contentLib.getOutboundDependencies({key: env.source._id})
+                .map(id => contentLib.get({key: id}))
+        },
         creator: {
             type: context.types.principalKeyType,
             resolve: function (env) {
@@ -233,7 +238,8 @@ exports.generateGenericContentFields = function (context) {
             }
         }
     };
-};
+}
+;
 
 exports.createGenericTypes = function (context) {
 
