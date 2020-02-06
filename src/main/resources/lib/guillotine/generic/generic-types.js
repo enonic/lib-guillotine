@@ -337,6 +337,10 @@ exports.createGenericTypes = function (context) {
             form: {
                 type: graphQlLib.list(context.types.formItemType)
             },
+            formAsJson: {
+                type: graphQlLib.GraphQLString,
+                resolve: (env) => JSON.stringify(env.source.form)
+            },
             getInstances: {
                 type: graphQlLib.list(graphQlLib.reference('Content')),
                 args: {
