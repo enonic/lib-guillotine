@@ -1,4 +1,4 @@
-var graphQlLib = require('./graphql');
+const graphQlLib = require('/lib/guillotine/graphql');
 
 exports.createInputTypes = function (context) {
     context.types.processHtmlType = graphQlLib.createInputObjectType({

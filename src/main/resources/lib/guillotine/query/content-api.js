@@ -1,12 +1,12 @@
-var contentLib = require('/lib/xp/content');
-var portalLib = require('/lib/xp/portal');
-var graphQlConnectionLib = require('/lib/graphql-connection');
+const contentLib = require('/lib/xp/content');
+const portalLib = require('/lib/xp/portal');
+const graphQlConnectionLib = require('/lib/graphql-connection');
 
-var graphQlLib = require('./graphql');
-var contentTypesLib = require('/lib/guillotine/dynamic/content-types');
-var securityLib = require('/lib/guillotine/util/security');
-var validationLib = require('/lib/guillotine/util/validation');
-var wildcardLib = require('/lib/guillotine/wildcard');
+const graphQlLib = require('/lib/guillotine/graphql');
+const contentTypesLib = require('/lib/guillotine/dynamic/content-types');
+const securityLib = require('/lib/guillotine/util/security');
+const validationLib = require('/lib/guillotine/util/validation');
+const wildcardLib = require('/lib/guillotine/wildcard');
 
 function createContentApiType(context) {
     return graphQlLib.createObjectType(context, {

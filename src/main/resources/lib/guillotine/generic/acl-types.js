@@ -1,4 +1,4 @@
-var graphQlLib = require('../graphql');
+const graphQlLib = require('/lib/guillotine/graphql');
 
 var principalKeyRegexp = /^(?:role:([^:]+)|(?:(?:user|group):([^:]+):([^:]+)))$/;
 

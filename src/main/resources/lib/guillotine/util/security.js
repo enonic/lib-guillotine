@@ -1,5 +1,5 @@
-var authLib = require('/lib/xp/auth');
-var portalLib = require('/lib/xp/portal');
+const authLib = require('/lib/xp/auth');
+const portalLib = require('/lib/xp/portal');
 
 function isSiteContext() {
     return !!portalLib.getSite();

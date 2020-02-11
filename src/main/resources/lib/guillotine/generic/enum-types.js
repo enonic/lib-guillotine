@@ -1,4 +1,4 @@
-var graphQlLib = require('./graphql');
+const graphQlLib = require('/lib/guillotine/graphql');
 
 exports.createEnumTypes = function (context) {
     context.types.urlTypeType = graphQlLib.createEnumType({

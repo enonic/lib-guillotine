@@ -1,4 +1,4 @@
-var graphQlLib = require('../graphql');
+const graphQlLib = require('/lib/guillotine/graphql');
 
 exports.generateTypes = function (context) {
     context.types.geoPointType = graphQlLib.createObjectType(context, {

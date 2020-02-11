@@ -1,4 +1,4 @@
-exports.forceArray = function(data) {
+function forceArray(data) {
     if (data) {
         if (Array.isArray(data)) {
             return data;
@@ -7,3 +7,5 @@ exports.forceArray = function(data) {
     }
     return [];
 };
+
+exports.forceArray = forceArray;

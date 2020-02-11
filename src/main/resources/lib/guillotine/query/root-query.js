@@ -1,7 +1,7 @@
-var graphQlLib = require('./graphql');
-var contentApiLib = require('./content-api');
+const graphQlLib = require('/lib/guillotine/graphql');
+const contentApiLib = require('./content-api');
 
-exports.createRootQueryType = function (context) {
+function createRootQueryType(context) {
     return graphQlLib.createObjectType(context, {
         name: context.uniqueName('Query'),
         fields: {
@@ -14,3 +14,4 @@ exports.createRootQueryType = function (context) {
         }
     });
 };
+exports.createRootQueryType = createRootQueryType;
