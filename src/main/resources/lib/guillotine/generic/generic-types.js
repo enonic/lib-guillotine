@@ -11,8 +11,8 @@ var genericContentTypesLib = require('./generic-content-types');
 
 var graphQlLib = require('../graphql');
 var securityLib = require('../security');
-var validationLib = require('../validation');
-var utilLib = require('../util');
+var validationLib = require('/lib/guillotine/util/validation');
+var utilLib = require('/lib/guillotine/util/util');
 
 
 exports.generateGenericContentFields = function (context) {

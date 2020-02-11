@@ -1,5 +1,5 @@
 var graphQlLib = require('./graphql');
-var eventLib = require('./event');
+var eventLib = require('/lib/guillotine/subscription/event');
 
 exports.createRootSubscriptionType = function (context) {
     const newEventPublisher = eventLib.createNewEventPublisher(context)

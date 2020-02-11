@@ -1,15 +1,11 @@
-var graphQlLib = require('./graphql');
-var rootQueryLib = require('./root-query');
-var rootSubscriptionLib = require('./root-subscription');
 var contentApiLib = require('./content-api');
 var contentTypesLib = require('./content-types');
-var enumTypesLib = require('./enum-types');
+var enumTypesLib = require('/lib/guillotine/generic/enum-types');
 var genericTypesLib = require('./generic/generic-types');
-var inputTypesLib = require('./input-types');
-
-exports.createSchema = createSchema;
-exports.createHeadlessCmsType = createContentApi;
-exports.createContext = createContext;
+var graphQlLib = require('./graphql');
+var inputTypesLib = require('/lib/guillotine/generic/input-types');
+var rootQueryLib = require('/lib/guillotine/query/root-query');
+var rootSubscriptionLib = require('/lib/guillotine/subscription/root-subscription');
 
 function createSchema(options) {
     var context = createContext(options);
@@ -74,3 +70,7 @@ function createContext(options) {
 
     return context;
 }
+
+exports.createSchema = createSchema;
+exports.createHeadlessCmsType = createContentApi;
+exports.createContext = createContext;

@@ -4,10 +4,9 @@ var nodeLib = require('/lib/xp/node');
 var portalLib = require('/lib/xp/portal');
 
 var graphQlLib = require('../graphql');
-var naminglLib = require('../naming');
-var utilLib = require('../util');
-var namingLib = require('../naming');
-var formLib = require('../form');
+var namingLib = require('/lib/guillotine/util/naming');
+var utilLib = require('/lib/guillotine/util/util');
+var formLib = require('/lib/guillotine/dynamic/form');
 
 exports.generateTypes = function (context) {
 

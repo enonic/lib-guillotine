@@ -1,5 +1,5 @@
 var contentLib = require('/lib/xp/content');
-var namingLib = require('./naming');
+var namingLib = require('/lib/guillotine/util/naming');
 
 var graphQlLib = require('./graphql');
 

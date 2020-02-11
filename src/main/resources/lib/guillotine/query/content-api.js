@@ -5,10 +5,10 @@ var graphQlConnectionLib = require('/lib/graphql-connection');
 var graphQlLib = require('./graphql');
 var contentTypesLib = require('./content-types');
 var securityLib = require('./security');
-var validationLib = require('./validation');
-var wildcardLib = require('./wildcard');
+var validationLib = require('/lib/guillotine/util/validation');
+var wildcardLib = require('/lib/guillotine/wildcard');
 
-exports.createContentApiType = function (context) {
+function createContentApiType(context) {
     return graphQlLib.createObjectType(context, {
         name: context.uniqueName('HeadlessCms'),
         description: 'Headless CMS',
@@ -178,3 +178,5 @@ function getContent(env, context) {
         return portalLib.getContent();
     }
 }
+
+exports.createContentApiType = createContentApiType;
