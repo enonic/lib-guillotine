@@ -1,5 +1,5 @@
 var contentApiLib = require('./content-api');
-var contentTypesLib = require('./content-types');
+var contentTypesLib = require('/lib/guillotine/dynamic/content-types');
 var enumTypesLib = require('/lib/guillotine/generic/enum-types');
 var genericTypesLib = require('./generic/generic-types');
 var graphQlLib = require('./graphql');

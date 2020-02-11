@@ -10,7 +10,7 @@ var formTypesLib = require('./form-types');
 var genericContentTypesLib = require('./generic-content-types');
 
 var graphQlLib = require('../graphql');
-var securityLib = require('../security');
+var securityLib = require('/lib/guillotine/util/security');
 var validationLib = require('/lib/guillotine/util/validation');
 var utilLib = require('/lib/guillotine/util/util');
 

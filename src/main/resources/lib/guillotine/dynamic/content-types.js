@@ -5,7 +5,6 @@ var graphQlLib = require('./graphql');
 var genericTypesLib = require('./generic/generic-types');
 var formLib = require('/lib/guillotine/dynamic/form');
 var namingLib = require('/lib/guillotine/util/naming');
-var securityLib = require('./security');
 
 var mediaContentTypeRegexp = /^media:/;
 var imageContentTypeRegexp = /^media:image$/;

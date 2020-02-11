@@ -3,8 +3,8 @@ var portalLib = require('/lib/xp/portal');
 var graphQlConnectionLib = require('/lib/graphql-connection');
 
 var graphQlLib = require('./graphql');
-var contentTypesLib = require('./content-types');
-var securityLib = require('./security');
+var contentTypesLib = require('/lib/guillotine/dynamic/content-types');
+var securityLib = require('/lib/guillotine/util/security');
 var validationLib = require('/lib/guillotine/util/validation');
 var wildcardLib = require('/lib/guillotine/wildcard');
 
