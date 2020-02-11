@@ -4,7 +4,10 @@ var nodeLib = require('/lib/xp/node');
 var portalLib = require('/lib/xp/portal');
 
 var graphQlLib = require('../graphql');
+var naminglLib = require('../naming');
 var utilLib = require('../util');
+var namingLib = require('../naming');
+var formLib = require('../form');
 
 exports.generateTypes = function (context) {
 
@@ -21,6 +24,8 @@ exports.generateTypes = function (context) {
         }
     });
 
+    createPageComponentDataConfigType(context);
+
     context.types.pageComponentDataType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PageComponentData'),
         description: 'Page component data.',
@@ -30,6 +35,9 @@ exports.generateTypes = function (context) {
             },
             customized: {
                 type: graphQlLib.GraphQLBoolean
+            },
+            config: context.types.pageComponentDataConfigType && {
+                type: context.types.pageComponentDataConfigType
             },
             configAsJson: {
                 type: graphQlLib.GraphQLString,
@@ -158,6 +166,69 @@ exports.generateTypes = function (context) {
         }
     });
 };
+
+function createPageComponentDataConfigType(context) {
+    const pageConfigFields = {};
+
+
+    context.options.applications.forEach(applicationKey => {
+        const bean = __.newBean('com.enonic.lib.guillotine.PageDescriptorServiceBean');
+        const pageDescriptors = __.toNativeObject(bean.getByApplication(applicationKey));
+        if (pageDescriptors.length > 0) {
+
+            const pageApplicationConfigFields = {};
+            pageDescriptors.forEach(pageDescriptor => {
+
+                const pageDescriptorConfigName = context.uniqueName('PageComponentDataDescriptorConfig')
+                const pageDescriptorConfigFields = {};
+
+                formLib.getFormItems(pageDescriptor.form).forEach(function (formItem) {
+                    //Creates a data field corresponding to this form item
+                    pageDescriptorConfigFields[namingLib.sanitizeText(formItem.name)] = {
+                        type: formLib.generateFormItemObjectType(context, pageDescriptorConfigName, formItem),
+                        args: formLib.generateFormItemArguments(context, formItem),
+                        resolve: formLib.generateFormItemResolveFunction(formItem)
+                    }
+                });
+
+
+                if (Object.keys(pageDescriptorConfigFields).length > 0) {
+                    const pageDescriptorConfigType = graphQlLib.createObjectType(context, {
+                        name: pageDescriptorConfigName,
+                        description: 'Page component application config for application [' + applicationKey + '] and descriptor [' +
+                                     pageDescriptor.name + ']',
+                        fields: pageDescriptorConfigFields
+                    });
+                    pageApplicationConfigFields[naminglLib.sanitizeText(pageDescriptor.name)] = {
+                        type: pageDescriptorConfigType
+                    }
+                }
+            });
+
+            if (Object.keys(pageApplicationConfigFields).length > 0) {
+                const applicationConfigType = graphQlLib.createObjectType(context, {
+                    name: context.uniqueName('PageComponentDataApplicationConfig'),
+                    description: 'Page component application config for application [' + applicationKey + ']',
+                    fields: pageApplicationConfigFields
+                });
+                pageConfigFields[naminglLib.sanitizeText(applicationKey)] = {
+                    type: applicationConfigType,
+                    resolve: (env) => env.source[naminglLib.applicationConfigKey(applicationKey)]
+                }
+
+            }
+        }
+    });
+
+
+    if (Object.keys(pageConfigFields).length > 0) {
+        context.types.pageComponentDataConfigType = graphQlLib.createObjectType(context, {
+            name: context.uniqueName('PageComponentDataConfig'),
+            description: 'Page component config.',
+            fields: pageConfigFields
+        });
+    }
+}
 
 function resolvePageTemplate(content) {
     if ('portal:page-template' === content.type) {
