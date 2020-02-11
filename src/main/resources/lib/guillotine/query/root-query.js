@@ -13,5 +13,6 @@ function createRootQueryType(context) {
             }
         }
     });
-};
+}
+
 exports.createRootQueryType = createRootQueryType;

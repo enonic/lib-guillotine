@@ -7,7 +7,7 @@ const graphQlLib = require('/lib/guillotine/graphql');
 const pageTypesLib = require('/lib/guillotine/dynamic/page-types');
 const utilLib = require('/lib/guillotine/util/util');
 
-exports.generateTypes = function (context) {
+function generateTypes(context) {
     pageTypesLib.createPageComponentDataConfigType(context);
 
     context.types.componentTypeType = graphQlLib.createEnumType({
@@ -162,7 +162,7 @@ exports.generateTypes = function (context) {
             }
         }
     });
-};
+}
 
 function resolvePageTemplate(content) {
     if ('portal:page-template' === content.type) {
@@ -265,6 +265,7 @@ function prefixContentComponentPaths(container, prefix) {
     }
 }
 
+exports.generateTypes = generateTypes;
 exports.resolvePageTemplate = resolvePageTemplate;
 exports.resolvePageTemplateId = resolvePageTemplateId;
 exports.inlineFragmentComponents = inlineFragmentComponents;

@@ -1,6 +1,6 @@
 const graphQlLib = require('/lib/guillotine/graphql');
 
-exports.generateTypes = function (context) {
+function generateTypes(context) {
     context.types.geoPointType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('GeoPoint'),
         description: 'GeoPoint.',
@@ -68,3 +68,5 @@ exports.generateTypes = function (context) {
         }
     });
 };
+
+exports.generateTypes = generateTypes;

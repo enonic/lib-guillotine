@@ -1,21 +1,20 @@
-var graphQlConnectionLib = require('/lib/graphql-connection');
-var contentLib = require('/lib/xp/content');
-var contextLib = require('/lib/xp/context');
-var nodeLib = require('/lib/xp/node');
-var portalLib = require('/lib/xp/portal');
+const graphQlConnectionLib = require('/lib/graphql-connection');
+const contentLib = require('/lib/xp/content');
+const contextLib = require('/lib/xp/context');
+const nodeLib = require('/lib/xp/node');
+const portalLib = require('/lib/xp/portal');
 
-var aclTypesLib = require('./acl-types');
-var pageTypesLib = require('./page-types');
-var formTypesLib = require('./form-types');
-var genericContentTypesLib = require('./generic-content-types');
+const aclTypesLib = require('./acl-types');
+const pageTypesLib = require('./page-types');
+const formTypesLib = require('./form-types');
+const genericContentTypesLib = require('./generic-content-types');
 
 const graphQlLib = require('/lib/guillotine/graphql');
-var securityLib = require('/lib/guillotine/util/security');
-var validationLib = require('/lib/guillotine/util/validation');
-var utilLib = require('/lib/guillotine/util/util');
+const securityLib = require('/lib/guillotine/util/security');
+const validationLib = require('/lib/guillotine/util/validation');
+const utilLib = require('/lib/guillotine/util/util');
 
-
-exports.generateGenericContentFields = function (context) {
+function generateGenericContentFields(context) {
     return {
         _id: {
             type: graphQlLib.nonNull(graphQlLib.GraphQLID)
@@ -239,9 +238,8 @@ exports.generateGenericContentFields = function (context) {
         }
     };
 }
-;
 
-exports.createGenericTypes = function (context) {
+function createGenericTypes(context) {
 
     aclTypesLib.generateTypes(context);
     pageTypesLib.generateTypes(context);
@@ -413,6 +411,9 @@ exports.createGenericTypes = function (context) {
         fields: exports.generateGenericContentFields(context)
     });
 };
+
+exports.generateGenericContentFields = generateGenericContentFields;
+exports.createGenericTypes = createGenericTypes;
 
 
 
