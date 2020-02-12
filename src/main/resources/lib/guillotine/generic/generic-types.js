@@ -66,6 +66,10 @@ function generateGenericContentFields(context) {
         type: {
             type: graphQlLib.GraphQLString
         },
+        contentType: {
+            type: graphQlLib.reference('ContentType'),
+            resolve: (env) => contentLib.getType(env.source.type)
+        },
         displayName: {
             type: graphQlLib.GraphQLString
         },
