@@ -73,6 +73,8 @@ function generateItemSetObjectType(context, namePrefix, itemSet) {
 
 function generateInputObjectType(context, input) {
     switch (input.inputType) {
+    case 'AttachmentUploader':
+        return graphQlLib.reference('Content');
     case 'CheckBox':
         return graphQlLib.GraphQLBoolean;
     case 'ComboBox':
@@ -89,10 +91,6 @@ function generateInputObjectType(context, input) {
         return graphQlLib.GraphQLString; //TODO DateTime custom scalar type
     case 'Double':
         return graphQlLib.GraphQLFloat;
-    case 'MediaUploader':
-        return graphQlLib.reference('Content');
-    case 'AttachmentUploader':
-        return graphQlLib.reference('Content');
     case 'GeoPoint':
         return context.types.geoPointType;
     case 'HtmlArea':
@@ -103,6 +101,10 @@ function generateInputObjectType(context, input) {
         return context.types.mediaUploaderType;
     case 'Long':
         return graphQlLib.GraphQLInt;
+    case 'MediaSelector':
+        return graphQlLib.reference('Content');
+    case 'MediaUploader':
+        return graphQlLib.reference('Content');
     case 'RadioButton':
         return graphQlLib.GraphQLString; //TODO Should be enum based on config
     case 'SiteConfigurator':
@@ -117,7 +119,7 @@ function generateInputObjectType(context, input) {
         return graphQlLib.GraphQLString; //TODO Time custom scalar type
     }
 
-    log.warning('Unknown input type [' + input.inputType + ']. Treated as String');
+    log.warning('Unknown input type [' + input.inputType + ']. Using String as GraphQL type');
     return graphQlLib.GraphQLString;
 }
 
@@ -188,7 +190,8 @@ function generateFormItemResolveFunction(formItem) {
                 value = portalLib.processHtml({value: value, type: env.args.processHtml.type});
             }
             if (value && 'Input' == formItem.formItemType &&
-                ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector'].indexOf(formItem.inputType) !== -1) {
+                ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !==
+                -1) {
                 value = contentLib.get({key: value});
             }
             return value;
@@ -206,7 +209,8 @@ function generateFormItemResolveFunction(formItem) {
                 });
             }
             if ('Input' == formItem.formItemType &&
-                ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector'].indexOf(formItem.inputType) !== -1) {
+                ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !==
+                -1) {
                 values = values.map(function (value) {
                     return contentLib.get({key: value});
                 }).filter(function (content) {
