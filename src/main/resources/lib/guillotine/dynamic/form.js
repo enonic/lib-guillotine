@@ -1,7 +1,9 @@
 const contentLib = require('/lib/xp/content');
 
 const namingLib = require('/lib/guillotine/util/naming');
+const utilLib = require('/lib/guillotine/util/util');
 const graphQlLib = require('/lib/guillotine/graphql');
+const validationLib = require('/lib/guillotine/util/validation');
 
 function getFormItems(form) {
     var formItems = [];

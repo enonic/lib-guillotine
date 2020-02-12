@@ -6,6 +6,6 @@ function forceArray(data) {
         return [data];
     }
     return [];
-};
+}
 
 exports.forceArray = forceArray;

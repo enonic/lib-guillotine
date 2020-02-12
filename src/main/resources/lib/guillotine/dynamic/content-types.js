@@ -1,13 +1,13 @@
-var contentLib = require('/lib/xp/content');
-var portalLib = require('/lib/xp/portal');
+const contentLib = require('/lib/xp/content');
+const portalLib = require('/lib/xp/portal');
 
 const graphQlLib = require('/lib/guillotine/graphql');
-var genericTypesLib = require('/lib/guillotine/generic/generic-types');
-var formLib = require('/lib/guillotine/dynamic/form');
-var namingLib = require('/lib/guillotine/util/naming');
+const genericTypesLib = require('/lib/guillotine/generic/generic-types');
+const formLib = require('/lib/guillotine/dynamic/form');
+const namingLib = require('/lib/guillotine/util/naming');
 
-var mediaContentTypeRegexp = /^media:/;
-var imageContentTypeRegexp = /^media:image$/;
+const mediaContentTypeRegexp = /^media:/;
+const imageContentTypeRegexp = /^media:image$/;
 
 exports.createContentTypeTypes = function (context) {
 

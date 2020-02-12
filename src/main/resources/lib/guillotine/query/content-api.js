@@ -6,7 +6,7 @@ const graphQlLib = require('/lib/guillotine/graphql');
 const contentTypesLib = require('/lib/guillotine/dynamic/content-types');
 const securityLib = require('/lib/guillotine/util/security');
 const validationLib = require('/lib/guillotine/util/validation');
-const wildcardLib = require('/lib/guillotine/wildcard');
+const wildcardLib = require('/lib/guillotine/util/wildcard');
 
 function createContentApiType(context) {
     return graphQlLib.createObjectType(context, {

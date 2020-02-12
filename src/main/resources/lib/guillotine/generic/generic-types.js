@@ -4,10 +4,10 @@ const contextLib = require('/lib/xp/context');
 const nodeLib = require('/lib/xp/node');
 const portalLib = require('/lib/xp/portal');
 
-const aclTypesLib = require('./acl-types');
-const pageTypesLib = require('./page-types');
-const formTypesLib = require('./form-types');
-const genericContentTypesLib = require('./generic-content-types');
+const aclTypesLib = require('/lib/guillotine/generic/acl-types');
+const pageTypesLib = require('/lib/guillotine/generic/page-types');
+const formTypesLib = require('/lib/guillotine/generic/form-types');
+const genericContentTypesLib = require('/lib/guillotine/generic/generic-content-types');
 
 const graphQlLib = require('/lib/guillotine/graphql');
 const securityLib = require('/lib/guillotine/util/security');

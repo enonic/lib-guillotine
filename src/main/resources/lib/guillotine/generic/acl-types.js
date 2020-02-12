@@ -1,8 +1,8 @@
 const graphQlLib = require('/lib/guillotine/graphql');
 
-var principalKeyRegexp = /^(?:role:([^:]+)|(?:(?:user|group):([^:]+):([^:]+)))$/;
+const principalKeyRegexp = /^(?:role:([^:]+)|(?:(?:user|group):([^:]+):([^:]+)))$/;
 
-exports.generateTypes = function (context) {
+function generateTypes(context) {
     context.types.principalKeyType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PrincipalKey'),
         description: 'Principal key.',
@@ -95,3 +95,5 @@ function getPrincipalId(principalKey) {
     var groups = principalKeyRegexp.exec(principalKey);
     return groups[1] || groups[3];
 }
+
+exports.generateTypes = generateTypes;

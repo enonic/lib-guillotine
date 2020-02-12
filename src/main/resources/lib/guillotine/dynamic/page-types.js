@@ -1,5 +1,7 @@
-var namingLib = require('/lib/guillotine/util/naming');
-var formLib = require('/lib/guillotine/dynamic/form');
+const graphQlLib = require('/lib/guillotine/graphql');
+
+const namingLib = require('/lib/guillotine/util/naming');
+const formLib = require('/lib/guillotine/dynamic/form');
 
 function createPageComponentDataConfigType(context) {
     const pageConfigFields = {};
@@ -42,7 +44,7 @@ function createPageComponentDataConfigType(context) {
                                  pageDescriptor.name + ']',
                     fields: pageDescriptorConfigFields
                 });
-                pageApplicationConfigFields[naminglLib.sanitizeText(pageDescriptor.name)] = {
+                pageApplicationConfigFields[namingLib.sanitizeText(pageDescriptor.name)] = {
                     type: pageDescriptorConfigType
                 }
             }
@@ -57,9 +59,9 @@ function createPageComponentDataConfigType(context) {
                 description: 'Page component application config for application [' + applicationKey + ']',
                 fields: pageApplicationConfigFields
             });
-            pageConfigFields[naminglLib.sanitizeText(applicationKey)] = {
+            pageConfigFields[namingLib.sanitizeText(applicationKey)] = {
                 type: applicationConfigType,
-                resolve: (env) => env.source[naminglLib.applicationConfigKey(applicationKey)]
+                resolve: (env) => env.source[namingLib.applicationConfigKey(applicationKey)]
             }
 
         }
