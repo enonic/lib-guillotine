@@ -33,8 +33,8 @@ function generateTypes(context) {
             customized: {
                 type: graphQlLib.GraphQLBoolean
             },
-            config: context.types.pageComponentDataConfigType && {
-                type: context.types.pageComponentDataConfigType
+            config: context.types.PageComponentDataConfigType && {
+                type: context.types.PageComponentDataConfigType
             },
             configAsJson: {
                 type: graphQlLib.GraphQLString,

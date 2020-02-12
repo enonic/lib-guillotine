@@ -3,63 +3,72 @@ const graphQlLib = require('/lib/guillotine/graphql');
 const namingLib = require('/lib/guillotine/util/naming');
 const formLib = require('/lib/guillotine/dynamic/form');
 
+
 function createPageComponentDataConfigType(context) {
-    const pageConfigFields = {};
+    createComponentDataConfigType(context, 'Page')
+}
+
+
+function getDescriptors(componentType, applicationKey) {
+    const bean = __.newBean('com.enonic.lib.guillotine.' + componentType + 'DescriptorServiceBean');
+    return __.toNativeObject(bean.getByApplication(applicationKey));
+}
+
+function createComponentDataConfigType(context, componentType) {
+    const componentConfigTypeFields = {};
 
 
     //For each application
     context.options.applications.forEach(applicationKey => {
 
         //Get descriptors
-        const bean = __.newBean('com.enonic.lib.guillotine.PageDescriptorServiceBean');
-        const pageDescriptors = __.toNativeObject(bean.getByApplication(applicationKey));
+        const descriptors = getDescriptors(componentType, applicationKey);
 
 
         //For each descriptor
-        const pageApplicationConfigFields = {};
-        pageDescriptors.forEach(pageDescriptor => {
+        const applicationConfigTypeFields = {};
+        descriptors.forEach(descriptor => {
 
-
-            const pageDescriptorConfigName = context.uniqueName('PageComponentDataDescriptorConfig')
-            const pageDescriptorConfigFields = {};
+            const descriptorConfigTypeName = context.uniqueName(componentType + 'ComponentDataDescriptorConfig')
+            const descriptorConfigTypeFields = {};
 
             //For each form item
-            formLib.getFormItems(pageDescriptor.form).forEach(function (formItem) {
+            formLib.getFormItems(descriptor.form).forEach(function (formItem) {
 
                 //Creates a data field corresponding to this form item
-                pageDescriptorConfigFields[namingLib.sanitizeText(formItem.name)] = {
-                    type: formLib.generateFormItemObjectType(context, pageDescriptorConfigName, formItem),
+                descriptorConfigTypeFields[namingLib.sanitizeText(formItem.name)] = {
+                    type: formLib.generateFormItemObjectType(context, descriptorConfigTypeName, formItem),
                     args: formLib.generateFormItemArguments(context, formItem),
                     resolve: formLib.generateFormItemResolveFunction(formItem)
                 }
             });
 
             //If there were form items (A type cannot have 0 fields)
-            if (Object.keys(pageDescriptorConfigFields).length > 0) {
+            if (Object.keys(descriptorConfigTypeFields).length > 0) {
 
                 //Creates the type for this descriptor
-                const pageDescriptorConfigType = graphQlLib.createObjectType(context, {
-                    name: pageDescriptorConfigName,
-                    description: 'Page component application config for application [' + applicationKey + '] and descriptor [' +
-                                 pageDescriptor.name + ']',
-                    fields: pageDescriptorConfigFields
+                const descriptorConfigType = graphQlLib.createObjectType(context, {
+                    name: descriptorConfigTypeName,
+                    description: componentType + ' component application config for application [' + applicationKey + '] and descriptor [' +
+                                 descriptor.name + ']',
+                    fields: descriptorConfigTypeFields
                 });
-                pageApplicationConfigFields[namingLib.sanitizeText(pageDescriptor.name)] = {
-                    type: pageDescriptorConfigType
+                applicationConfigTypeFields[namingLib.sanitizeText(descriptor.name)] = {
+                    type: descriptorConfigType
                 }
             }
         });
 
         //If there were descriptors with form items (A type cannot have 0 fields)
-        if (Object.keys(pageApplicationConfigFields).length > 0) {
+        if (Object.keys(applicationConfigTypeFields).length > 0) {
 
             //Creates the type for these descriptors
             const applicationConfigType = graphQlLib.createObjectType(context, {
-                name: context.uniqueName('PageComponentDataApplicationConfig'),
-                description: 'Page component application config for application [' + applicationKey + ']',
-                fields: pageApplicationConfigFields
+                name: context.uniqueName(componentType + 'ComponentDataApplicationConfig'),
+                description: componentType + ' component application config for application [' + applicationKey + ']',
+                fields: applicationConfigTypeFields
             });
-            pageConfigFields[namingLib.sanitizeText(applicationKey)] = {
+            componentConfigTypeFields[namingLib.sanitizeText(applicationKey)] = {
                 type: applicationConfigType,
                 resolve: (env) => env.source[namingLib.applicationConfigKey(applicationKey)]
             }
@@ -69,13 +78,13 @@ function createPageComponentDataConfigType(context) {
 
 
     //If there were descriptors with form items (A type cannot have 0 fields)
-    if (Object.keys(pageConfigFields).length > 0) {
+    if (Object.keys(componentConfigTypeFields).length > 0) {
 
         //Creates the type for all the descriptors
-        context.types.pageComponentDataConfigType = graphQlLib.createObjectType(context, {
-            name: context.uniqueName('PageComponentDataConfig'),
-            description: 'Page component config.',
-            fields: pageConfigFields
+        context.types[componentType + 'ComponentDataConfigType'] = graphQlLib.createObjectType(context, {
+            name: context.uniqueName(componentType + 'ComponentDataConfig'),
+            description: componentType + ' component config.',
+            fields: componentConfigTypeFields
         });
     }
 }
