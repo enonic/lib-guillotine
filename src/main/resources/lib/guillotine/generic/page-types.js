@@ -58,6 +58,9 @@ function generateTypes(context) {
             descriptor: {
                 type: graphQlLib.nonNull(graphQlLib.GraphQLString)
             },
+            config: context.types.LayoutComponentDataConfigType && {
+                type: context.types.LayoutComponentDataConfigType
+            },
             configAsJson: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
@@ -74,6 +77,9 @@ function generateTypes(context) {
         fields: {
             descriptor: {
                 type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+            },
+            config: context.types.PartComponentDataConfigType && {
+                type: context.types.PartComponentDataConfigType
             },
             configAsJson: {
                 type: graphQlLib.GraphQLString,

@@ -5,7 +5,9 @@ const formLib = require('/lib/guillotine/dynamic/form');
 
 
 function createPageComponentDataConfigType(context) {
-    createComponentDataConfigType(context, 'Page')
+    createComponentDataConfigType(context, 'Page');
+    createComponentDataConfigType(context, 'Part');
+    createComponentDataConfigType(context, 'Layout');
 }
 
 
@@ -54,7 +56,8 @@ function createComponentDataConfigType(context, componentType) {
                     fields: descriptorConfigTypeFields
                 });
                 applicationConfigTypeFields[namingLib.sanitizeText(descriptor.name)] = {
-                    type: descriptorConfigType
+                    type: descriptorConfigType,
+                    resolve: (env) => env.source[descriptor.name]
                 }
             }
         });
