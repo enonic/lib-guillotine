@@ -43,6 +43,10 @@ function generateFormItemObjectType(context, namePrefix, formItem) {
         break;
     }
 
+    if (!formItemObjectType) {
+        log.warning('No type found for input type: ' + JSON.stringify(formItem));
+    }
+
     formItemObjectType = formItemObjectType || graphQlLib.GraphQLString;
     if (formItem.occurrences && formItem.occurrences.maximum == 1) {
         return formItemObjectType;
@@ -74,7 +78,7 @@ function generateInputObjectType(context, input) {
     case 'ComboBox':
         return graphQlLib.GraphQLString;
     case 'ContentSelector':
-        return context.types.contentType;
+        return graphQlLib.reference('Content');
     case 'CustomSelector':
         return graphQlLib.GraphQLString;
     case 'ContentTypeFilter':
@@ -86,15 +90,15 @@ function generateInputObjectType(context, input) {
     case 'Double':
         return graphQlLib.GraphQLFloat;
     case 'MediaUploader':
-        return context.types.contentType;
+        return graphQlLib.reference('Content');
     case 'AttachmentUploader':
-        return context.types.contentType;
+        return graphQlLib.reference('Content');
     case 'GeoPoint':
         return context.types.geoPointType;
     case 'HtmlArea':
         return graphQlLib.GraphQLString;
     case 'ImageSelector':
-        return context.types.contentType;
+        return graphQlLib.reference('Content');
     case 'ImageUploader':
         return context.types.mediaUploaderType;
     case 'Long':
@@ -112,6 +116,8 @@ function generateInputObjectType(context, input) {
     case 'Time':
         return graphQlLib.GraphQLString; //TODO Time custom scalar type
     }
+
+    log.warning('Unknown input type [' + input.inputType + ']. Treated as String');
     return graphQlLib.GraphQLString;
 }
 

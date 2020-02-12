@@ -242,9 +242,9 @@ function generateGenericContentFields(context) {
 function createGenericTypes(context) {
 
     aclTypesLib.generateTypes(context);
-    pageTypesLib.generateTypes(context);
-    formTypesLib.generateTypes(context);
     genericContentTypesLib.generateTypes(context);
+    formTypesLib.generateTypes(context);
+    pageTypesLib.generateTypes(context);
 
     context.types.publishInfoType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PublishInfo'),
