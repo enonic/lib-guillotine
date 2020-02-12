@@ -1,7 +1,7 @@
-var graphQlLib = require('./graphql');
-var eventLib = require('./event');
+const graphQlLib = require('/lib/guillotine/graphql');
+const eventLib = require('/lib/guillotine/subscription/event');
 
-exports.createRootSubscriptionType = function (context) {
+function createRootSubscriptionType(context) {
     const newEventPublisher = eventLib.createNewEventPublisher(context)
     return graphQlLib.createObjectType(context, {
         name: context.uniqueName('Subscription'),
@@ -28,3 +28,5 @@ exports.createRootSubscriptionType = function (context) {
         }
     });
 };
+
+exports.createRootSubscriptionType = createRootSubscriptionType;

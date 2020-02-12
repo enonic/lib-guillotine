@@ -1,6 +1,6 @@
-var graphQlLib = require('../graphql');
+const graphQlLib = require('/lib/guillotine/graphql');
 
-exports.generateTypes = function (context) {
+function generateTypes(context) {
     context.types.formItemTypeType = graphQlLib.createEnumType({
         name: context.uniqueName('FormItemType'),
         description: 'Form item type',
@@ -220,3 +220,5 @@ exports.generateTypes = function (context) {
     });
     context.addDictionaryType(context.types.formInputType);
 };
+
+exports.generateTypes = generateTypes;

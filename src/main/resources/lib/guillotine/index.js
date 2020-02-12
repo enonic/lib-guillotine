@@ -1,18 +1,12 @@
-var graphQlLib = require('./graphql');
-var rootQueryLib = require('./root-query');
-var rootSubscriptionLib = require('./root-subscription');
-var contentApiLib = require('./content-api');
-var contentTypesLib = require('./content-types');
-var enumTypesLib = require('./enum-types');
-var genericTypesLib = require('./generic/generic-types');
-var inputTypesLib = require('./input-types');
-
-exports.createSchema = createSchema;
-exports.createHeadlessCmsType = createContentApi;
-exports.createContext = createContext;
+const contentApiLib = require('/lib/guillotine/query/content-api');
+const genericLib = require('/lib/guillotine/generic/index');
+const dynamicLib = require('/lib/guillotine/dynamic/index');
+const graphQlLib = require('/lib/guillotine/graphql');
+const rootQueryLib = require('/lib/guillotine/query/root-query');
+const rootSubscriptionLib = require('/lib/guillotine/subscription/root-subscription');
 
 function createSchema(options) {
-    var context = createContext(options);
+    const context = createContext(options);
     createTypes(context);
     return graphQlLib.createSchema({
         query: rootQueryLib.createRootQueryType(context),
@@ -27,10 +21,8 @@ function createContentApi(context) {
 }
 
 function createTypes(context) {
-    enumTypesLib.createEnumTypes(context);
-    inputTypesLib.createInputTypes(context);
-    genericTypesLib.createGenericTypes(context);
-    contentTypesLib.createContentTypeTypes(context);
+    genericLib.createTypes(context);
+    dynamicLib.createTypes(context);
 }
 
 function createContext(options) {
@@ -74,3 +66,7 @@ function createContext(options) {
 
     return context;
 }
+
+exports.createSchema = createSchema;
+exports.createHeadlessCmsType = createContentApi;
+exports.createContext = createContext;
