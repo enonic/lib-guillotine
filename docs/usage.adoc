@@ -248,7 +248,3 @@ HTML fields are generated with a parameter "processHtml" allowing to replace abs
   }
 }
 ----
-
-== link:custom.adoc[Customizing the schema]
-
-== link:api.adoc[Guillotine API]

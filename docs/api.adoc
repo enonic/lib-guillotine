@@ -1,4 +1,4 @@
-= Guillotine API
+= API
 
 This documentation lists and describes all static GraphQL types
 

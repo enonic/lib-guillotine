@@ -1,15 +1,15 @@
 {
   "menuItems": [
     {
-      "title": "Guillotine App",
+      "title": "Application",
       "document": "application"
     },
     {
-      "title": "Guillotine Lib",
+      "title": "Library",
       "document": "library"
     },
     {
-      "title": "Usage",
+      "title": "Access and use",
       "document": "usage"
     },
     {
