@@ -1,0 +1,254 @@
+= Using the GraphQL API
+
+This section describes how access and use the GraphQL API
+
+== Introduction
+
+GraphQL is a query language developed by Facebook. 
+This technology allows Guillotine to provide a single and exhaustive API while allowing you to retrieve the content you need in few requests, and with minimal overhead.
+
+http://graphql.org/learn[Learn more about GraphQL...]
+====
+
+== Access
+
+Depending on how you deployed Guillotine, you will now have an accessible endpoint, relative to your specific site and context.
+
+=== Endpoints
+
+When using the Guillotine library, you control where and how your API is exposed. For instance:
+
+Filter:: i.e. https://mysite.com (GraphQL uses POST method)
+Path Mapping:: i.e. https://mysite.com/headless
+Service:: i.e. https://mysite.com/_/service/<app-name>/<service-name>
+
+When using the Guilloine application however, it will always be available at the following site contextual path:
+
+Application:: https://mysite.com/_/com.enonic.app.guillotine/graphql
+
+Also, Guillotine will always provide an API, URL generation, and access to content based on it's contextual site. This is explained in detail below:
+
+=== Context
+
+All XP sites can be accessed through an internal URL pattern.
+This pattern combined, provides what we call the context.
+
+For instance, a typical internal site URL may look like this:
+
+http://localhost:8080/site/default/draft/path-to/mysite
+
+It consists of the following elements:
+
+<scheme>://<host>:<port>/<engine>/<project>/<branch>/<sitepath>
+
+Every part of this URL composes the context. In our case, we are specifically interested in the project, branch and sitepath.
+
+Project:: Determines the underlying CMS repo being accessed
+Branch:: Determines branch: Allowed values are 'draft' or 'master' (where master represents the published data set)
+Sitepath:: Must match the path to the specific site to access
+
+Using different project, branch and site path enable us to access different sites. This enables you to use Guillotine both for the draft content (i.e. for connecting it with a preview application), or the live content.
+
+== Vhosts
+
+Since any XP instance may contain multiple sites, vhosts provide a way of exposing your APIs through a "nice" URL.
+
+As an example, `mysite.com` may be configured to point to the internal path `/site/default/master/path-to/mysite` - this way end-users will only see mysite.com, but internally the entire context is still available and in use.
+
+Also, `draft.mysite.com` may point to `/site/default/draft/path-to/mysite` - and be secured or exposed only to internal preview applications.
+
+For more details about vhosts, check out the https://developer.enonic.com/docs/xp/stable/deployment/vhosts[XP documentation]
+
+
+== GraphQL Playground
+
+The Guillotine app ships with an embedded GraphQL browser called GraphQL Playground. This enables you to instantly access and communicate with the API. When setting up Guillotine as a library, you can choose to embed GraphQL playground or not.
+
+NOTE: We recommend embedding a GraphQL browser with the API, as this greatly simplifies developers access to and use of the API.
+
+== Playground interface
+
+* The field 'Service Location' specifies the location of the GraphQL service.
+* The left panel allows you to edit your graphQL query
+* The center panel displays the result of the query execution
+* The right panel is used to display a documentation generated from the GraphQL API.
+
+=== Sample query
+
+* Write the query below inside the left panel.
++
+This query can be read as: Retrieve the display name and type of the current content.
+* Click on the query execution button above
+* The service response is displayed in the center panel
+
+----
+{
+  guillotine {
+    get {
+      displayName
+      type
+    }
+  }
+}
+----
+
+image::images/graphiql-example.png[Example,1024,612]
+
+== Sample subscription
+
+Guillotine also enables you to use GraphQL subscription in order to listen to events from the server.
+
+The subscriptions are implemented using Websockets, providing instant and high performance streaming of events over HTTP.
+
+
+TODO Sample
+
+
+== Accessing GraphQL with Javascript
+
+To use your GraphQL service, your client will send all its requests to the same service. The service is expecting to receive a POST request with inside its body:
+
+* A mandatory "query" String
+* An optional "variables" Object
+
+.Example: Generate the service URL from a controller
+[source,javascript]
+----
+var portalLib = require('/lib/xp/portal');
+var graphqlServiceUrl = portalLib.serviceUrl({
+    service: 'graphql',
+    application: 'com.enonic.app.guillotine' // <1>
+});
+----
+<1> Remove this line if you are using the guillotine library
+
+.Example: Fetch data from a javascript client
+[source,javascript]
+----
+const query = `query($path:ID!){
+    guillotine {
+        get(key:$path) {
+            displayName
+            type
+        }
+    }
+}`;
+
+const variables = {
+    'path': '/mysite/mycontentpath'
+};
+
+fetch('{{graphqlServiceUrl}}', {
+    method: 'POST',
+    body: JSON.stringify({
+        query: query,
+        variables: variables
+    }),
+    credentials: 'same-origin'
+})
+    .then(response => response.json())
+    .then(console.log);
+----
+
+== Using the API
+
+At the root of the default Guillotine schema is a type `Query` with a field `guillotine` of type `HeadlessCms`.
+The `HeadlessCms` type gathers fields allowing to retrieve contents or related data.
+
+=== Content
+
+The type `Content` is an interface with multiple implementations generated from built-in content types but also from content types defined by your application.
+All types implementing `Content` share the same fields at the exception of the field `data` defined for each implementation type.
+
+=== Relations
+
+Multiple relations are generated to allow to navigate between contents.
+By default, each content has the following relations:
+
+* parent: Link to the parent content 
+* children: Link to the child contents
+* site: Link to the nearest site content
+
+Moreover, every ContentSelector, MediaUploader, AttachmentUploader or ImageSelector defined in your content type form will 
+be converted to a link to the related content(s).
+
+.Query example: Retrieve the display name of the current content and the display name of its direct children
+----
+{
+  guillotine {
+    get {
+      displayName
+      children {
+        displayName
+      }
+    }
+  }
+}
+----
+
+
+.Query example: Retrieve the blog posts. For each post, return its display name and the display name of the related author
+----
+{
+  guillotine {
+    query(contentTypes:"com.enonic.app.myapp:post") {
+      displayName
+      ... on com_enonic_app_myapp_Post {
+        data {          
+          author {
+            displayName
+          }
+        }
+      }
+    }
+  }
+}
+----
+
+=== Image
+
+Enonic XP can edit images at runtime.
+Guillotine uses this functionality by generating, on every image, a field "imageUrl" generating a URL pointing to the processed image.
+
+
+
+.*Example: Scaled Image URL* - Retrieve the image contents and generate absolute URLs to these images cropped to 800x200px
+----
+{
+  guillotine {
+    query(contentTypes:"media:image") {
+      displayName
+      ... on media_Image {
+        imageUrl(scale:"block(800,200)",type:absolute)
+      }
+    }
+  }
+}
+----
+
+=== HTML
+
+HTML fields are generated with a parameter "processHtml" allowing to replace abstract internal links by generated URLs. 
+
+.*Example: Process HTML* - Retrieve the Superhero blog posts. For each post, return its author display name, tags and processed content.
+----
+{
+  guillotine {
+    query(contentTypes:"com.enonic.app.myapp:post") {
+      ... on com_enonic_app_myapp_Post {
+        data {
+          author {
+            displayName
+          }
+          tags
+          post(processHtml:{type:absolute})
+        }
+      }
+    }
+  }
+}
+----
+
+== link:custom.adoc[Customizing the schema]
+
+== link:api.adoc[Guillotine API]

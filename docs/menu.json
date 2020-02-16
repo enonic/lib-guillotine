@@ -1,12 +1,24 @@
 {
   "menuItems": [
     {
+      "title": "Guillotine App",
+      "document": "application"
+    },
+    {
+      "title": "Guillotine Lib",
+      "document": "library"
+    },
+    {
+      "title": "Usage",
+      "document": "usage"
+    },
+    {
       "title": "Guillotine API",
       "document": "api"
     },
     {
-      "title": "Customizing the schema",
-      "document": "custom"
+      "title": "Advanced topics",
+      "document": "advanced"
     }
   ]
 }

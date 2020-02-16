@@ -1,0 +1,23 @@
+= Guillotine Application 
+
+This section describes how to install and use Guillotine as an XP application.
+
+== Step 1: Installation
+
+* Open the admin tool "Applications"
+* Search for the "guillotine" application
+* Click on "install"
+
+image::images/installation.png[Installation,768,384]
+
+== Step 2: Configuration
+
+* Open the admin tool "Content Studio"
+* Edit your site
+* Add the application "Guillotine"
+
+You now have a GraphQL endpoint!
+
+image::images/configuration.png[Installation,768,576]
+
+==

@@ -1,0 +1,12 @@
+{
+    "versions": [
+        {
+            "label": "stable",
+            "checkout": "master"
+        },
+        {
+            "label": "2.x",
+            "checkout": "d89cc3ee3b1116e0496be6deebba41a0b72a9869"
+        }
+    ]
+  }
