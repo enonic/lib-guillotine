@@ -1,21 +1,20 @@
-var graphQlConnectionLib = require('/lib/graphql-connection');
-var contentLib = require('/lib/xp/content');
-var contextLib = require('/lib/xp/context');
-var nodeLib = require('/lib/xp/node');
-var portalLib = require('/lib/xp/portal');
+const graphQlConnectionLib = require('/lib/graphql-connection');
+const contentLib = require('/lib/xp/content');
+const contextLib = require('/lib/xp/context');
+const nodeLib = require('/lib/xp/node');
+const portalLib = require('/lib/xp/portal');
 
-var aclTypesLib = require('./acl-types');
-var pageTypesLib = require('./page-types');
-var formTypesLib = require('./form-types');
-var genericContentTypesLib = require('./generic-content-types');
+const aclTypesLib = require('/lib/guillotine/generic/acl-types');
+const pageTypesLib = require('/lib/guillotine/generic/page-types');
+const formTypesLib = require('/lib/guillotine/generic/form-types');
+const genericContentTypesLib = require('/lib/guillotine/generic/generic-content-types');
 
-var graphQlLib = require('../graphql');
-var securityLib = require('../security');
-var validationLib = require('../validation');
-var utilLib = require('../util');
+const graphQlLib = require('/lib/guillotine/graphql');
+const securityLib = require('/lib/guillotine/util/security');
+const validationLib = require('/lib/guillotine/util/validation');
+const utilLib = require('/lib/guillotine/util/util');
 
-
-exports.generateGenericContentFields = function (context) {
+function generateGenericContentFields(context) {
     return {
         _id: {
             type: graphQlLib.nonNull(graphQlLib.GraphQLID)
@@ -25,6 +24,11 @@ exports.generateGenericContentFields = function (context) {
         },
         _path: {
             type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+        },
+        _references: {
+            type: graphQlLib.list(graphQlLib.reference('Content')),
+            resolve: (env) => contentLib.getOutboundDependencies({key: env.source._id})
+                .map(id => contentLib.get({key: id}))
         },
         creator: {
             type: context.types.principalKeyType,
@@ -61,6 +65,10 @@ exports.generateGenericContentFields = function (context) {
         },
         type: {
             type: graphQlLib.GraphQLString
+        },
+        contentType: {
+            type: graphQlLib.reference('ContentType'),
+            resolve: (env) => contentLib.getType(env.source.type)
         },
         displayName: {
             type: graphQlLib.GraphQLString
@@ -233,14 +241,14 @@ exports.generateGenericContentFields = function (context) {
             }
         }
     };
-};
+}
 
-exports.createGenericTypes = function (context) {
+function createGenericTypes(context) {
 
     aclTypesLib.generateTypes(context);
-    pageTypesLib.generateTypes(context);
-    formTypesLib.generateTypes(context);
     genericContentTypesLib.generateTypes(context);
+    formTypesLib.generateTypes(context);
+    pageTypesLib.generateTypes(context);
 
     context.types.publishInfoType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PublishInfo'),
@@ -337,6 +345,10 @@ exports.createGenericTypes = function (context) {
             form: {
                 type: graphQlLib.list(context.types.formItemType)
             },
+            formAsJson: {
+                type: graphQlLib.GraphQLString,
+                resolve: (env) => JSON.stringify(env.source.form)
+            },
             getInstances: {
                 type: graphQlLib.list(graphQlLib.reference('Content')),
                 args: {
@@ -403,6 +415,9 @@ exports.createGenericTypes = function (context) {
         fields: exports.generateGenericContentFields(context)
     });
 };
+
+exports.generateGenericContentFields = generateGenericContentFields;
+exports.createGenericTypes = createGenericTypes;
 
 
 

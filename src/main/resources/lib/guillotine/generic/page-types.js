@@ -1,12 +1,14 @@
-var contentLib = require('/lib/xp/content');
-var contextLib = require('/lib/xp/context');
-var nodeLib = require('/lib/xp/node');
-var portalLib = require('/lib/xp/portal');
+const contentLib = require('/lib/xp/content');
+const contextLib = require('/lib/xp/context');
+const nodeLib = require('/lib/xp/node');
+const portalLib = require('/lib/xp/portal');
 
-var graphQlLib = require('../graphql');
-var utilLib = require('../util');
+const graphQlLib = require('/lib/guillotine/graphql');
+const pageTypesLib = require('/lib/guillotine/dynamic/page-types');
+const utilLib = require('/lib/guillotine/util/util');
 
-exports.generateTypes = function (context) {
+function generateTypes(context) {
+    pageTypesLib.createPageComponentDataConfigType(context);
 
     context.types.componentTypeType = graphQlLib.createEnumType({
         name: context.uniqueName('ComponentType'),
@@ -31,6 +33,9 @@ exports.generateTypes = function (context) {
             customized: {
                 type: graphQlLib.GraphQLBoolean
             },
+            config: context.types.PageComponentDataConfigType && {
+                type: context.types.PageComponentDataConfigType
+            },
             configAsJson: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
@@ -53,6 +58,9 @@ exports.generateTypes = function (context) {
             descriptor: {
                 type: graphQlLib.nonNull(graphQlLib.GraphQLString)
             },
+            config: context.types.LayoutComponentDataConfigType && {
+                type: context.types.LayoutComponentDataConfigType
+            },
             configAsJson: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
@@ -69,6 +77,9 @@ exports.generateTypes = function (context) {
         fields: {
             descriptor: {
                 type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+            },
+            config: context.types.PartComponentDataConfigType && {
+                type: context.types.PartComponentDataConfigType
             },
             configAsJson: {
                 type: graphQlLib.GraphQLString,
@@ -157,7 +168,7 @@ exports.generateTypes = function (context) {
             }
         }
     });
-};
+}
 
 function resolvePageTemplate(content) {
     if ('portal:page-template' === content.type) {
@@ -260,6 +271,7 @@ function prefixContentComponentPaths(container, prefix) {
     }
 }
 
+exports.generateTypes = generateTypes;
 exports.resolvePageTemplate = resolvePageTemplate;
 exports.resolvePageTemplateId = resolvePageTemplateId;
 exports.inlineFragmentComponents = inlineFragmentComponents;

@@ -1,11 +1,7 @@
-var graphQlLib = require('/lib/graphql');
+const graphQlLib = require('/lib/graphql');
 
-for (var exportKey in graphQlLib) {
-    exports[exportKey] = graphQlLib[exportKey];
-}
-
-exports.createObjectType = function (context, params) {
-    var creationCallback = context.options.creationCallbacks && context.options.creationCallbacks[params.name];
+function createObjectType(context, params) {
+    const creationCallback = context.options.creationCallbacks && context.options.creationCallbacks[params.name];
     if (creationCallback) {
         creationCallback(context, params);
     }
@@ -13,5 +9,11 @@ exports.createObjectType = function (context, params) {
         context.options.creationCallback(context, params);
     }
     return graphQlLib.createObjectType(params);
-};
+}
+
+for (var exportKey in graphQlLib) {
+    exports[exportKey] = graphQlLib[exportKey];
+}
+
+exports.createObjectType = createObjectType;
 

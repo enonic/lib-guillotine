@@ -1,14 +1,14 @@
-var contentLib = require('/lib/xp/content');
-var portalLib = require('/lib/xp/portal');
-var graphQlConnectionLib = require('/lib/graphql-connection');
+const contentLib = require('/lib/xp/content');
+const portalLib = require('/lib/xp/portal');
+const graphQlConnectionLib = require('/lib/graphql-connection');
 
-var graphQlLib = require('./graphql');
-var contentTypesLib = require('./content-types');
-var securityLib = require('./security');
-var validationLib = require('./validation');
-var wildcardLib = require('./wildcard');
+const graphQlLib = require('/lib/guillotine/graphql');
+const contentTypesLib = require('/lib/guillotine/dynamic/content-types');
+const securityLib = require('/lib/guillotine/util/security');
+const validationLib = require('/lib/guillotine/util/validation');
+const wildcardLib = require('/lib/guillotine/util/wildcard');
 
-exports.createContentApiType = function (context) {
+function createContentApiType(context) {
     return graphQlLib.createObjectType(context, {
         name: context.uniqueName('HeadlessCms'),
         description: 'Headless CMS',
@@ -178,3 +178,5 @@ function getContent(env, context) {
         return portalLib.getContent();
     }
 }
+
+exports.createContentApiType = createContentApiType;

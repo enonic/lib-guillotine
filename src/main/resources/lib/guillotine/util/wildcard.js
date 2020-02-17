@@ -1,5 +1,3 @@
-const portalLib = require('/lib/xp/portal');
-
 const siteRegex = /\$\{site\}/gi;
 
 function replaceSitePath(path, sitePath) {
