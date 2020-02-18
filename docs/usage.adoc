@@ -9,13 +9,13 @@ Compared to RESTful APIs, GraphQL is strongly typed and self-documented. It also
 
 http://graphql.org/learn[Learn more about GraphQL...]
 
-=== Sites
+== Sites
 
 Sites in Enonic XP represent the main container of content. Like any other item in the CMS, sites are also content.
 
 In addition to being a special container of content, your may also add applications to sites. Applications define the content types, and potentially other capabilities that will be added to the site. 
 
-=== Context
+== Context
 
 All XP sites have a specific endpoint that can be accessed through an internal URL pattern. This pattern combined, provides what we call the context.
 
@@ -52,7 +52,7 @@ The Guillotine app ships with an embedded GraphQL browser called GraphQL Playgro
 
 NOTE: We recommend embedding a GraphQL browser with the API, as this greatly simplifies developers access to and use of the API.
 
-=== Playground interface
+=== Interface
 
 * The field 'Service Location' specifies the location of the GraphQL service.
 * The left panel allows you to edit your graphQL query
