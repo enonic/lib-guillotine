@@ -1,12 +1,8 @@
 {
   "menuItems": [
     {
-      "title": "Application",
-      "document": "application"
-    },
-    {
-      "title": "Library",
-      "document": "library"
+      "title": "Deployment",
+      "document": "deployment"
     },
     {
       "title": "Access and use",

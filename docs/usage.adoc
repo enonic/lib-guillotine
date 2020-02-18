@@ -5,33 +5,20 @@ This section describes how access and use the GraphQL API
 == Introduction
 
 GraphQL is a query language developed by Facebook. 
-This technology allows Guillotine to provide a single and exhaustive API while allowing you to retrieve the content you need in few requests, and with minimal overhead.
+Compared to RESTful APIs, GraphQL is strongly typed and self-documented. It also enable client developers to request exactly the information required in as few requests as possible.
 
 http://graphql.org/learn[Learn more about GraphQL...]
 ====
 
-== Access
+=== Sites
 
-Depending on how you deployed Guillotine, you will now have an accessible endpoint, relative to your specific site and context.
+Sites in Enonic XP represent the main container of content. Like any other item in the CMS, sites are also content.
 
-=== Endpoints
-
-When using the Guillotine library, you control where and how your API is exposed. For instance:
-
-Filter:: i.e. https://mysite.com (GraphQL uses POST method)
-Path Mapping:: i.e. https://mysite.com/headless
-Service:: i.e. https://mysite.com/_/service/<app-name>/<service-name>
-
-When using the Guilloine application however, it will always be available at the following site contextual path:
-
-Application:: https://mysite.com/_/com.enonic.app.guillotine/graphql
-
-Also, Guillotine will always provide an API, URL generation, and access to content based on it's contextual site. This is explained in detail below:
+In addition to being a special container of content, your may also add applications to sites. Applications define the content types, and potentially other capabilities that will be added to the site. 
 
 === Context
 
-All XP sites can be accessed through an internal URL pattern.
-This pattern combined, provides what we call the context.
+All XP sites have a specific endpoint that can be accessed through an internal URL pattern. This pattern combined, provides what we call the context.
 
 For instance, a typical internal site URL may look like this:
 
@@ -47,7 +34,7 @@ Project:: Determines the underlying CMS repo being accessed
 Branch:: Determines branch: Allowed values are 'draft' or 'master' (where master represents the published data set)
 Sitepath:: Must match the path to the specific site to access
 
-Using different project, branch and site path enable us to access different sites. This enables you to use Guillotine both for the draft content (i.e. for connecting it with a preview application), or the live content.
+Using different project, branch and site path enable us to access different sites, in different modes. For instance accessing the `draft` content (i.e. for a preview application), or for accessing the "live" content of the `master` branch.
 
 == Vhosts
 
@@ -66,7 +53,7 @@ The Guillotine app ships with an embedded GraphQL browser called GraphQL Playgro
 
 NOTE: We recommend embedding a GraphQL browser with the API, as this greatly simplifies developers access to and use of the API.
 
-== Playground interface
+=== Playground interface
 
 * The field 'Service Location' specifies the location of the GraphQL service.
 * The left panel allows you to edit your graphQL query
@@ -81,10 +68,12 @@ This query can be read as: Retrieve the display name and type of the current con
 * Click on the query execution button above
 * The service response is displayed in the center panel
 
+.getSite
+[source,graphQL]
 ----
 {
   guillotine {
-    get {
+    getSite {
       displayName
       type
     }
@@ -92,16 +81,18 @@ This query can be read as: Retrieve the display name and type of the current con
 }
 ----
 
-image::images/graphiql-example.png[Example,1024,612]
 
-== Sample subscription
+=== Sample subscription
 
 Guillotine also enables you to use GraphQL subscription in order to listen to events from the server.
 
 The subscriptions are implemented using Websockets, providing instant and high performance streaming of events over HTTP.
 
-
-TODO Sample
+.Listen to modify events
+[source,graphQL]
+----
+subscription{newEvent(type:"node.modify")}
+----
 
 
 == Accessing GraphQL with Javascript
