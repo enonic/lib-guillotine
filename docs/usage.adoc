@@ -8,7 +8,6 @@ GraphQL is a query language developed by Facebook.
 Compared to RESTful APIs, GraphQL is strongly typed and self-documented. It also enable client developers to request exactly the information required in as few requests as possible.
 
 http://graphql.org/learn[Learn more about GraphQL...]
-====
 
 === Sites
 

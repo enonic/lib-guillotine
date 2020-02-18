@@ -5,16 +5,16 @@
       "document": "deployment"
     },
     {
-      "title": "Access and use",
+      "title": "Usage",
       "document": "usage"
-    },
-    {
-      "title": "Guillotine API",
-      "document": "api"
     },
     {
       "title": "Advanced topics",
       "document": "advanced"
+    },
+    {
+      "title": "API",
+      "document": "api"
     }
   ]
 }
