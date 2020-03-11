@@ -16,7 +16,7 @@ Including the ability to follow references, child items and access media directl
 |Dependency
 
 |4.2.0
-|7.0.0
+|7.2.0
 |com.enonic.lib:lib-guillotine:4.2.0
 
 |4.1.1
