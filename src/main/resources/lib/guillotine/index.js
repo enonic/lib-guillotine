@@ -16,8 +16,10 @@ function createSchema(options) {
 }
 
 function createContentApi(context) {
+    context = context || createContext();
+
     createTypes(context);
-    return contentApiLib.createContentApiType(context || createContext());
+    return contentApiLib.createContentApiType(context);
 }
 
 function createTypes(context) {

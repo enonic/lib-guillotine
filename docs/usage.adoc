@@ -159,7 +159,7 @@ By default, each content has the following relations:
 * children: Link to the child contents
 * site: Link to the nearest site content
 
-Moreover, every ContentSelector, MediaUploader, AttachmentUploader or ImageSelector defined in your content type form will 
+Moreover, every ContentSelector, MediaSelector or ImageSelector defined in your content type form will
 be converted to a link to the related content(s).
 
 .Query example: Retrieve the display name of the current content and the display name of its direct children

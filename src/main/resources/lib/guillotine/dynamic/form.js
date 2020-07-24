@@ -1,4 +1,5 @@
 const contentLib = require('/lib/xp/content');
+const portalLib = require('/lib/xp/portal');
 
 const namingLib = require('/lib/guillotine/util/naming');
 const utilLib = require('/lib/guillotine/util/util');
@@ -17,7 +18,7 @@ function getFormItems(form) {
             });
             return;
         }
-        if ('Input' == formItem.formItemType && 'SiteConfigurator' == formItem.inputType) {
+        if ('Input' === formItem.formItemType && 'SiteConfigurator' === formItem.inputType) {
             return;
         }
         formItems.push(formItem);
@@ -48,7 +49,7 @@ function generateFormItemObjectType(context, namePrefix, formItem) {
     }
 
     formItemObjectType = formItemObjectType || graphQlLib.GraphQLString;
-    if (formItem.occurrences && formItem.occurrences.maximum == 1) {
+    if (formItem.occurrences && formItem.occurrences.maximum === 1) {
         return formItemObjectType;
     } else {
         return graphQlLib.list(formItemObjectType)
@@ -74,7 +75,7 @@ function generateItemSetObjectType(context, namePrefix, itemSet) {
 function generateInputObjectType(context, input) {
     switch (input.inputType) {
     case 'AttachmentUploader':
-        return graphQlLib.reference('Content');
+        return graphQlLib.GraphQLString;
     case 'CheckBox':
         return graphQlLib.GraphQLBoolean;
     case 'ComboBox':
@@ -131,8 +132,8 @@ function generateOptionSetObjectType(context, namePrefix, optionSet) {
         description: optionSet.label,
         fields: {
             _selected: {
-                type: optionSet.selection.maximum == 1 ? optionSetEnum : graphQlLib.list(optionSetEnum),
-                resolve: optionSet.selection.maximum == 1 ? undefined : function (env) { //TODO Fix
+                type: optionSet.selection.maximum === 1 ? optionSetEnum : graphQlLib.list(optionSetEnum),
+                resolve: optionSet.selection.maximum === 1 ? undefined : function (env) { //TODO Fix
                     return utilLib.forceArray(env.source._selected);
                 }
             }
@@ -171,28 +172,28 @@ function generateOptionObjectType(context, namePrefix, option) {
 
 function generateFormItemArguments(context, formItem) {
     var args = {};
-    if (!formItem.occurrences || formItem.occurrences.maximum != 1) {
+    if (!formItem.occurrences || formItem.occurrences.maximum !== 1) {
         args.offset = graphQlLib.GraphQLInt;
         args.first = graphQlLib.GraphQLInt;
     }
-    if ('Input' == formItem.formItemType && 'HtmlArea' == formItem.inputType) {
+    if ('Input' === formItem.formItemType && 'HtmlArea' === formItem.inputType) {
         args.processHtml = context.types.processHtmlType;
     }
     return args;
 }
 
 function generateFormItemResolveFunction(formItem) {
-    if (formItem.occurrences && formItem.occurrences.maximum == 1) {
+    if (formItem.occurrences && formItem.occurrences.maximum === 1) {
         return function (env) {
-            var value = env.source[formItem.name];
+            let value = env.source[formItem.name];
 
             if (value && env.args.processHtml) {
                 value = portalLib.processHtml({value: value, type: env.args.processHtml.type});
             }
-            if (value && 'Input' == formItem.formItemType &&
-                ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !==
-                -1) {
-                value = contentLib.get({key: value});
+            if (value && 'Input' === formItem.formItemType) {
+                if (['ContentSelector', 'MediaUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !== -1) {
+                    value = contentLib.get({key: value});
+                }
             }
             return value;
         };
@@ -208,14 +209,14 @@ function generateFormItemResolveFunction(formItem) {
                     return portalLib.processHtml({value: value});
                 });
             }
-            if ('Input' == formItem.formItemType &&
-                ['ContentSelector', 'MediaUploader', 'AttachmentUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !==
-                -1) {
-                values = values.map(function (value) {
-                    return contentLib.get({key: value});
-                }).filter(function (content) {
-                    return content != null
-                });
+            if ('Input' === formItem.formItemType) {
+                if (['ContentSelector', 'MediaUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !== -1) {
+                    values = values.map(function (value) {
+                        return contentLib.get({key: value});
+                    }).filter(function (content) {
+                        return content != null
+                    });
+                }
             }
             return values;
         };

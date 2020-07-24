@@ -185,7 +185,7 @@ function generateGenericContentFields(context) {
                 } else {
                     var parentPath = env.source._path.substr(0, lastSlashIndex);
                     var parent = contentLib.get({key: parentPath});
-                    return securityLib.filterForbiddenContent(parent);
+                    return securityLib.filterForbiddenContent(parent, context);
                 }
             }
         },

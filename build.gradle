@@ -15,19 +15,25 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'jacoco'
     id 'maven-publish'
     id 'com.enonic.defaults' version '2.0.1'
     id 'com.enonic.xp.base' version '2.0.0'
 }
 
 dependencies {
+    compileOnly "com.enonic.xp:script-api:${xpVersion}"
+
     compile "com.enonic.xp:lib-auth:${xpVersion}"
     compile "com.enonic.xp:lib-content:${xpVersion}"
     compile "com.enonic.xp:lib-context:${xpVersion}"
     compile "com.enonic.xp:lib-event:${xpVersion}"
     compile "com.enonic.xp:lib-node:${xpVersion}"
     compile "com.enonic.xp:lib-portal:${xpVersion}"
-    compile 'com.enonic.lib:lib-graphql:1.1.1'
+    compile 'com.enonic.lib:lib-graphql:1.1.2'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+    testImplementation "com.enonic.xp:testing:${xpVersion}"
 }
 
 repositories {
@@ -36,13 +42,21 @@ repositories {
     xp.enonicRepo()
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
+
+test {
+    useJUnitPlatform()
+}
 
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'org.aim42.htmlSanityCheck'
-
-
-
-
 
 asciidoctor {
     sourceDir = file('docs')
