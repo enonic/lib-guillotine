@@ -6,7 +6,7 @@ function createInputTypes(context) {
         description: 'Process HTML input type.',
         fields: {
             'type': {
-                type: context.types.urlTypeType
+                type: context.types.urlType
             }
         }
     })

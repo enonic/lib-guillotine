@@ -71,7 +71,7 @@ function addMediaFields(context, createContentTypeTypeParams) {
         type: graphQlLib.GraphQLString,
         args: {
             download: graphQlLib.GraphQLBoolean,
-            type: context.types.urlTypeType,
+            type: context.types.urlType,
             params: graphQlLib.GraphQLString
         },
         resolve: function (env) {
@@ -94,7 +94,7 @@ function addImageFields(context, createContentTypeTypeParams) {
             background: graphQlLib.GraphQLString,
             format: graphQlLib.GraphQLString,
             filter: graphQlLib.GraphQLString,
-            type: context.types.urlTypeType,
+            type: context.types.urlType,
             params: graphQlLib.GraphQLString
         },
         resolve: function (env) {

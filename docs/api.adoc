@@ -163,7 +163,7 @@ Interface of all contents.
 |publish: <<PublishInfo>>
 |Publication information
 
-|pageUrl(type: <<UrlTypeType>>, params: String): String
+|pageUrl(type: <<UrlType>>, params: String): String
 |Util field to generate a URL pointing to the content
 
 |site: portal_Site
@@ -633,7 +633,7 @@ Enum values: ItemSet
 , Input
 , OptionSet
 
-=== UrlTypeType
+=== UrlType
 
 Enum values: server
 , absolute
