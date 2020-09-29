@@ -1,4 +1,4 @@
-const contentLib = require('/lib/xp/content');
+const contentLib = require('/lib/xp/content-graphql');
 const portalLib = require('/lib/xp/portal');
 
 const graphQlLib = require('/lib/guillotine/graphql');
