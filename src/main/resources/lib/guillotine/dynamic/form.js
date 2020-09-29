@@ -66,6 +66,7 @@ function generateItemSetObjectType(context, namePrefix, itemSet) {
     getFormItems(itemSet.items).forEach(function (item) {
         createItemSetTypeParams.fields[namingLib.generateCamelCase(item.name)] = {
             type: generateFormItemObjectType(context, namePrefix, item),
+            args: generateFormItemArguments(context, item),
             resolve: generateFormItemResolveFunction(item)
         }
     });
