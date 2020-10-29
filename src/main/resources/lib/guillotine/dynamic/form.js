@@ -154,7 +154,8 @@ function generateOptionSetObjectType(context, namePrefix, optionSet) {
 function generateOptionSetEnum(context, optionSet, optionSetName) {
     var enumValues = {};
     optionSet.options.forEach(function (option) {
-        enumValues[option.name] = option.name;
+        let optionName = namingLib.generateCamelCase(option.name);
+        enumValues[optionName] = option.name;
     });
     return graphQlLib.createEnumType({
         name: context.uniqueName(optionSetName + '_OptionEnum'),
