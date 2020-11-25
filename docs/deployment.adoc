@@ -28,14 +28,14 @@ image::images/configuration.png[Installation,768,576]
 
 Once installed, your endpoint will be available at a fixed location contextual to your site: /_/com.enonic.app.guillotine/graphql
 
-Example when deployed with vhost: https://mysite.com/_/com.enonic.app.guillotine/graphql
+Example when deployed with vhost: https://mysite.com/_/service/com.enonic.app.guillotine/graphql
 
 Guillotine will always provide an API, URL generation, and access to content based on it's contextual site. This is explained in detail below:
 
 
 == Embedded mode
 
-By embedding Guillotine in your application you get full control over the API. This is generally the preferred approach, and is also what you get when using the https://developer.enonic.com/templates/headless-cms[Headless CMS starter]
+By embedding Guillotine in your application you get full control over the API. This is generally the preferred approach, and is also what you get when using the https://market.enonic.com/vendors/enonic/headless-cms-starter[Headless CMS starter]
 
 Follow the instructions below to embed Guillotine in your application:
 
@@ -53,7 +53,7 @@ dependencies {
 
 === Creating an endpoint
  
-Unlike most headless CMSs, Enonic XP is also capable of running custom code - for instance by acting as a traditional CMS. We'll make use of this capability to deploy our API.
+Unlike most headless CMSs, Enonic XP is also capable of running custom code - for instance by acting as a traditional CMS. We'll make use of this capability to deploy the headless API together with our application.
 
 When using the Guillotine library, you control where and how your API is exposed. For instance:
 
