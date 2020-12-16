@@ -2,7 +2,7 @@ const formLib = require('/lib/guillotine/dynamic/form');
 const testingLib = require('/lib/xp/testing');
 
 exports.testGenerateFormItemObjectType = function () {
-    var objectType = formLib.generateFormItemObjectType({}, 'namePrefix', {
+    let objectType = formLib.generateFormItemObjectType({}, 'namePrefix', {
         inputType: 'AttachmentUploader',
         formItemType: 'Input',
         occurrences: {
@@ -10,5 +10,5 @@ exports.testGenerateFormItemObjectType = function () {
         }
     });
 
-    testingLib.assertEquals('String', objectType.name);
+    testingLib.assertEquals('Attachment', objectType.name);
 };

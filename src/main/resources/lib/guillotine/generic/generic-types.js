@@ -281,6 +281,23 @@ function createGenericTypes(context) {
             },
             mimeType: {
                 type: graphQlLib.GraphQLString
+            },
+            attachmentUrl: {
+                type: graphQlLib.GraphQLString,
+                args: {
+                    download: graphQlLib.GraphQLBoolean,
+                    type: context.types.urlTypeType,
+                    params: graphQlLib.GraphQLString
+                },
+                resolve: function (env) {
+                    return portalLib.attachmentUrl({
+                        id: env.source['__nodeId'],
+                        name: env.source.name,
+                        download: env.args.download,
+                        type: env.args.type,
+                        params: env.args.params && JSON.parse(env.args.params)
+                    });
+                }
             }
         }
     });
