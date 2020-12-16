@@ -573,6 +573,9 @@ Direct Known Subtypes: FormInput
 |mimeType: String
 |Attachment mime type
 
+|attachmentUrl: String
+|Attachment URL
+
 |===
 
 === PublishInfo

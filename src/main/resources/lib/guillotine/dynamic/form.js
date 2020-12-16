@@ -76,7 +76,7 @@ function generateItemSetObjectType(context, namePrefix, itemSet) {
 function generateInputObjectType(context, input) {
     switch (input.inputType) {
     case 'AttachmentUploader':
-        return graphQlLib.GraphQLString;
+        return graphQlLib.reference('Attachment');
     case 'CheckBox':
         return graphQlLib.GraphQLBoolean;
     case 'ComboBox':
@@ -193,8 +193,23 @@ function generateFormItemResolveFunction(formItem) {
                 value = portalLib.processHtml({value: value, type: env.args.processHtml.type});
             }
             if (value && 'Input' === formItem.formItemType) {
-                if (['ContentSelector', 'MediaUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !== -1) {
-                    value = contentLib.get({key: value});
+                if ('AttachmentUploader' === formItem.inputType) {
+                    let attachments = contentLib.getAttachments(env.source['__nodeId']);
+                    if (attachments && attachments[value]) {
+                        let attachment = attachments[value];
+                        attachment['__nodeId'] = env.source['__nodeId'];
+
+                        value = attachment;
+                    }
+                } else if (['ContentSelector', 'MediaUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !== -1) {
+                    let content = contentLib.get({key: value});
+                    if (content && content.hasOwnProperty('attachments') && Object.keys(content.attachments).length > 0) {
+                        Object.keys(content.attachments).forEach((key) => {
+                            content.attachments[key]['__nodeId'] = content._id;
+                        });
+
+                        value = content;
+                    }
                 }
             }
             return value;
@@ -202,7 +217,7 @@ function generateFormItemResolveFunction(formItem) {
     } else {
         return function (env) {
             validationLib.validateArguments(env.args);
-            var values = utilLib.forceArray(env.source[formItem.name]);
+            let values = utilLib.forceArray(env.source[formItem.name]);
             if (env.args.offset != null || env.args.offset != null) {
                 return values.slice(env.args.offset, env.args.first);
             }
@@ -212,9 +227,26 @@ function generateFormItemResolveFunction(formItem) {
                 });
             }
             if ('Input' === formItem.formItemType) {
-                if (['ContentSelector', 'MediaUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !== -1) {
+                if ('AttachmentUploader' === formItem.inputType) {
+                    let attachments = contentLib.getAttachments(env.source['__nodeId']);
+                    values = values.map(function (attachment) {
+                        let attach = attachments[attachment];
+                        if (attach) {
+                            attach['__nodeId'] = env.source['__nodeId'];
+                        }
+                        return attach
+                    }).filter(attachment => {
+                        return attachment != null;
+                    });
+                } else if (['ContentSelector', 'MediaUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !== -1) {
                     values = values.map(function (value) {
-                        return contentLib.get({key: value});
+                        let content = contentLib.get({key: value});
+                        if (content && content.hasOwnProperty('attachments') && Object.keys(content.attachments).length > 0) {
+                            Object.keys(content.attachments).forEach((key) => {
+                                content.attachments[key]['__nodeId'] = content._id;
+                            });
+                        }
+                        return content;
                     }).filter(function (content) {
                         return content != null
                     });
