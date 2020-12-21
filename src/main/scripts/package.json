@@ -1,0 +1,15 @@
+{
+  "name": "guillotine-aggregations-filters-schema",
+  "version": "1.0.0",
+  "description": "Definition for aggregations and filters",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anatol Sialitski",
+  "dependencies": {
+    "apollo-server": "^2.4.8",
+    "graphql": "^14.2.1"
+  }
+}
