@@ -159,7 +159,7 @@ function generateGenericContentFields(context) {
         pageUrl: {
             type: graphQlLib.GraphQLString,
             args: {
-                type: context.types.urlTypeType,
+                type: context.types.urlType,
                 params: graphQlLib.GraphQLString
             },
             resolve: function (env) {
@@ -286,7 +286,7 @@ function createGenericTypes(context) {
                 type: graphQlLib.GraphQLString,
                 args: {
                     download: graphQlLib.GraphQLBoolean,
-                    type: context.types.urlTypeType,
+                    type: context.types.urlType,
                     params: graphQlLib.GraphQLString
                 },
                 resolve: function (env) {
