@@ -7,6 +7,7 @@ const contentTypesLib = require('/lib/guillotine/dynamic/content-types');
 const securityLib = require('/lib/guillotine/util/security');
 const validationLib = require('/lib/guillotine/util/validation');
 const wildcardLib = require('/lib/guillotine/util/wildcard');
+const factoryUtil = require('/lib/guillotine/util/factory');
 
 function createContentApiType(context) {
     return graphQlLib.createObjectType(context, {
@@ -113,49 +114,87 @@ function createContentApiType(context) {
                 }
             },
             query: {
-                type: graphQlLib.list(context.types.contentType),
+                type: context.types.queryResult,
                 args: {
                     query: graphQlLib.GraphQLString,
                     offset: graphQlLib.GraphQLInt,
                     first: graphQlLib.GraphQLInt,
                     sort: graphQlLib.GraphQLString,
-                    contentTypes: graphQlLib.list(graphQlLib.GraphQLString)
+                    contentTypes: graphQlLib.list(graphQlLib.GraphQLString),
+                    aggregations: graphQlLib.list(context.types.aggregationInputType),
+                    filters: graphQlLib.list(context.types.filterInputType)
                 },
                 resolve: function (env) {
-                    validationLib.validateArguments(env.args);
+                    validationLib.validateArgumentsForQueryField(env);
+
                     const query = wildcardLib.replaceSitePath(env.args.query, '/content' + portalLib.getSite()._path);
 
-                    let hits = contentLib.query({
+                    let queryParams = {
                         query: securityLib.adaptQuery(query, context),
                         start: env.args.offset,
                         count: env.args.first,
                         sort: env.args.sort,
                         contentTypes: env.args.contentTypes
-                    }).hits;
+                    };
 
+                    if (env.args.aggregations) {
+                        let aggregations = {};
+                        env.args.aggregations.forEach(aggregation => {
+                            factoryUtil.createAggregation(aggregations, aggregation);
+                        });
+                        queryParams.aggregations = aggregations;
+                    }
+                    if (env.args.filters) {
+                        queryParams.filters = factoryUtil.createFilters(env.args.filters);
+                    }
+
+                    let result = contentLib.query(queryParams);
+
+                    let hits = result.hits;
                     hits.forEach(node => transformNodeIfExistsAttachments(node));
-                    return hits;
+
+                    return {
+                        hits: hits,
+                        aggregationsAsJson: result.aggregations
+                    };
                 }
             },
             queryConnection: {
-                type: context.types.contentConnectionType,
+                type: context.types.queryContentConnectionType,
                 args: {
                     query: graphQlLib.nonNull(graphQlLib.GraphQLString),
                     after: graphQlLib.GraphQLString,
                     first: graphQlLib.GraphQLInt,
                     sort: graphQlLib.GraphQLString,
-                    contentTypes: graphQlLib.list(graphQlLib.GraphQLString)
+                    contentTypes: graphQlLib.list(graphQlLib.GraphQLString),
+                    aggregations: graphQlLib.list(context.types.aggregationInputType),
+                    filters: graphQlLib.list(context.types.filterInputType)
                 },
                 resolve: function (env) {
-                    validationLib.validateArguments(env.args);
+                    validationLib.validateArgumentsForQueryField(env);
+
                     let start = env.args.after ? parseInt(graphQlConnectionLib.decodeCursor(env.args.after)) + 1 : 0;
-                    let queryResult = contentLib.query({
+
+                    let queryParams = {
                         query: securityLib.adaptQuery(env.args.query, context),
                         start: start,
                         count: env.args.first,
                         sort: env.args.sort,
                         contentTypes: env.args.contentTypes
-                    });
+                    };
+
+                    if (env.args.aggregations) {
+                        let aggregations = {};
+                        env.args.aggregations.forEach(aggregation => {
+                            factoryUtil.createAggregation(aggregations, aggregation);
+                        });
+                        queryParams.aggregations = aggregations;
+                    }
+                    if (env.args.filters) {
+                        queryParams.filters = factoryUtil.createFilters(env.args.filters);
+                    }
+
+                    let queryResult = contentLib.query(queryParams);
 
                     let hits = queryResult.hits;
                     hits.forEach(node => transformNodeIfExistsAttachments(node));
@@ -163,7 +202,8 @@ function createContentApiType(context) {
                     return {
                         total: queryResult.total,
                         start: start,
-                        hits: hits
+                        hits: hits,
+                        aggregationsAsJson: queryResult.aggregations
                     };
                 }
             },
