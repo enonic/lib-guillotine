@@ -431,7 +431,61 @@ function createGenericTypes(context) {
         interfaces: [context.types.contentType],
         fields: exports.generateGenericContentFields(context)
     });
-};
+
+    context.types.queryResult = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('QueryResult'),
+        description: 'Query result.',
+        fields: {
+            hits: {
+                type: graphQlLib.list(context.types.contentType)
+            },
+            aggregationsAsJson: {
+                type: graphQlLib.Json
+            }
+        }
+    });
+
+    context.types.queryContentConnectionType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('QueryContentConnection'),
+        description: 'QueryContentConnection',
+        fields: {
+            totalCount: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLInt),
+                resolve: function (env) {
+                    return env.source.total;
+                }
+            },
+            edges: {
+                type: graphQlLib.list(graphQlLib.reference('ContentEdge')),
+                resolve: function (env) {
+                    let hits = env.source.hits;
+                    let edges = [];
+                    for (let i = 0; i < hits.length; i++) {
+                        edges.push({
+                            node: hits[i],
+                            cursor: env.source.start + i
+                        });
+                    }
+                    return edges;
+                }
+            },
+            pageInfo: {
+                type: graphQlLib.reference('PageInfo'),
+                resolve: function (env) {
+                    let count = env.source.hits.length;
+                    return {
+                        startCursor: env.source.start,
+                        endCursor: env.source.start + (count === 0 ? 0 : (count - 1)),
+                        hasNext: (env.source.start + count) < env.source.total
+                    }
+                }
+            },
+            aggregationsAsJson: {
+                type: graphQlLib.Json
+            }
+        }
+    });
+}
 
 exports.generateGenericContentFields = generateGenericContentFields;
 exports.createGenericTypes = createGenericTypes;

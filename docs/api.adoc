@@ -78,8 +78,10 @@ Gathers all content retrieval requests.
  offset: Int,
  first: Int,
  sort: String,
- contentTypes: [String]
- ): [<<Content>>]
+ contentTypes: [String],
+ aggregations: [<<AggregationInput>>],
+ filters: [<<FilterInput>>]
+ ): [<<QueryResult>>]
 |Queries contents
 
 |queryConnection(
@@ -87,8 +89,10 @@ Gathers all content retrieval requests.
  after: String,
  first: Int,
  sort: String,
- contentTypes: [String]
- ): <<ContentConnection>>
+ contentTypes: [String],
+ aggregations: [<<AggregationInput>>],
+ filters: [<<FilterInput>>]
+ ): <<QueryContentConnection>>
 |Queries contents and returns the result as a connection
 
 |getType(name: String!): <<ContentType>>
@@ -163,7 +167,7 @@ Interface of all contents.
 |publish: <<PublishInfo>>
 |Publication information
 
-|pageUrl(type: <<UrlTypeType>>, params: String): String
+|pageUrl(type: <<UrlType>>, params: String): String
 |Util field to generate a URL pointing to the content
 
 |site: portal_Site
@@ -241,6 +245,27 @@ It allows you to :
 
 |===
 
+=== QueryContentConnection
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|totalCount: Int!
+|Total number of related content
+
+|edges: [<<ContentEdge>>]
+|Edge to the related content
+
+|pageInfo: <<PageInfo>>
+|Paging information
+
+|aggregationAsJSON: JSON
+|Result of aggregations
+
+|===
+
 === ContentEdge
 
 ==== Fields
@@ -271,6 +296,21 @@ It allows you to :
 
 |hasNext: Boolean!
 |Has more related contents at end cursor
+
+|===
+
+=== QueryResult
+
+==== Fields
+
+|===
+|Name (Arguments): Type | Description
+
+|hits: [<<Content>>]
+|Related contents
+
+|aggregationAsJson: JSON
+|Result of aggregations
 
 |===
 
@@ -611,6 +651,310 @@ Direct Known Subtypes: FormInput
 
 |===
 
+== Aggregation Input Types
+
+=== AggregationInput
+
+Aggregations allows to extract statistical data from search results. Only one of aggregation field must be not null.
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|name: String!
+|Aggregation name
+
+|subAggregations: [<<AggregationInput>>]
+|Sub aggregations
+
+|terms: <<TermsAggregationInput>>
+|Terms aggregation
+
+|stats: <<StatsAggregationInput>>
+|Stats aggregation
+
+|range: <<RangeAggregationInput>>
+|Range aggregation
+
+|dateRange: <<DateRangeAggregationInput>>
+|DateRange aggregation
+
+|dateHistogram: <<DateHistogramAggregationInput>>
+|DateHistogram aggregation
+
+|getDistance: <<GeoDistanceAggregationInput>>
+|GeoDistance aggregation
+
+|===
+
+
+=== TermsAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|order: String
+|How to order the results, type and direction. Supports _term (Alphabetic ordering of bucket keys) and _count (Numeric ordering of number of document in buckets) types. Default to _term ASC.
+
+|size: Int
+|The number of bucket to return, ordered by the given orderType and orderDirection. Default to 10.
+
+|===
+
+=== StatsAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|===
+
+
+=== RangeAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path.
+
+|ranges: [ <<NumberRangeInput>> ]
+|The range-buckets to create.
+
+|===
+
+
+=== NumberRangeInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|from: Float
+|From-value is included in bucket.
+
+|to: Float
+|To-value is excluded.
+
+|===
+
+=== DateRangeAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path.
+
+|format: String
+|The date-format of which the buckets will be formatted to on return. Defaults to `yyyy-MM-dd’T’HH:mm:ss.SSSZ`.
+
+
+|ranges: [ <<DateRangeInput>> ]
+|The range-buckets to create.
+
+|===
+
+
+=== DateRangeInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|from: String
+|From-value is included in bucket.
+
+|to: String
+|To-value is excluded.
+
+|===
+
+=== DateHistogramAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path.
+
+|interval: String
+|The time-unit interval for creating bucket. Supported time-unit notations `y`, `M`, `W`,`d`,`h`,`m`,`s`.
+
+
+|format: String
+|The date-format of which the buckets will be formatted to on return. Defaults to `yyyy-MM-dd’T’HH:mm:ss.SSSZ`.
+
+
+|minDocCount: Int
+|Only include bucket in result if number of hits equal or more than `minDocCount`.
+
+|===
+
+
+=== GeoDistanceAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path.
+
+|unit: String
+|The measurement unit to use for the ranges. Legal values are either the full name or the abbreviation of the following: km (kilometers), m (meters), cm (centimeters), mm (millimeters), mi (miles), yd (yards), ft (feet) or nmi (nauticalmiles).
+
+|origin: <<GeoPointInput>>
+|The GeoPoint from which the distance is measured.
+
+|ranges: [ <<NumberRangeInput>> ]
+|The range-buckets to create.
+
+|===
+
+=== GeoPointInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|lat: String!
+|The latitude.
+
+|lon: String!
+|The longitude.
+
+|===
+
+== Filter Input Types
+
+=== FilterInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|boolean: <<BooleanFilterInput>>
+|Boolean filter
+
+|exists: <<ExistsFilterInput>>
+|ExistsFilter
+
+|notExists: <<NotExistsFilterInput>>
+|NotExists filter
+
+|hasValue: <<HasValueFilterInput>>
+|HasValue filter
+
+|ids: <<IdsFilterInput>>
+|Ids filter
+
+|===
+
+=== BooleanFilterInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|must: [<<FilterInput>>]
+|All functions on the must array must evaluate to true for the filter to match
+
+|mustNot: [<<FilterInput>>]
+|All functions in the mustNot array must evaluate to false for the filter to match
+
+|should: [<<FilterInput>>]
+|One or more of the functions in the should array must evaluate to true for the filter to match
+
+|===
+
+=== ExistsFilterInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|===
+
+=== NotExistsFilterInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|===
+
+
+=== HasValueFilterInput
+
+Only one values field must be not null.
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|stringValues: [String]
+|Array of values to decide a match
+
+|intValues: [Int]
+|Array of values to decide a match
+
+|booleanValues: [Boolean]
+|Array of values to decide a match
+
+|floatValues: [Float]
+|Array of values to decide a match
+
+|===
+
+
+=== IdsFilterInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|values: [String]
+|Arrays of ids to match
+
+|===
+
+
 == Enum Types
 
 === PrincipalType
@@ -636,7 +980,7 @@ Enum values: ItemSet
 , Input
 , OptionSet
 
-=== UrlTypeType
+=== UrlType
 
 Enum values: server
 , absolute

@@ -30,7 +30,7 @@ dependencies {
     compile "com.enonic.xp:lib-event:${xpVersion}"
     compile "com.enonic.xp:lib-node:${xpVersion}"
     compile "com.enonic.xp:lib-portal:${xpVersion}"
-    compile 'com.enonic.lib:lib-graphql:1.1.2'
+    compile 'com.enonic.lib:lib-graphql:1.2.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
     testImplementation "com.enonic.xp:testing:${xpVersion}"
