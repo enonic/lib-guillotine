@@ -43,4 +43,22 @@ public class AggregationsTest
         runFunction( "lib/factory-aggregations-test.js", "testCreateGeoDistanceAggregation" );
     }
 
+    @Test
+    public void testMinAggregation()
+    {
+        runFunction( "lib/factory-aggregations-test.js", "testMinAggregation" );
+    }
+
+    @Test
+    public void testMaxAggregation()
+    {
+        runFunction( "lib/factory-aggregations-test.js", "testMaxAggregation" );
+    }
+
+    @Test
+    public void testCountAggregation()
+    {
+        runFunction( "lib/factory-aggregations-test.js", "testCountAggregation" );
+    }
+
 }
