@@ -223,7 +223,7 @@ function generateFormItemResolveFunction(formItem) {
             }
             if (env.args.processHtml) {
                 values = values.map(function (value) {
-                    return portalLib.processHtml({value: value});
+                    return portalLib.processHtml({value: value, type: env.args.processHtml.type});
                 });
             }
             if ('Input' === formItem.formItemType) {
