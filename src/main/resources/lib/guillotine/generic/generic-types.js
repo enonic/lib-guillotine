@@ -83,9 +83,9 @@ function generateGenericContentFields(context) {
             type: graphQlLib.GraphQLBoolean
         },
         dataAsJson: {
-            type: graphQlLib.GraphQLString,
+            type: graphQlLib.Json,
             resolve: function (env) {
-                return JSON.stringify(env.source.data);
+                return env.source.data;
             }
         },
         x: {
@@ -103,7 +103,7 @@ function generateGenericContentFields(context) {
             }
         },
         pageAsJson: {
-            type: graphQlLib.GraphQLString,
+            type: graphQlLib.Json,
             args: {
                 resolveTemplate: graphQlLib.GraphQLBoolean,
                 resolveFragment: graphQlLib.GraphQLBoolean,
@@ -114,7 +114,7 @@ function generateGenericContentFields(context) {
                 if (env.args.resolveFragment !== false && page && page.regions) {
                     pageTypesLib.inlineFragmentContentComponents(page);
                 }
-                return JSON.stringify(page);
+                return page;
             }
         },
         pageTemplate: {
@@ -363,8 +363,8 @@ function createGenericTypes(context) {
                 type: graphQlLib.list(context.types.formItemType)
             },
             formAsJson: {
-                type: graphQlLib.GraphQLString,
-                resolve: (env) => JSON.stringify(env.source.form)
+                type: graphQlLib.Json,
+                resolve: (env) => env.source.form
             },
             getInstances: {
                 type: graphQlLib.list(graphQlLib.reference('Content')),

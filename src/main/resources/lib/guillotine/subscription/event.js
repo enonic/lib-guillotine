@@ -19,8 +19,8 @@ function createEventObjectType(context) {
                 type: graphQlLib.GraphQLBoolean
             },
             dataAsJson: {
-                type: graphQlLib.GraphQLString,
-                resolve: (env) => JSON.stringify(env.source.data)
+                type: graphQlLib.Json,
+                resolve: (env) => env.source.data
             },
         }
     });
