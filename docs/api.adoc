@@ -655,7 +655,7 @@ Direct Known Subtypes: FormInput
 
 === AggregationInput
 
-Aggregations allows to extract statistical data from search results. Only one of aggregation field must be not null.
+Aggregations enable extracting statistical data from search results. Only one of the aggregation fields at a time can be specified.
 
 ==== Fields
 
@@ -700,10 +700,10 @@ Aggregations allows to extract statistical data from search results. Only one of
 |The property path
 
 |order: String
-|How to order the results, type and direction. Supports _term (Alphabetic ordering of bucket keys) and _count (Numeric ordering of number of document in buckets) types. Default to _term ASC.
+|How to order the results, type and direction. Supports _term (Alphabetic ordering of bucket keys) and _count (Numeric ordering of bucket sizes) types. Defaults to _term ASC.
 
 |size: Int
-|The number of bucket to return, ordered by the given orderType and orderDirection. Default to 10.
+|Bucket size, ordered by the given orderType and orderDirection. Defaults to 10.
 
 |===
 
@@ -762,7 +762,7 @@ Aggregations allows to extract statistical data from search results. Only one of
 |The property path.
 
 |format: String
-|The date-format of which the buckets will be formatted to on return. Defaults to `yyyy-MM-dd’T’HH:mm:ss.SSSZ`.
+|Date/time format for buckets. Defaults to `yyyy-MM-dd’T’HH:mm:ss.SSSZ`.
 
 
 |ranges: [ <<DateRangeInput>> ]
@@ -797,15 +797,15 @@ Aggregations allows to extract statistical data from search results. Only one of
 |The property path.
 
 |interval: String
-|The time-unit interval for creating bucket. Supported time-unit notations `y`, `M`, `W`,`d`,`h`,`m`,`s`.
+|The time-unit interval for buckets. Supported time-unit notations are `y`, `M`, `W`,`d`,`h`,`m`,`s`.
 
 
 |format: String
-|The date-format of which the buckets will be formatted to on return. Defaults to `yyyy-MM-dd’T’HH:mm:ss.SSSZ`.
+|Date/time format for buckets. Defaults to `yyyy-MM-dd’T’HH:mm:ss.SSSZ`.
 
 
 |minDocCount: Int
-|Only include bucket in result if number of hits equal or more than `minDocCount`.
+|Only include bucket in result if number of hits is equal or greater than `minDocCount`.
 
 |===
 
@@ -821,7 +821,7 @@ Aggregations allows to extract statistical data from search results. Only one of
 |The property path.
 
 |unit: String
-|The measurement unit to use for the ranges. Legal values are either the full name or the abbreviation of the following: km (kilometers), m (meters), cm (centimeters), mm (millimeters), mi (miles), yd (yards), ft (feet) or nmi (nauticalmiles).
+|The measurement unit to use for the ranges. Allowed values are either full name or the abbreviation of the following: km (kilometers), m (meters), cm (centimeters), mm (millimeters), mi (miles), yd (yards), ft (feet) or nmi (nauticalmiles).
 
 |origin: <<GeoPointInput>>
 |The GeoPoint from which the distance is measured.
@@ -880,13 +880,13 @@ Aggregations allows to extract statistical data from search results. Only one of
 |Name(Arguments):Type | Description
 
 |must: [<<FilterInput>>]
-|All functions on the must array must evaluate to true for the filter to match
+|All functions on the `must` array must evaluate to `true` for the filter to match
 
 |mustNot: [<<FilterInput>>]
-|All functions in the mustNot array must evaluate to false for the filter to match
+|All functions in the `mustNot` array must evaluate to `false` for the filter to match
 
 |should: [<<FilterInput>>]
-|One or more of the functions in the should array must evaluate to true for the filter to match
+|At least one function in the `should` array must evaluate to `true for the filter to match
 
 |===
 
@@ -917,7 +917,7 @@ Aggregations allows to extract statistical data from search results. Only one of
 
 === HasValueFilterInput
 
-Only one values field must be not null.
+Only one value field can be specified.
 
 ==== Fields
 
@@ -928,16 +928,16 @@ Only one values field must be not null.
 |The property path
 
 |stringValues: [String]
-|Array of values to decide a match
+|Array of string values to find a match
 
 |intValues: [Int]
-|Array of values to decide a match
+|Array of integer values to find a match
 
 |booleanValues: [Boolean]
-|Array of values to decide a match
+|Array of boolean values to find a match
 
 |floatValues: [Float]
-|Array of values to decide a match
+|Array of float values to find a match
 
 |===
 
@@ -950,7 +950,7 @@ Only one values field must be not null.
 |Name(Arguments):Type | Description
 
 |values: [String]
-|Arrays of ids to match
+|Array of ids to match
 
 |===
 
