@@ -705,6 +705,9 @@ Aggregations enable extracting statistical data from search results. Only one of
 |size: Int
 |Bucket size, ordered by the given orderType and orderDirection. Defaults to 10.
 
+|minDocCount: Int
+|Only include bucket in result if number of hits more or equal minDocCount.
+
 |===
 
 === StatsAggregationInput

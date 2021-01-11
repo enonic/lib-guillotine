@@ -7,7 +7,8 @@ exports.testCreateTermsAggregation = function () {
         terms: {
             field: 'myCategory',
             order: '_count desc',
-            size: 10
+            size: 10,
+            minDocCount: 2
         }
     };
 
@@ -18,7 +19,8 @@ exports.testCreateTermsAggregation = function () {
             "terms": {
                 "field": "myCategory",
                 "order": "_count desc",
-                "size": 10
+                "size": 10,
+                "minDocCount": 2
             }
         }
     }, result);

@@ -63,6 +63,9 @@ function createInputTypes(context) {
             },
             size: {
                 type: graphQlLib.GraphQLInt,
+            },
+            minDocCount: {
+                type: graphQlLib.GraphQLInt
             }
         }
     });
