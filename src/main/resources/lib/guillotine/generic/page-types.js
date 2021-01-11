@@ -37,9 +37,9 @@ function generateTypes(context) {
                 type: context.types.PageComponentDataConfigType
             },
             configAsJson: {
-                type: graphQlLib.GraphQLString,
+                type: graphQlLib.Json,
                 resolve: function (env) {
-                    return JSON.stringify(env.source.config);
+                    return env.source.config;
                 }
             },
             template: {
@@ -62,9 +62,9 @@ function generateTypes(context) {
                 type: context.types.LayoutComponentDataConfigType
             },
             configAsJson: {
-                type: graphQlLib.GraphQLString,
+                type: graphQlLib.Json,
                 resolve: function (env) {
-                    return JSON.stringify(env.source.config);
+                    return env.source.config;
                 }
             }
 
@@ -82,9 +82,9 @@ function generateTypes(context) {
                 type: context.types.PartComponentDataConfigType
             },
             configAsJson: {
-                type: graphQlLib.GraphQLString,
+                type: graphQlLib.Json,
                 resolve: function (env) {
-                    return JSON.stringify(env.source.config);
+                    return env.source.config;
                 }
             }
 

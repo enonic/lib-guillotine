@@ -149,10 +149,13 @@ Interface of all contents.
 |valid: Boolean
 |true if the content is valid
 
+|dataAsJson: JSON
+|Content data
+
 |x: [<<ExtraData>>]
 |Content extra data
 
-|pageAsJson: String
+|pageAsJson: JSON
 |Page specific information
 
 |pageTemplate: <<Content>>
@@ -511,7 +514,7 @@ Direct Known Subtypes: FormInput
 |customized: Boolean
 |True if the page is customized
 
-|configAsJson: String
+|configAsJson: JSON
 |Component config
 
 |template: <<Content>>
@@ -529,7 +532,7 @@ Direct Known Subtypes: FormInput
 |descriptor: String!
 |Controller descriptor
 
-|configAsJson: String
+|configAsJson: JSON
 |Component config
 
 |===
@@ -562,7 +565,7 @@ Direct Known Subtypes: FormInput
 |descriptor: String!
 |Controller descriptor
 
-|configAsJson: String
+|configAsJson: JSON
 |Component config
 
 |===
