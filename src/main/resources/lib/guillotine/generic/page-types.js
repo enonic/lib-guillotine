@@ -175,7 +175,7 @@ function resolvePageTemplate(content) {
         return content;
     }
 
-    if (!content.page || Object.keys(content.page).length == 0) {
+    if (!content.page || Object.keys(content.page).length === 0) {
         return getDefaultPageTemplate(content);
     }
 
@@ -191,7 +191,7 @@ function resolvePageTemplateId(content) {
         return content._id;
     }
 
-    if (!content.page || Object.keys(content.page).length == 0) {
+    if (!content.page || Object.keys(content.page).length === 0) {
         const template = getDefaultPageTemplate(content);
         return template == null ? null : template._id;
     }
@@ -212,11 +212,11 @@ function getDefaultPageTemplate(content) {
 function inlineFragmentComponents(components) {
     const inlinedComponents = [];
     components.forEach(component => {
-        if ('fragment' == component.type) {
+        if ('fragment' === component.type && component.fragment.id) {
             const fragmentId = component.fragment.id;
 
-            var context = contextLib.get();
-            var fragment = nodeLib.connect({
+            let context = contextLib.get();
+            let fragment = nodeLib.connect({
                 repoId: context.repository,
                 branch: context.branch
             }).get(fragmentId);
@@ -236,7 +236,7 @@ function inlineFragmentContentComponents(container) {
         Object.keys(container.regions).forEach(regionName => {
             const region = container.regions[regionName];
             utilLib.forceArray(region.components).forEach((component, componentIndex) => {
-                if ('fragment' == component.type) {
+                if ('fragment' === component.type && component.fragment) {
                     const fragmentContent = contentLib.get({key: component.fragment});
                     if (fragmentContent) {
                         region.components[componentIndex] = fragmentContent.fragment;
@@ -247,7 +247,7 @@ function inlineFragmentContentComponents(container) {
                         //No need to call recursively as a fragment cannot contain a fragment
 
                     }
-                } else if ('layout' == component.type) {
+                } else if ('layout' === component.type) {
                     inlineFragmentContentComponents(component);
                 }
             });
@@ -263,7 +263,7 @@ function prefixContentComponentPaths(container, prefix) {
             utilLib.forceArray(region.components).forEach((component) => {
                 component.path = prefix + component.path;
 
-                if ('layout' == component.type) {
+                if ('layout' === component.type) {
                     prefixContentComponentPaths(component, prefix);
                 }
             });
