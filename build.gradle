@@ -39,7 +39,7 @@ dependencies {
 repositories {
     mavenLocal()
     jcenter()
-    xp.enonicRepo()
+    xp.enonicRepo('dev')
 }
 
 jacocoTestReport {
