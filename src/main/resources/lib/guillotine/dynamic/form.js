@@ -57,14 +57,17 @@ function generateFormItemObjectType(context, namePrefix, formItem) {
 }
 
 function generateItemSetObjectType(context, namePrefix, itemSet) {
-    var name = namePrefix + '_' + namingLib.generateCamelCase(itemSet.label, true);
-    var createItemSetTypeParams = {
+    let name = namePrefix + '_' + namingLib.generateCamelCase(itemSet.label, true);
+    let createItemSetTypeParams = {
         name: context.uniqueName(name),
         description: itemSet.label,
         fields: {}
     };
+
+    validationLib.validateUniqueNamesOfTypeFields(name, getFormItems(itemSet.items));
+
     getFormItems(itemSet.items).forEach(function (item) {
-        createItemSetTypeParams.fields[namingLib.generateCamelCase(item.name)] = {
+        createItemSetTypeParams.fields[namingLib.sanitizeText(item.name)] = {
             type: generateFormItemObjectType(context, namePrefix, item),
             args: generateFormItemArguments(context, item),
             resolve: generateFormItemResolveFunction(item)
@@ -126,9 +129,9 @@ function generateInputObjectType(context, input) {
 }
 
 function generateOptionSetObjectType(context, namePrefix, optionSet) {
-    var name = namePrefix + '_' + namingLib.generateCamelCase(optionSet.label, true);
-    var optionSetEnum = generateOptionSetEnum(context, optionSet, name);
-    var createOptionSetTypeParams = {
+    let name = namePrefix + '_' + namingLib.generateCamelCase(optionSet.label, true);
+    let optionSetEnum = generateOptionSetEnum(context, optionSet, name);
+    let createOptionSetTypeParams = {
         name: context.uniqueName(name),
         description: optionSet.label,
         fields: {
@@ -140,8 +143,11 @@ function generateOptionSetObjectType(context, namePrefix, optionSet) {
             }
         }
     };
+
+    validationLib.validateUniqueNamesOfTypeFields(name, optionSet.options);
+
     optionSet.options.forEach(function (option) {
-        createOptionSetTypeParams.fields[namingLib.generateCamelCase(option.name)] = {
+        createOptionSetTypeParams.fields[namingLib.sanitizeText(option.name)] = {
             type: generateOptionObjectType(context, namePrefix, option),
             resolve: function (env) {
                 return env.source[option.name];
@@ -152,13 +158,19 @@ function generateOptionSetObjectType(context, namePrefix, optionSet) {
 }
 
 function generateOptionSetEnum(context, optionSet, optionSetName) {
-    var enumValues = {};
+    let enumValues = {};
+
+    let name = optionSetName + '_OptionEnum';
+
+    validationLib.validateUniqueNamesOfTypeFields(name, optionSet.options);
+
     optionSet.options.forEach(function (option) {
-        let optionName = namingLib.generateCamelCase(option.name);
+        let optionName = namingLib.sanitizeText(option.name);
         enumValues[optionName] = option.name;
     });
+
     return graphQlLib.createEnumType({
-        name: context.uniqueName(optionSetName + '_OptionEnum'),
+        name: context.uniqueName(name),
         description: optionSet.label + ' option enum.',
         values: enumValues
     });

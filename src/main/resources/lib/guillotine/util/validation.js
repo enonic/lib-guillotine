@@ -1,3 +1,5 @@
+const namingLib = require('/lib/guillotine/util/naming');
+
 const guillotineConstants = require('/lib/guillotine/util/constants');
 
 const firstArgumentMaxValue = 1000;
@@ -40,5 +42,18 @@ function validateAggregation(aggregation) {
     }
 }
 
+function validateUniqueNamesOfTypeFields(typeName, items) {
+    let obj = {};
+
+    items.forEach(function (item) {
+        obj[namingLib.sanitizeText(item.name)] = item.name;
+    });
+
+    if (items.length !== Object.keys(obj).length) {
+        throw new Error(`Type ${typeName} has fields with not unique names`);
+    }
+}
+
 exports.validateArguments = validateArguments;
 exports.validateArgumentsForQueryField = validateArgumentsForQueryField;
+exports.validateUniqueNamesOfTypeFields = validateUniqueNamesOfTypeFields;

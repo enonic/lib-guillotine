@@ -1,3 +1,5 @@
+const commonLib = require('/lib/xp/common');
+
 function generateCamelCase(text, upper, keepUnderscore) {
     const sanitizedText = sanitizeText(text);
     const camelCasedText = sanitizedText.replace(/_[0-9A-Za-z]/g, function (match, offset, string) {
@@ -8,7 +10,33 @@ function generateCamelCase(text, upper, keepUnderscore) {
 }
 
 function sanitizeText(text) {
-    return text.replace(/([^0-9A-Za-z])+/g, '_');
+    let sanitizedText = '';
+
+    for (let i = 0; i < text.length; i++) {
+        let originalChar = text.charAt(i);
+
+        if (originalChar === '_' || originalChar === '-' || originalChar === '.') {
+            sanitizedText += originalChar;
+        } else if (originalChar === '+' || originalChar === ' ') {
+            sanitizedText += '-';
+        } else {
+            let sanitizedChars = commonLib.sanitize(originalChar);
+
+            if (sanitizedChars !== 'page') {
+                if (originalChar === originalChar.toUpperCase()) {
+                    sanitizedText += sanitizedChars.toUpperCase();
+                } else {
+                    sanitizedText += sanitizedChars;
+                }
+            }
+        }
+    }
+
+    if (sanitizedText.length > 0 && /[0-9]/.test(sanitizedText.charAt(0))) {
+        sanitizedText = '_' + sanitizedText;
+    }
+
+    return sanitizedText.replace(/([^0-9A-Za-z])+/g, '_');
 }
 
 function applicationConfigKey(text) {
