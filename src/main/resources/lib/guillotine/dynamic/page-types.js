@@ -30,8 +30,9 @@ function createComponentDataConfigType(context, componentType) {
         //For each descriptor
         const applicationConfigTypeFields = {};
         descriptors.forEach(descriptor => {
+            let name = componentType + "_" + namingLib.sanitizeText(applicationKey) + "_" + namingLib.sanitizeText(descriptor.name);
 
-            const descriptorConfigTypeName = context.uniqueName(componentType + 'ComponentDataDescriptorConfig')
+            const descriptorConfigTypeName = context.uniqueName(name);
             const descriptorConfigTypeFields = {};
 
             //For each form item
@@ -64,10 +65,11 @@ function createComponentDataConfigType(context, componentType) {
 
         //If there were descriptors with form items (A type cannot have 0 fields)
         if (Object.keys(applicationConfigTypeFields).length > 0) {
+            let name = componentType + "_" + namingLib.sanitizeText(applicationKey) + "_ComponentDataApplicationConfig";
 
             //Creates the type for these descriptors
             const applicationConfigType = graphQlLib.createObjectType(context, {
-                name: context.uniqueName(componentType + 'ComponentDataApplicationConfig'),
+                name: context.uniqueName(name),
                 description: componentType + ' component application config for application [' + applicationKey + ']',
                 fields: applicationConfigTypeFields
             });
