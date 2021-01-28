@@ -239,7 +239,7 @@ function getContent(env, context) {
 }
 
 function transformNodeIfExistsAttachments(node) {
-    if (node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
+    if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
         if (node.data) {
             node.data['__nodeId'] = node._id;
             addRecursiveNodeId(node.data, node._id);

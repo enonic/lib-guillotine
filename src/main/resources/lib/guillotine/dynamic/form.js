@@ -5,6 +5,7 @@ const namingLib = require('/lib/guillotine/util/naming');
 const utilLib = require('/lib/guillotine/util/util');
 const graphQlLib = require('/lib/guillotine/graphql');
 const validationLib = require('/lib/guillotine/util/validation');
+const macroLib = require('/lib/guillotine/macro');
 
 function getFormItems(form) {
     var formItems = [];
@@ -99,7 +100,7 @@ function generateInputObjectType(context, input) {
     case 'GeoPoint':
         return context.types.geoPointType;
     case 'HtmlArea':
-        return graphQlLib.GraphQLString;
+        return context.types.htmlAreaResultType;
     case 'ImageSelector':
         return graphQlLib.reference('Content');
     case 'ImageUploader':
@@ -202,7 +203,10 @@ function generateFormItemResolveFunction(formItem) {
             let value = env.source[formItem.name];
 
             if (value && env.args.processHtml) {
-                value = portalLib.processHtml({value: value, type: env.args.processHtml.type});
+                value = macroLib.processHtml({
+                    value: value,
+                    type: env.args.processHtml.type
+                })
             }
             if (value && 'Input' === formItem.formItemType) {
                 if ('AttachmentUploader' === formItem.inputType) {
@@ -235,7 +239,10 @@ function generateFormItemResolveFunction(formItem) {
             }
             if (env.args.processHtml) {
                 values = values.map(function (value) {
-                    return portalLib.processHtml({value: value, type: env.args.processHtml.type});
+                    return macroLib.processHtml({
+                        value: value,
+                        type: env.args.processHtml.type
+                    });
                 });
             }
             if ('Input' === formItem.formItemType) {
