@@ -1,4 +1,4 @@
-package com.enonic.lib.guillotine;
+package com.enonic.lib.guillotine.handler;
 
 import java.util.function.Supplier;
 
