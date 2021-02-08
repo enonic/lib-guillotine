@@ -1,13 +1,13 @@
-package com.enonic.lib.guillotine;
+package com.enonic.lib.guillotine.handler;
 
 import java.util.function.Supplier;
 
-import com.enonic.lib.guillotine.macro.HtmlAreaProcessedResult;
 import com.enonic.lib.guillotine.macro.ProcessHtmlParams;
 import com.enonic.lib.guillotine.macro.ProcessHtmlService;
 import com.enonic.lib.guillotine.macro.ProcessHtmlServiceImpl;
 import com.enonic.lib.guillotine.mapper.HtmlAreaResultMapper;
 import com.enonic.xp.content.ContentService;
+import com.enonic.xp.macro.MacroDescriptorService;
 import com.enonic.xp.macro.MacroService;
 import com.enonic.xp.portal.PortalRequest;
 import com.enonic.xp.portal.url.PortalUrlService;
@@ -27,6 +27,8 @@ public class ProcessHtmlHandler
 
     private Supplier<MacroService> macroServiceSupplier;
 
+    private Supplier<MacroDescriptorService> macroDescriptorServiceSupplier;
+
     private PortalRequest request;
 
     @Override
@@ -38,6 +40,7 @@ public class ProcessHtmlHandler
         this.styleDescriptorServiceSupplier = context.getService( StyleDescriptorService.class );
         this.portalUrlServiceSupplier = context.getService( PortalUrlService.class );
         this.macroServiceSupplier = context.getService( MacroService.class );
+        this.macroDescriptorServiceSupplier = context.getService( MacroDescriptorService.class );
     }
 
     public Object processHtml( ScriptValue params )
@@ -56,11 +59,9 @@ public class ProcessHtmlHandler
 
         final ProcessHtmlService processHtmlService =
             new ProcessHtmlServiceImpl( contentServiceSupplier.get(), styleDescriptorServiceSupplier.get(), portalUrlServiceSupplier.get(),
-                                        macroServiceSupplier.get() );
+                                        macroServiceSupplier.get(), macroDescriptorServiceSupplier.get() );
 
-        final HtmlAreaProcessedResult result = processHtmlService.processHtml( htmlParams );
-
-        return new HtmlAreaResultMapper( result );
+        return new HtmlAreaResultMapper( processHtmlService.processHtml( htmlParams ) );
     }
 
 }

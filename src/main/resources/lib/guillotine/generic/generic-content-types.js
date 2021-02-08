@@ -67,25 +67,6 @@ function generateTypes(context) {
             }
         }
     });
-
-    context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('HtmlAreaResult'),
-        description: 'HtmlAreaResult type.',
-        fields: {
-            value: {
-                type: graphQlLib.GraphQLString,
-                resolve: function (env) {
-                    return env.source.value;
-                }
-            },
-            macros: {
-                type: graphQlLib.Json,
-                resolve: function (env) {
-                    return env.source.macros;
-                }
-            }
-        }
-    });
-};
+}
 
 exports.generateTypes = generateTypes;

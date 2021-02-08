@@ -1,27 +1,40 @@
 package com.enonic.lib.guillotine.macro;
 
+import java.util.List;
 import java.util.Map;
 
 public class HtmlAreaProcessedResult
 {
-    private final String processedHtml;
+    private final String markup;
 
-    private final Map<String, HtmlMacroResult> macrosAsMap;
+    private final List<HtmlMacroResult> macrosAsJson;
 
-    public HtmlAreaProcessedResult( final String processedHtml, final Map<String, HtmlMacroResult> macroMap )
+    private Map<String, Map<String, List<Map<String, Object>>>> macros;
+
+    public HtmlAreaProcessedResult( final String processedHtml, final List<HtmlMacroResult> macroMap )
     {
-        this.processedHtml = processedHtml;
-        this.macrosAsMap = macroMap;
+        this.markup = processedHtml;
+        this.macrosAsJson = macroMap;
     }
 
-    public String getProcessedHtml()
+    public void setMacros( final Map<String, Map<String, List<Map<String, Object>>>> macros )
     {
-        return processedHtml;
+        this.macros = macros;
     }
 
-    public Map<String, HtmlMacroResult> getMacrosAsMap()
+    public String getMarkup()
     {
-        return macrosAsMap;
+        return markup;
+    }
+
+    public List<HtmlMacroResult> getMacrosAsJson()
+    {
+        return macrosAsJson;
+    }
+
+    public Map<String, Map<String, List<Map<String, Object>>>> getMacros()
+    {
+        return macros;
     }
 
     public static HtmlAreaProcessedResult empty()

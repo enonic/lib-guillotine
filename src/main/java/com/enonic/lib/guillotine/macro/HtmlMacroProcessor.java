@@ -28,6 +28,6 @@ public class HtmlMacroProcessor
         } );
 
         return new HtmlAreaProcessedResult( processedHtml, processedMacros.stream().
-            collect( Collectors.toMap( MacroDecorator::getId, HtmlMacroResult::new ) ) );
+            map( HtmlMacroResult::new ).collect( Collectors.toList() ) );
     }
 }

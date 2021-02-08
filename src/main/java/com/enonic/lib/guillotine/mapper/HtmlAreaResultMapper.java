@@ -7,7 +7,6 @@ import com.enonic.xp.script.serializer.MapSerializable;
 public class HtmlAreaResultMapper
     implements MapSerializable
 {
-
     private final HtmlAreaProcessedResult htmlAreaResult;
 
     public HtmlAreaResultMapper( final HtmlAreaProcessedResult htmlMacrosResult )
@@ -18,19 +17,22 @@ public class HtmlAreaResultMapper
     @Override
     public void serialize( final MapGenerator gen )
     {
-        gen.value( "value", htmlAreaResult.getProcessedHtml() );
+        gen.value( "markup", htmlAreaResult.getMarkup() );
 
-        if ( htmlAreaResult.getMacrosAsMap() != null )
+        if ( htmlAreaResult.getMacrosAsJson() != null )
         {
+            gen.array( "macrosAsJson" );
+            if ( htmlAreaResult.getMacrosAsJson() != null )
+            {
+                htmlAreaResult.getMacrosAsJson().forEach( macro -> gen.value( macro.getProcessedAsJson() ) );
+            }
+            gen.end();
+
             gen.map( "macros" );
-
-            htmlAreaResult.getMacrosAsMap().forEach( ( key, value ) -> {
-                gen.map( key );
-                gen.value( "macroAsHtml", value.getProcessedAsHtml() );
-                gen.value( "macroAsJson", value.getProcessedAsJson() );
-                gen.end();
-            } );
-
+            if ( htmlAreaResult.getMacros() != null )
+            {
+                htmlAreaResult.getMacros().forEach( gen::value );
+            }
             gen.end();
         }
     }

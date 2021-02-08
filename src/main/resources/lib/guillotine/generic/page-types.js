@@ -4,11 +4,36 @@ const nodeLib = require('/lib/xp/node');
 const portalLib = require('/lib/xp/portal');
 
 const graphQlLib = require('/lib/guillotine/graphql');
-const pageTypesLib = require('/lib/guillotine/dynamic/page-types');
+const descriptorTypesLib = require('/lib/guillotine/dynamic/descriptor-types');
 const utilLib = require('/lib/guillotine/util/util');
 
 function generateTypes(context) {
-    pageTypesLib.createPageComponentDataConfigType(context);
+    descriptorTypesLib.createDynamicDataConfigType(context);
+
+    context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('HtmlAreaResult'),
+        description: 'HtmlAreaResult type.',
+        fields: {
+            markup: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.markup;
+                }
+            },
+            macrosAsJson: {
+                type: graphQlLib.Json,
+                resolve: function (env) {
+                    return env.source.macrosAsJson;
+                }
+            },
+            macros: context.types.MacroDataConfigType && {
+                type: context.types.MacroDataConfigType,
+                resolve: function (env) {
+                    return env.source.macros;
+                }
+            }
+        }
+    });
 
     context.types.componentTypeType = graphQlLib.createEnumType({
         name: context.uniqueName('ComponentType'),
@@ -202,7 +227,7 @@ function resolvePageTemplateId(content) {
 }
 
 function getDefaultPageTemplate(content) {
-    const bean = __.newBean('com.enonic.lib.guillotine.GetDefaultPageTemplateBean');
+    const bean = __.newBean('com.enonic.lib.guillotine.handler.GetDefaultPageTemplateBean');
     bean.siteId = portalLib.getSite()._id;
     bean.contentType = content.type;
     const template = bean.execute();
