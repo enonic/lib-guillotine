@@ -1,5 +1,6 @@
 package com.enonic.lib.guillotine.handler;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.enonic.lib.guillotine.macro.ProcessHtmlParams;
@@ -55,6 +56,11 @@ public class ProcessHtmlHandler
         if ( params.getMap().containsKey( "type" ) )
         {
             htmlParams.setType( params.getMap().get( "type" ).toString() );
+        }
+
+        if ( params.getMap().containsKey( "imageWidths" ) )
+        {
+            htmlParams.setImageWidths( (List<Integer>) params.getMap().get( "imageWidths" ) );
         }
 
         final ProcessHtmlService processHtmlService =

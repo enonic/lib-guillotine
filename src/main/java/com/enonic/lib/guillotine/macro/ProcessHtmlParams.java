@@ -1,5 +1,7 @@
 package com.enonic.lib.guillotine.macro;
 
+import java.util.List;
+
 import com.enonic.xp.portal.PortalRequest;
 import com.enonic.xp.portal.url.UrlTypeConstants;
 
@@ -10,6 +12,8 @@ public class ProcessHtmlParams
     private PortalRequest portalRequest;
 
     private String type = UrlTypeConstants.SERVER_RELATIVE;
+
+    private List<Integer> imageWidths;
 
     public String getValue()
     {
@@ -42,5 +46,16 @@ public class ProcessHtmlParams
     public String getType()
     {
         return type;
+    }
+
+    public List<Integer> getImageWidths()
+    {
+        return imageWidths;
+    }
+
+    public ProcessHtmlParams setImageWidths( final List<Integer> imageWidths )
+    {
+        this.imageWidths = imageWidths;
+        return this;
     }
 }

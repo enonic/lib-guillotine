@@ -1,9 +1,12 @@
 package com.enonic.lib.guillotine.macro;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
@@ -102,7 +105,7 @@ public class HtmlLinkProcessor
         this.portalUrlService = portalUrlService;
     }
 
-    public String process( final String text, final String urlType, final PortalRequest portalRequest )
+    public String process( final String text, final String urlType, final PortalRequest portalRequest, final List<Integer> imageWidths )
     {
         String processedHtml = text;
         final ImmutableMap<String, ImageStyle> imageStyleMap = getImageStyleMap( portalRequest );
@@ -137,13 +140,32 @@ public class HtmlLinkProcessor
                         ImageUrlParams imageUrlParams = new ImageUrlParams().
                             type( urlType ).
                             id( id ).
-                            scale( getScale( id, imageStyle, urlParams ) ).
+                            scale( getScale( id, imageStyle, urlParams, null ) ).
                             filter( getFilter( imageStyle ) ).
                             portalRequest( portalRequest );
 
                         final String imageUrl = portalUrlService.imageUrl( imageUrlParams );
 
-                        processedHtml = processedHtml.replaceFirst( Pattern.quote( match ), "\"" + imageUrl + "\"" );
+                        String srcsetValues = null;
+
+                        if ( imageWidths != null && !imageWidths.isEmpty() )
+                        {
+                            srcsetValues = IntStream.range( 0, imageWidths.size() ).mapToObj( index -> {
+                                final ImageUrlParams imageParams = new ImageUrlParams().
+                                    type( urlType ).
+                                    id( id ).
+                                    scale( getScale( id, imageStyle, urlParams, imageWidths.get( index ) ) ).
+                                    filter( getFilter( imageStyle ) ).
+                                    portalRequest( portalRequest );
+
+                                return portalUrlService.imageUrl( imageParams ) + " " + imageWidths.get( index ) + "w";
+                            } ).collect( Collectors.joining( "," ) );
+                        }
+
+                        final String replacement =
+                            srcsetValues != null ? "\"" + imageUrl + "\" srcset=\"" + srcsetValues + "\"" : "\"" + imageUrl + "\"";
+
+                        processedHtml = processedHtml.replaceFirst( Pattern.quote( match ), replacement );
                         break;
                     default:
                         AttachmentUrlParams attachmentUrlParams = new AttachmentUrlParams().
@@ -201,7 +223,8 @@ public class HtmlLinkProcessor
         return null;
     }
 
-    private String getScale( final String id, final ImageStyle imageStyle, final Map<String, String> urlParams )
+    private String getScale( final String id, final ImageStyle imageStyle, final Map<String, String> urlParams,
+                             final Integer expectedWidth )
     {
         final String aspectRatio = getAspectRation( imageStyle, urlParams );
         final boolean keepSize = urlParams.containsKey( KEEP_SIZE_PARAM );
@@ -216,13 +239,17 @@ public class HtmlLinkProcessor
             final String horizontalProportion = matcher.group( "horizontalProportion" );
             final String verticalProportion = matcher.group( "verticalProportion" );
 
-            final int width = keepSize ? getImageOriginalWidth( id ) : DEFAULT_WIDTH;
+            final int width = keepSize ? getImageOriginalWidth( id ) : expectedWidth != null ? expectedWidth : DEFAULT_WIDTH;
             final int height = width / Integer.parseInt( horizontalProportion ) * Integer.parseInt( verticalProportion );
 
             return "block(" + width + "," + height + ")";
         }
+        else if ( expectedWidth != null )
+        {
+            return "width(" + expectedWidth + ")";
+        }
 
-        if ( keepSize)
+        if ( keepSize )
         {
             return IMAGE_NO_SCALING;
         }

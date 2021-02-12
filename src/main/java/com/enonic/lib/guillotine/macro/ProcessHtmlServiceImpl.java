@@ -53,7 +53,7 @@ public class ProcessHtmlServiceImpl
         }
 
         String processedHtml = new HtmlLinkProcessor( contentService, styleDescriptorService, portalUrlService ).
-            process( unescapeValue( params.getValue() ), params.getType(), params.getPortalRequest() );
+            process( unescapeValue( params.getValue() ), params.getType(), params.getPortalRequest(), params.getImageWidths() );
 
         final HtmlAreaProcessedResult result = new HtmlMacroProcessor( macroService ).process( processedHtml );
 

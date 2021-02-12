@@ -205,7 +205,8 @@ function generateFormItemResolveFunction(formItem) {
             if (value && env.args.processHtml) {
                 value = macroLib.processHtml({
                     value: value,
-                    type: env.args.processHtml.type
+                    type: env.args.processHtml.type,
+                    imageWidths: env.args.processHtml.imageWidths
                 })
             }
             if (value && 'Input' === formItem.formItemType) {
@@ -241,7 +242,8 @@ function generateFormItemResolveFunction(formItem) {
                 values = values.map(function (value) {
                     return macroLib.processHtml({
                         value: value,
-                        type: env.args.processHtml.type
+                        type: env.args.processHtml.type,
+                        imageWidths: env.args.processHtml.imageWidths
                     });
                 });
             }
