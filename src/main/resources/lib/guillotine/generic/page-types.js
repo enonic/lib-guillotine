@@ -4,16 +4,24 @@ const nodeLib = require('/lib/xp/node');
 const portalLib = require('/lib/xp/portal');
 
 const graphQlLib = require('/lib/guillotine/graphql');
-const descriptorTypesLib = require('/lib/guillotine/dynamic/descriptor-types');
+const componentTypesLib = require('/lib/guillotine/dynamic/component-types');
 const utilLib = require('/lib/guillotine/util/util');
+const macroTypesLib = require('/lib/guillotine/dynamic/macro-types');
 
 function generateTypes(context) {
-    descriptorTypesLib.createDynamicDataConfigType(context);
+    componentTypesLib.createComponentDataConfigType(context);
+    macroTypesLib.createMacroDataConfigType(context);
 
     context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('HtmlAreaResult'),
         description: 'HtmlAreaResult type.',
         fields: {
+            raw: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.raw;
+                }
+            },
             markup: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
