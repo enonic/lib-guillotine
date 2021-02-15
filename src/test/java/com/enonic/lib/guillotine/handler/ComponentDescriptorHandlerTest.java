@@ -1,5 +1,6 @@
 package com.enonic.lib.guillotine.handler;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.enonic.lib.guillotine.mapper.ComponentDescriptorMapper;
 import com.enonic.lib.guillotine.mapper.MacroDescriptorMapper;
 import com.enonic.xp.app.ApplicationKey;
+import com.enonic.xp.app.ApplicationKeys;
 import com.enonic.xp.form.Form;
 import com.enonic.xp.form.Input;
 import com.enonic.xp.inputtype.InputTypeName;
@@ -88,7 +90,7 @@ public class ComponentDescriptorHandlerTest
 
         when( pageDescriptorService.getByApplication( any( ApplicationKey.class ) ) ).thenReturn( pageDescriptors );
 
-        final Object result = instance.getByApplication( "Page", "app-guillotine" );
+        final Object result = instance.getComponentDescriptors( "Page", "app-guillotine" );
 
         assertNotNull( result );
 
@@ -120,7 +122,7 @@ public class ComponentDescriptorHandlerTest
 
         when( partDescriptorService.getByApplication( any( ApplicationKey.class ) ) ).thenReturn( descriptors );
 
-        final Object result = instance.getByApplication( "Part", "app-guillotine" );
+        final Object result = instance.getComponentDescriptors( "Part", "app-guillotine" );
 
         assertNotNull( result );
 
@@ -153,7 +155,7 @@ public class ComponentDescriptorHandlerTest
 
         when( layoutDescriptorService.getByApplication( any( ApplicationKey.class ) ) ).thenReturn( descriptors );
 
-        final Object result = instance.getByApplication( "Layout", "app-guillotine" );
+        final Object result = instance.getComponentDescriptors( "Layout", "app-guillotine" );
 
         assertNotNull( result );
 
@@ -172,7 +174,7 @@ public class ComponentDescriptorHandlerTest
     }
 
     @Test
-    void testGetByApplicationForMacro()
+    void testGetMacroDescriptors()
     {
         final MacroDescriptors descriptors = MacroDescriptors.from( MacroDescriptor.create().
             displayName( "testMacro" ).
@@ -189,9 +191,9 @@ public class ComponentDescriptorHandlerTest
         final ComponentDescriptorHandler instance = new ComponentDescriptorHandler();
         instance.initialize( newBeanContext( ResourceKey.from( "com.app:/test" ) ) );
 
-        when( macroDescriptorService.getByApplication( any( ApplicationKey.class ) ) ).thenReturn( descriptors );
+        when( macroDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( descriptors );
 
-        final Object result = instance.getByApplication( "Macro", "com.app" );
+        final Object result = instance.getMacroDescriptors( Collections.singletonList( "com.app" ) );
 
         assertNotNull( result );
 
@@ -216,7 +218,7 @@ public class ComponentDescriptorHandlerTest
         instance.initialize( newBeanContext( ResourceKey.from( "com.app:/test" ) ) );
 
         final IllegalArgumentException ex =
-            assertThrows( IllegalArgumentException.class, () -> instance.getByApplication( "Unknown", "com.app.name" ) );
+            assertThrows( IllegalArgumentException.class, () -> instance.getComponentDescriptors( "Unknown", "com.app.name" ) );
 
         assertEquals( "Unsupported component type \"Unknown\"", ex.getMessage() );
     }

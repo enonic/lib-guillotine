@@ -9,7 +9,7 @@ public class HtmlAreaProcessedResult
 
     private final List<HtmlMacroResult> macrosAsJson;
 
-    private Map<String, Map<String, List<Map<String, Object>>>> macros;
+    private List<Map<String, Object>> macros;
 
     public HtmlAreaProcessedResult( final String processedHtml, final List<HtmlMacroResult> macroMap )
     {
@@ -17,7 +17,7 @@ public class HtmlAreaProcessedResult
         this.macrosAsJson = macroMap;
     }
 
-    public void setMacros( final Map<String, Map<String, List<Map<String, Object>>>> macros )
+    public void setMacros( final List<Map<String, Object>> macros )
     {
         this.macros = macros;
     }
@@ -32,7 +32,7 @@ public class HtmlAreaProcessedResult
         return macrosAsJson;
     }
 
-    public Map<String, Map<String, List<Map<String, Object>>>> getMacros()
+    public List<Map<String, Object>> getMacros()
     {
         return macros;
     }

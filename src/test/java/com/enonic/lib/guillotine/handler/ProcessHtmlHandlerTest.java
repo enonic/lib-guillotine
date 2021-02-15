@@ -14,6 +14,7 @@ import com.enonic.xp.form.Input;
 import com.enonic.xp.inputtype.InputTypeName;
 import com.enonic.xp.macro.MacroDescriptor;
 import com.enonic.xp.macro.MacroDescriptorService;
+import com.enonic.xp.macro.MacroDescriptors;
 import com.enonic.xp.macro.MacroKey;
 import com.enonic.xp.macro.MacroService;
 import com.enonic.xp.portal.url.PortalUrlService;
@@ -79,7 +80,8 @@ class ProcessHtmlHandlerTest
             build();
 
         when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( StyleDescriptors.empty() );
-        when( macroDescriptorService.getByKey( any( MacroKey.class ) ) ).thenReturn( macroDescriptor );
+        when( macroDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn(
+            MacroDescriptors.from( macroDescriptor ) );
 
         runFunction( "lib/macro-test.js", "testProcessHtml" );
     }

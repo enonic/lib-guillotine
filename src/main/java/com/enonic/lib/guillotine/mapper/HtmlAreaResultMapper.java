@@ -28,7 +28,7 @@ public class HtmlAreaResultMapper
             }
             gen.end();
 
-            gen.map( "macros" );
+            gen.array( "macros" );
             if ( htmlAreaResult.getMacros() != null )
             {
                 htmlAreaResult.getMacros().forEach( gen::value );

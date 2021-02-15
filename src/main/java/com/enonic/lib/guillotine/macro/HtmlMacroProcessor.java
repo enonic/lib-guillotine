@@ -10,9 +10,12 @@ public class HtmlMacroProcessor
 {
     private final MacroService macroService;
 
-    public HtmlMacroProcessor( final MacroService macroService )
+    private final List<String> registeredMacroNames;
+
+    public HtmlMacroProcessor( final MacroService macroService, final List<String> registeredMacroNames )
     {
         this.macroService = macroService;
+        this.registeredMacroNames = registeredMacroNames;
     }
 
     public HtmlAreaProcessedResult process( final String text )
@@ -20,6 +23,11 @@ public class HtmlMacroProcessor
         final List<MacroDecorator> processedMacros = new ArrayList<>();
 
         final String processedHtml = macroService.evaluateMacros( text, ( macro ) -> {
+            if ( !registeredMacroNames.contains( macro.getName() ) )
+            {
+                return macro.toString();
+            }
+
             final MacroDecorator macroDecorator = MacroDecorator.from( macro );
 
             processedMacros.add( macroDecorator );
