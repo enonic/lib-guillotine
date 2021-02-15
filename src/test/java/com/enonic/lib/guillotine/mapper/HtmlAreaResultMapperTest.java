@@ -1,14 +1,15 @@
 package com.enonic.lib.guillotine.mapper;
 
 import java.util.Collections;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import com.enonic.lib.guillotine.macro.HtmlAreaProcessedResult;
-import com.enonic.lib.guillotine.macro.HtmlMacroResult;
 import com.enonic.lib.guillotine.macro.MacroDecorator;
+import com.enonic.lib.guillotine.macro.MacroEditorJsonSerializer;
 import com.enonic.xp.macro.Macro;
 import com.enonic.xp.script.serializer.JsonMapGenerator;
 
@@ -22,15 +23,17 @@ class HtmlAreaResultMapperTest
     @Test
     void serialize()
     {
-        HtmlMacroResult macroResult = new HtmlMacroResult( MacroDecorator.from( Macro.create().
+        Map<String, Object> macroResult = new MacroEditorJsonSerializer( MacroDecorator.from( Macro.create().
             name( "mymacro" ).
             param( "attr1", "val1" ).
             param( "attr2", "val2" ).
-            build() ) );
+            build() ) ).serialize();
 
-        HtmlAreaProcessedResult input = new HtmlAreaProcessedResult(
-            "<p><editor-macro data-macro-name=\"mymacro\" data-macro-ref=\"307f02a2-7019-4012-807e-916df5779ae6\"></editor-macro></p>",
-            Collections.singletonList( macroResult ) );
+        HtmlAreaProcessedResult input = HtmlAreaProcessedResult.create().
+            setMarkup(
+                "<p><editor-macro data-macro-name=\"mymacro\" data-macro-ref=\"307f02a2-7019-4012-807e-916df5779ae6\"></editor-macro></p>" ).
+            setMacrosAsJson( Collections.singletonList( macroResult ) ).
+            build();
 
         HtmlAreaResultMapper instance = new HtmlAreaResultMapper( input );
 

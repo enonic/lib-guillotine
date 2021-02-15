@@ -17,23 +17,21 @@ public class HtmlAreaResultMapper
     @Override
     public void serialize( final MapGenerator gen )
     {
+        gen.value( "raw", htmlAreaResult.getRaw() );
         gen.value( "markup", htmlAreaResult.getMarkup() );
 
+        gen.array( "macrosAsJson" );
         if ( htmlAreaResult.getMacrosAsJson() != null )
         {
-            gen.array( "macrosAsJson" );
-            if ( htmlAreaResult.getMacrosAsJson() != null )
-            {
-                htmlAreaResult.getMacrosAsJson().forEach( macro -> gen.value( macro.getProcessedAsJson() ) );
-            }
-            gen.end();
-
-            gen.map( "macros" );
-            if ( htmlAreaResult.getMacros() != null )
-            {
-                htmlAreaResult.getMacros().forEach( gen::value );
-            }
-            gen.end();
+            htmlAreaResult.getMacrosAsJson().forEach( gen::value );
         }
+        gen.end();
+
+        gen.map( "macros" );
+        if ( htmlAreaResult.getMacros() != null )
+        {
+            htmlAreaResult.getMacros().forEach( gen::value );
+        }
+        gen.end();
     }
 }

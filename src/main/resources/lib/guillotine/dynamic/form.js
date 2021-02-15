@@ -202,11 +202,14 @@ function generateFormItemResolveFunction(formItem) {
         return function (env) {
             let value = env.source[formItem.name];
 
-            if (value && env.args.processHtml) {
-                value = macroLib.processHtml({
-                    value: value,
-                    type: env.args.processHtml.type
-                })
+            if (value && 'HtmlArea' === formItem.inputType) {
+                let processHtmlParams = {
+                    value: value
+                };
+                if (env.args.processHtml) {
+                    processHtmlParams['type'] = env.args.processHtml.type
+                }
+                value = macroLib.processHtml(processHtmlParams);
             }
             if (value && 'Input' === formItem.formItemType) {
                 if ('AttachmentUploader' === formItem.inputType) {
@@ -237,12 +240,15 @@ function generateFormItemResolveFunction(formItem) {
             if (env.args.offset != null || env.args.offset != null) {
                 return values.slice(env.args.offset, env.args.first);
             }
-            if (env.args.processHtml) {
+            if ('HtmlArea' === formItem.inputType) {
                 values = values.map(function (value) {
-                    return macroLib.processHtml({
-                        value: value,
-                        type: env.args.processHtml.type
-                    });
+                    let processHtmlParams = {
+                        value: value
+                    };
+                    if (env.args.processHtml) {
+                        processHtmlParams['type'] = env.args.processHtml.type
+                    }
+                    return macroLib.processHtml(processHtmlParams);
                 });
             }
             if ('Input' === formItem.formItemType) {

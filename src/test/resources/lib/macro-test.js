@@ -17,14 +17,13 @@ exports.testProcessHtml = function () {
     testingLib.assertEquals('Value 12', result.macrosAsJson[0]['field_name_1'][1]);
     testingLib.assertEquals('', result.macrosAsJson[0].body);
     testingLib.assertNotNull(result.macros);
-    testingLib.assertNotNull(result.macros['myapp']);
-    testingLib.assertTrue(result.macros['myapp']['mymacro'].length === 1);
-    testingLib.assertNotNull(result.macros['myapp']['mymacro'][0]);
+    testingLib.assertTrue(result.macros['mymacro'].length === 1);
+    testingLib.assertNotNull(result.macros['mymacro'][0]);
 
-    testingLib.assertEquals("mymacro", result.macros['myapp']['mymacro'][0].macroName);
-    testingLib.assertNotNull(result.macros['myapp']['mymacro'][0].macroRef);
-    testingLib.assertNotNull(result.macros['myapp']['mymacro'][0]['field_name_1']);
-    testingLib.assertEquals('Value 11', result.macros['myapp']['mymacro'][0]['field_name_1'][0]);
-    testingLib.assertEquals('Value 12', result.macros['myapp']['mymacro'][0]['field_name_1'][1]);
-    testingLib.assertEquals('', result.macros['myapp']['mymacro'][0].body);
+    testingLib.assertEquals("mymacro", result.macros['mymacro'][0].macroName);
+    testingLib.assertNotNull(result.macros['mymacro'][0].macroRef);
+    testingLib.assertNotNull(result.macros['mymacro'][0]['field_name_1']);
+    testingLib.assertEquals('Value 11', result.macros['mymacro'][0]['field_name_1'][0]);
+    testingLib.assertEquals('Value 12', result.macros['mymacro'][0]['field_name_1'][1]);
+    testingLib.assertEquals('', result.macros['mymacro'][0].body);
 };

@@ -5,16 +5,16 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMultimap;
 
-class MacroEditorJsonSerializer
+public class MacroEditorJsonSerializer
 {
     private final MacroDecorator macro;
 
-    MacroEditorJsonSerializer( final MacroDecorator macro )
+    public MacroEditorJsonSerializer( final MacroDecorator macro )
     {
         this.macro = macro;
     }
 
-    Map<String, Object> serialize()
+    public Map<String, Object> serialize()
     {
         final Map<String, Object> result = new LinkedHashMap<>();
 
