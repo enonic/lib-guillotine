@@ -1,12 +1,12 @@
 package com.enonic.lib.guillotine.handler;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.enonic.lib.guillotine.macro.ProcessHtmlParams;
 import com.enonic.lib.guillotine.macro.ProcessHtmlService;
 import com.enonic.lib.guillotine.macro.ProcessHtmlServiceImpl;
 import com.enonic.lib.guillotine.mapper.HtmlAreaResultMapper;
-import com.enonic.xp.content.ContentService;
 import com.enonic.xp.macro.MacroDescriptorService;
 import com.enonic.xp.macro.MacroService;
 import com.enonic.xp.portal.PortalRequest;
@@ -19,8 +19,6 @@ import com.enonic.xp.style.StyleDescriptorService;
 public class ProcessHtmlHandler
     implements ScriptBean
 {
-    private Supplier<ContentService> contentServiceSupplier;
-
     private Supplier<StyleDescriptorService> styleDescriptorServiceSupplier;
 
     private Supplier<PortalUrlService> portalUrlServiceSupplier;
@@ -36,7 +34,6 @@ public class ProcessHtmlHandler
     {
         this.request = context.getBinding( PortalRequest.class ).get();
 
-        this.contentServiceSupplier = context.getService( ContentService.class );
         this.styleDescriptorServiceSupplier = context.getService( StyleDescriptorService.class );
         this.portalUrlServiceSupplier = context.getService( PortalUrlService.class );
         this.macroServiceSupplier = context.getService( MacroService.class );
@@ -57,9 +54,14 @@ public class ProcessHtmlHandler
             htmlParams.setType( params.getMap().get( "type" ).toString() );
         }
 
+        if ( params.getMap().containsKey( "imageWidths" ) )
+        {
+            htmlParams.setImageWidths( (List<Integer>) params.getMap().get( "imageWidths" ) );
+        }
+
         final ProcessHtmlService processHtmlService =
-            new ProcessHtmlServiceImpl( contentServiceSupplier.get(), styleDescriptorServiceSupplier.get(), portalUrlServiceSupplier.get(),
-                                        macroServiceSupplier.get(), macroDescriptorServiceSupplier.get() );
+            new ProcessHtmlServiceImpl( styleDescriptorServiceSupplier.get(), portalUrlServiceSupplier.get(), macroServiceSupplier.get(),
+                                        macroDescriptorServiceSupplier.get() );
 
         return new HtmlAreaResultMapper( processHtmlService.processHtml( htmlParams ) );
     }

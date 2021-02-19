@@ -12,6 +12,56 @@ function generateTypes(context) {
     componentTypesLib.createComponentDataConfigType(context);
     macroTypesLib.createMacroDataConfigType(context);
 
+    context.types.imageStyleType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('ImageStyleType'),
+        description: 'ImageStyleType.',
+        fields: {
+            name: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.name;
+                }
+            },
+            aspectRatio: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.aspectRatio;
+                }
+            },
+            filter: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.filter;
+                }
+            }
+        }
+    });
+
+    context.types.imageType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('ImageType'),
+        description: 'ImageType.',
+        fields: {
+            imageId: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.imageId;
+                }
+            },
+            imageRef: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.imageRef;
+                }
+            },
+            style: {
+                type: context.types.imageStyleType,
+                resolve: function (env) {
+                    return env.source.style;
+                }
+            }
+        }
+    });
+
     context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('HtmlAreaResult'),
         description: 'HtmlAreaResult type.',
@@ -38,6 +88,12 @@ function generateTypes(context) {
                 type: context.types.MacroDataConfigType,
                 resolve: function (env) {
                     return env.source.macros;
+                }
+            },
+            images: {
+                type: graphQlLib.list(context.types.imageType),
+                resolve: function (env) {
+                    return env.source.images;
                 }
             }
         }

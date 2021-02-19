@@ -33,5 +33,12 @@ public class HtmlAreaResultMapper
             htmlAreaResult.getMacros().forEach( gen::value );
         }
         gen.end();
+
+        gen.array( "images" );
+        if ( htmlAreaResult.getImages() != null )
+        {
+            htmlAreaResult.getImages().forEach( gen::value );
+        }
+        gen.end();
     }
 }
