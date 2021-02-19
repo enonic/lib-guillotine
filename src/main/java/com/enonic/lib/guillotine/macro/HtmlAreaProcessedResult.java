@@ -13,12 +13,15 @@ public final class HtmlAreaProcessedResult
 
     private final Map<String, List<Map<String, Object>>> macros;
 
+    private final List<Map<String, Object>> images;
+
     private HtmlAreaProcessedResult( final Builder builder )
     {
         this.raw = builder.raw;
         this.markup = builder.markup;
         this.macrosAsJson = builder.macrosAsJson;
         this.macros = builder.macros;
+        this.images = builder.images;
     }
 
     public String getRaw()
@@ -41,6 +44,11 @@ public final class HtmlAreaProcessedResult
         return macros;
     }
 
+    public List<Map<String, Object>> getImages()
+    {
+        return images;
+    }
+
     public static HtmlAreaProcessedResult empty()
     {
         return HtmlAreaProcessedResult.create().build();
@@ -60,6 +68,8 @@ public final class HtmlAreaProcessedResult
         private List<Map<String, Object>> macrosAsJson;
 
         private Map<String, List<Map<String, Object>>> macros;
+
+        private List<Map<String, Object>> images;
 
         public Builder setRaw( final String raw )
         {
@@ -82,6 +92,12 @@ public final class HtmlAreaProcessedResult
         public Builder setMacros( final Map<String, List<Map<String, Object>>> macros )
         {
             this.macros = macros;
+            return this;
+        }
+
+        public Builder setImages( final List<Map<String, Object>> images )
+        {
+            this.images = images;
             return this;
         }
 

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import com.enonic.xp.app.ApplicationKey;
 import com.enonic.xp.app.ApplicationKeys;
-import com.enonic.xp.content.ContentService;
 import com.enonic.xp.macro.MacroDescriptor;
 import com.enonic.xp.macro.MacroDescriptorService;
 import com.enonic.xp.macro.MacroService;
@@ -20,8 +19,6 @@ import com.enonic.xp.style.StyleDescriptorService;
 public class ProcessHtmlServiceImpl
     implements ProcessHtmlService
 {
-    private final ContentService contentService;
-
     private final StyleDescriptorService styleDescriptorService;
 
     private final PortalUrlService portalUrlService;
@@ -30,11 +27,9 @@ public class ProcessHtmlServiceImpl
 
     private final MacroDescriptorService macroDescriptorService;
 
-    public ProcessHtmlServiceImpl( final ContentService contentService, final StyleDescriptorService styleDescriptorService,
-                                   final PortalUrlService portalUrlService, final MacroService macroService,
-                                   final MacroDescriptorService macroDescriptorService )
+    public ProcessHtmlServiceImpl( final StyleDescriptorService styleDescriptorService, final PortalUrlService portalUrlService,
+                                   final MacroService macroService, final MacroDescriptorService macroDescriptorService )
     {
-        this.contentService = contentService;
         this.styleDescriptorService = styleDescriptorService;
         this.portalUrlService = portalUrlService;
         this.macroService = macroService;
@@ -53,8 +48,13 @@ public class ProcessHtmlServiceImpl
 
         builder.setRaw( params.getValue() );
 
-        String processedHtml = new HtmlLinkProcessor( contentService, styleDescriptorService, portalUrlService ).
-            process( unescapeValue( params.getValue() ), params.getType(), params.getPortalRequest() );
+        final List<Map<String, Object>> images = new ArrayList<>();
+
+        String processedHtml = new HtmlLinkProcessor( styleDescriptorService, portalUrlService ).
+            process( unescapeValue( params.getValue() ), params.getType(), params.getPortalRequest(), params.getImageWidths(),
+                     images::add );
+
+        builder.setImages( images );
 
         final List<String> registeredMacroNames = getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() );
 

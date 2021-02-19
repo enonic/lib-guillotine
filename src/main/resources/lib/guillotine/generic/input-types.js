@@ -5,8 +5,11 @@ function createInputTypes(context) {
         name: context.uniqueName('ProcessHtmlInput'),
         description: 'Process HTML input type',
         fields: {
-            'type': {
+            type: {
                 type: context.types.urlType
+            },
+            imageWidths: {
+                type: graphQlLib.list(graphQlLib.GraphQLInt)
             }
         }
     });

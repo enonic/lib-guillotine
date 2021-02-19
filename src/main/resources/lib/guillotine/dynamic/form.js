@@ -207,7 +207,8 @@ function generateFormItemResolveFunction(formItem) {
                     value: value
                 };
                 if (env.args.processHtml) {
-                    processHtmlParams['type'] = env.args.processHtml.type
+                    processHtmlParams['type'] = env.args.processHtml.type;
+                    processHtmlParams['imageWidths'] = env.args.processHtml.imageWidths
                 }
                 value = macroLib.processHtml(processHtmlParams);
             }
@@ -246,7 +247,8 @@ function generateFormItemResolveFunction(formItem) {
                         value: value
                     };
                     if (env.args.processHtml) {
-                        processHtmlParams['type'] = env.args.processHtml.type
+                        processHtmlParams['type'] = env.args.processHtml.type;
+                        processHtmlParams['imageWidths'] = env.args.processHtml.imageWidths
                     }
                     return macroLib.processHtml(processHtmlParams);
                 });
