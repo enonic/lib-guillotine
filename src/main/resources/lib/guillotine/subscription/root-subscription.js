@@ -7,7 +7,7 @@ function createRootSubscriptionType(context) {
     return graphQlLib.createObjectType(context, {
         name: context.uniqueName('Subscription'),
         fields: {
-            newEvent: {
+            event: {
                 type: eventLib.createEventObjectType(context),
                 resolve: (env) => {
                     return newEventPublisher;
