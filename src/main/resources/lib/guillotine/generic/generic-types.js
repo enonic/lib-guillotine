@@ -49,10 +49,10 @@ function generateGenericContentFields(context) {
             }
         },
         createdTime: {
-            type: graphQlLib.GraphQLString
+            type: graphQlLib.DateTime
         },
         modifiedTime: {
-            type: graphQlLib.GraphQLString
+            type: graphQlLib.DateTime
         },
         owner: {
             type: context.types.principalKeyType,

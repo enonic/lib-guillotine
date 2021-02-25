@@ -92,9 +92,12 @@ function generateInputObjectType(context, input) {
     case 'ContentTypeFilter':
         return graphQlLib.GraphQLString;
     case 'Date':
-        return graphQlLib.GraphQLString; //TODO Date custom scalar type
+        return graphQlLib.Date;
     case 'DateTime':
-        return graphQlLib.GraphQLString; //TODO DateTime custom scalar type
+        if (input.config && input.config.timezone && input.config.timezone.length && input.config.timezone[0].value === "true") {
+            return graphQlLib.DateTime;
+        }
+        return graphQlLib.LocalDateTime;
     case 'Double':
         return graphQlLib.GraphQLFloat;
     case 'GeoPoint':
@@ -122,7 +125,7 @@ function generateInputObjectType(context, input) {
     case 'TextLine':
         return graphQlLib.GraphQLString;
     case 'Time':
-        return graphQlLib.GraphQLString; //TODO Time custom scalar type
+        return graphQlLib.LocalTime;
     }
 
     log.warning('Unknown input type [' + input.inputType + ']. Using String as GraphQL type');
