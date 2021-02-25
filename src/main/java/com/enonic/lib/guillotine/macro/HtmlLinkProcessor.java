@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -142,25 +143,30 @@ public class HtmlLinkProcessor
 
                         final String imageUrl = portalUrlService.imageUrl( imageUrlParams );
 
-                        final StringBuilder replacement = new StringBuilder( "\"" + imageUrl + "\" " );
+                        final StringBuilder replacement = new StringBuilder( "\"" + imageUrl + "\"" );
 
-                        if ( "img".equals( tagName ) && "src".equals( attr ) && imageWidths != null && !imageWidths.isEmpty() )
+                        if ( "img".equals( tagName ) && "src".equals( attr ) )
                         {
-                            final String srcsetValues = IntStream.range( 0, imageWidths.size() ).mapToObj( index -> {
-                                final ImageUrlParams imageParams = new ImageUrlParams().
-                                    type( urlType ).
-                                    id( id ).
-                                    scale( getScale( imageStyle, urlParams, imageWidths.get( index ) ) ).
-                                    filter( getFilter( imageStyle ) ).
-                                    portalRequest( portalRequest );
+                            final String srcsetValues =
+                                IntStream.range( 0, Objects.requireNonNullElse( imageWidths, List.of() ).size() ).mapToObj( index -> {
+                                    final ImageUrlParams imageParams = new ImageUrlParams().
+                                        type( urlType ).
+                                        id( id ).
+                                        scale( getScale( imageStyle, urlParams, imageWidths.get( index ) ) ).
+                                        filter( getFilter( imageStyle ) ).
+                                        portalRequest( portalRequest );
 
-                                return portalUrlService.imageUrl( imageParams ) + " " + imageWidths.get( index ) + "w";
-                            } ).collect( Collectors.joining( "," ) );
+                                    return portalUrlService.imageUrl( imageParams ) + " " + imageWidths.get( index ) + "w";
+                                } ).collect( Collectors.joining( "," ) );
 
                             final String imgEditorRef = UUID.randomUUID().toString();
 
-                            replacement.append( "data-image-ref=\"" ).append( imgEditorRef ).append( "\" " ).
-                                append( "srcset=\"" ).append( srcsetValues ).append( "\"" );
+                            replacement.append( " data-image-ref=\"" ).append( imgEditorRef ).append( "\"" );
+
+                            if ( !srcsetValues.isEmpty() )
+                            {
+                                replacement.append( " srcset=\"" ).append( srcsetValues ).append( "\"" );
+                            }
 
                             imageConsumer.accept( buildStyleProjection( id, imgEditorRef, imageStyle ) );
                         }
@@ -246,11 +252,6 @@ public class HtmlLinkProcessor
 
     private String getScale( final ImageStyle imageStyle, final Map<String, String> urlParams, final Integer expectedWidth )
     {
-        if ( expectedWidth != null )
-        {
-            return "width(" + expectedWidth + ")";
-        }
-
         final String aspectRatio = getAspectRation( imageStyle, urlParams );
 
         if ( aspectRatio != null )
@@ -263,13 +264,13 @@ public class HtmlLinkProcessor
             final String horizontalProportion = matcher.group( "horizontalProportion" );
             final String verticalProportion = matcher.group( "verticalProportion" );
 
-            final int width = DEFAULT_WIDTH;
+            final int width = Objects.requireNonNullElse( expectedWidth, DEFAULT_WIDTH );
             final int height = width / Integer.parseInt( horizontalProportion ) * Integer.parseInt( verticalProportion );
 
             return "block(" + width + "," + height + ")";
         }
 
-        return IMAGE_SCALE;
+        return expectedWidth != null ? "width(" + expectedWidth + ")" : IMAGE_SCALE;
     }
 
     private String getFilter( final ImageStyle imageStyle )
