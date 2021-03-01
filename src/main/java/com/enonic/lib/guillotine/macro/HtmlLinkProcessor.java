@@ -148,15 +148,15 @@ public class HtmlLinkProcessor
                         if ( "img".equals( tagName ) && "src".equals( attr ) )
                         {
                             final String srcsetValues =
-                                IntStream.range( 0, Objects.requireNonNullElse( imageWidths, List.of() ).size() ).mapToObj( index -> {
+                                Objects.requireNonNullElse( imageWidths, List.<Integer>of() ).stream().map( imageWidth -> {
                                     final ImageUrlParams imageParams = new ImageUrlParams().
                                         type( urlType ).
                                         id( id ).
-                                        scale( getScale( imageStyle, urlParams, imageWidths.get( index ) ) ).
+                                        scale( getScale( imageStyle, urlParams, imageWidth ) ).
                                         filter( getFilter( imageStyle ) ).
                                         portalRequest( portalRequest );
 
-                                    return portalUrlService.imageUrl( imageParams ) + " " + imageWidths.get( index ) + "w";
+                                    return portalUrlService.imageUrl( imageParams ) + " " + imageWidth + "w";
                                 } ).collect( Collectors.joining( "," ) );
 
                             final String imgEditorRef = UUID.randomUUID().toString();
