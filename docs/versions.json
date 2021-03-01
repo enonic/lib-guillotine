@@ -2,7 +2,7 @@
     "versions": [
         {
             "label": "stable",
-            "checkout": "master"
+            "checkout": "cdcd26756f6c8cc76111411892cc81cfabac4924"
         },
         {
             "label": "2.x",
