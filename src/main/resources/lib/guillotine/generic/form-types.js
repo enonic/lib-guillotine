@@ -1,7 +1,7 @@
 const graphQlLib = require('/lib/guillotine/graphql');
 
-function generateTypes(context) {
-    context.types.formItemTypeType = graphQlLib.createEnumType({
+function generateTypes(schemaGenerator, context) {
+    context.types.formItemTypeType = schemaGenerator.createEnumType({
         name: context.uniqueName('FormItemType'),
         description: 'Form item type',
         values: {
@@ -12,7 +12,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.formItemType = graphQlLib.createInterfaceType({
+    context.types.formItemType = schemaGenerator.createInterfaceType({
         name: context.uniqueName('FormItem'),
         typeResolver: function (contentType) {
             switch (contentType.formItemType) {
@@ -40,7 +40,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.occurrencesType = graphQlLib.createObjectType(context, {
+    context.types.occurrencesType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('Occurrences'),
         description: 'Occurrences.',
         fields: {
@@ -53,7 +53,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.defaultValueType = graphQlLib.createObjectType(context, {
+    context.types.defaultValueType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('DefaultValue'),
         description: 'Default value.',
         fields: {
@@ -69,7 +69,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.formItemSetType = graphQlLib.createObjectType(context, {
+    context.types.formItemSetType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('FormItemSet'),
         description: 'Form item set.',
         interfaces: [context.types.formItemType],
@@ -99,7 +99,7 @@ function generateTypes(context) {
     });
     context.addDictionaryType(context.types.formItemSetType);
 
-    context.types.formLayoutType = graphQlLib.createObjectType(context, {
+    context.types.formLayoutType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('FormLayout'),
         description: 'Form layout.',
         interfaces: [context.types.formItemType],
@@ -120,7 +120,7 @@ function generateTypes(context) {
     });
     context.addDictionaryType(context.types.formLayoutType);
 
-    context.types.formOptionSetOptionType = graphQlLib.createObjectType(context, {
+    context.types.formOptionSetOptionType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('FormOptionSetOption'),
         description: 'Form option set option.',
         fields: {
@@ -142,7 +142,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.formOptionSetType = graphQlLib.createObjectType(context, {
+    context.types.formOptionSetType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('FormOptionSet'),
         description: 'Form option set.',
         interfaces: [context.types.formItemType],
@@ -175,7 +175,7 @@ function generateTypes(context) {
     });
     context.addDictionaryType(context.types.formOptionSetType);
 
-    context.types.formInputType = graphQlLib.createObjectType(context, {
+    context.types.formInputType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('FormInput'),
         description: 'Form input.',
         interfaces: [context.types.formItemType],

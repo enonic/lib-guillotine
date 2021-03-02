@@ -1,7 +1,7 @@
 const graphQlLib = require('/lib/guillotine/graphql');
 
-function generateTypes(context) {
-    context.types.geoPointType = graphQlLib.createObjectType(context, {
+function generateTypes(schemaGenerator, context) {
+    context.types.geoPointType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('GeoPoint'),
         description: 'GeoPoint.',
         fields: {
@@ -26,7 +26,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.mediaFocalPointType = graphQlLib.createObjectType(context, {
+    context.types.mediaFocalPointType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('MediaFocalPoint'),
         description: 'Media focal point.',
         fields: {
@@ -39,7 +39,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.mediaUploaderType = graphQlLib.createObjectType(context, {
+    context.types.mediaUploaderType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('MediaUploader'),
         description: 'Media uploader.',
         fields: {
@@ -52,7 +52,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.siteConfiguratorType = graphQlLib.createObjectType(context, {
+    context.types.siteConfiguratorType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('SiteConfigurator'),
         description: 'Site configurator.',
         fields: {

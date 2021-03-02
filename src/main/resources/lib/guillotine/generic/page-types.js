@@ -8,11 +8,11 @@ const componentTypesLib = require('/lib/guillotine/dynamic/component-types');
 const utilLib = require('/lib/guillotine/util/util');
 const macroTypesLib = require('/lib/guillotine/dynamic/macro-types');
 
-function generateTypes(context) {
-    componentTypesLib.createComponentDataConfigType(context);
-    macroTypesLib.createMacroDataConfigType(context);
+function generateTypes(schemaGenerator, context) {
+    componentTypesLib.createComponentDataConfigType(schemaGenerator, context);
+    macroTypesLib.createMacroDataConfigType(schemaGenerator, context);
 
-    context.types.imageStyleType = graphQlLib.createObjectType(context, {
+    context.types.imageStyleType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('ImageStyleType'),
         description: 'ImageStyleType.',
         fields: {
@@ -37,7 +37,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.imageType = graphQlLib.createObjectType(context, {
+    context.types.imageType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('ImageType'),
         description: 'ImageType.',
         fields: {
@@ -64,7 +64,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
+    context.types.htmlAreaResultType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('HtmlAreaResult'),
         description: 'HtmlAreaResult type.',
         fields: {
@@ -101,7 +101,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.componentTypeType = graphQlLib.createEnumType({
+    context.types.componentTypeType = schemaGenerator.createEnumType({
         name: context.uniqueName('ComponentType'),
         description: 'Component type.',
         values: {
@@ -114,7 +114,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.pageComponentDataType = graphQlLib.createObjectType(context, {
+    context.types.pageComponentDataType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('PageComponentData'),
         description: 'Page component data.',
         fields: {
@@ -142,7 +142,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.layoutComponentDataType = graphQlLib.createObjectType(context, {
+    context.types.layoutComponentDataType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('LayoutComponentData'),
         description: 'Layout component data.',
         fields: {
@@ -162,7 +162,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.partComponentDataType = graphQlLib.createObjectType(context, {
+    context.types.partComponentDataType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('PartComponentData'),
         description: 'Part component data.',
         fields: {
@@ -182,7 +182,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.imageComponentDataType = graphQlLib.createObjectType(context, {
+    context.types.imageComponentDataType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('ImageComponentData'),
         description: 'Image component data.',
         fields: {
@@ -202,7 +202,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.textComponentDataType = graphQlLib.createObjectType(context, {
+    context.types.textComponentDataType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('TextComponentData'),
         description: 'Text component data.',
         fields: {
@@ -212,7 +212,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.fragmentComponentDataType = graphQlLib.createObjectType(context, {
+    context.types.fragmentComponentDataType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('FragmentComponentData'),
         description: 'Fragment component data.',
         fields: {
@@ -229,7 +229,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.componentType = graphQlLib.createObjectType(context, {
+    context.types.componentType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('Component'),
         description: 'Component.',
         fields: {

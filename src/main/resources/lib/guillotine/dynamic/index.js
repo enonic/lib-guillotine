@@ -1,7 +1,7 @@
 const contentTypesLib = require('/lib/guillotine/dynamic/content-types');
 
-function createTypes(context) {
-    contentTypesLib.createContentTypeTypes(context);
+function createTypes(schemaGenerator, context) {
+    contentTypesLib.createContentTypeTypes(schemaGenerator, context);
 }
 
 exports.createTypes = createTypes;

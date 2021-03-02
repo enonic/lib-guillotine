@@ -1,7 +1,7 @@
 const graphQlLib = require('/lib/guillotine/graphql');
 
-function createInputTypes(context) {
-    context.types.processHtmlType = graphQlLib.createInputObjectType({
+function createInputTypes(schemaGenerator, context) {
+    context.types.processHtmlType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('ProcessHtmlInput'),
         description: 'Process HTML input type',
         fields: {
@@ -14,7 +14,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.numberRangeInputType = graphQlLib.createInputObjectType({
+    context.types.numberRangeInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('NumberRangeInput'),
         description: 'Number range input type',
         fields: {
@@ -27,7 +27,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.dateRangeInputType = graphQlLib.createInputObjectType({
+    context.types.dateRangeInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('DateRangeInput'),
         description: 'Date range input type',
         fields: {
@@ -41,7 +41,7 @@ function createInputTypes(context) {
     });
 
 
-    context.types.geoPointInputType = graphQlLib.createInputObjectType({
+    context.types.geoPointInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('GeoPointInput'),
         description: 'Geo range input type',
         fields: {
@@ -54,7 +54,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.termsAggregationInputType = graphQlLib.createInputObjectType({
+    context.types.termsAggregationInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('TermsAggregationInput'),
         description: 'Terms aggregation input type',
         fields: {
@@ -70,7 +70,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.statsAggregationInputType = graphQlLib.createInputObjectType({
+    context.types.statsAggregationInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('StatsAggregationInput'),
         description: 'Stats aggregation input type',
         fields: {
@@ -80,7 +80,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.rangeAggregationInputType = graphQlLib.createInputObjectType({
+    context.types.rangeAggregationInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('RangeAggregationInput'),
         description: 'Range aggregation input type',
         fields: {
@@ -93,7 +93,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.dateRangeAggregationInputType = graphQlLib.createInputObjectType({
+    context.types.dateRangeAggregationInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('DateRangeAggregationInput'),
         description: 'DateRange aggregation input type',
         fields: {
@@ -109,7 +109,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.dateHistogramAggregationInputType = graphQlLib.createInputObjectType({
+    context.types.dateHistogramAggregationInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('DateHistogramAggregationInput'),
         description: 'DateHistogram aggregation input type',
         fields: {
@@ -128,7 +128,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.geoDistanceAggregationInputType = graphQlLib.createInputObjectType({
+    context.types.geoDistanceAggregationInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('GeoDistanceAggregationInput'),
         description: 'GeoDistance aggregation input type',
         fields: {
@@ -147,7 +147,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.aggregationInputType = graphQlLib.createInputObjectType({
+    context.types.aggregationInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('AggregationInput'),
         description: 'Aggregation input type',
         fields: {
@@ -178,7 +178,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.existsFilterInputType = graphQlLib.createInputObjectType({
+    context.types.existsFilterInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('ExistsFilterInput'),
         description: 'ExistsFilter input type',
         fields: {
@@ -188,7 +188,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.notExistsFilterInputType = graphQlLib.createInputObjectType({
+    context.types.notExistsFilterInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('NotExistsFilterInput'),
         description: 'NotExistsFilter input type',
         fields: {
@@ -198,7 +198,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.hasValueFilterInputType = graphQlLib.createInputObjectType({
+    context.types.hasValueFilterInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('HasValueFilterInput'),
         description: 'HasValueFilter input type',
         fields: {
@@ -220,7 +220,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.idsFilterInputType = graphQlLib.createInputObjectType({
+    context.types.idsFilterInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('IdsFilterInput'),
         description: 'IdsFilter input type',
         fields: {
@@ -230,7 +230,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.booleanFilterInputType = graphQlLib.createInputObjectType({
+    context.types.booleanFilterInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('BooleanFilterInput'),
         description: 'BooleanFilter input type',
         fields: {
@@ -246,7 +246,7 @@ function createInputTypes(context) {
         }
     });
 
-    context.types.filterInputType = graphQlLib.createInputObjectType({
+    context.types.filterInputType = schemaGenerator.createInputObjectType({
         name: context.uniqueName('FilterInput'),
         description: 'Filter input type',
         fields: {

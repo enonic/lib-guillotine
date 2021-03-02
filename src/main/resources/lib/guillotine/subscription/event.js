@@ -1,10 +1,10 @@
-const graphQlLib = require('/lib/graphql');
+const graphQlLib = require('/lib/guillotine/graphql');
 const graphQlRxLib = require('/lib/graphql-rx');
 const eventLib = require('/lib/xp/event');
 const ctxLib = require('/lib/xp/context');
 
-function createEventObjectType(context) {
-    return graphQlLib.createObjectType({
+function createEventObjectType(schemaGenerator, context) {
+    return graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('Event'),
         fields: {
             type: {
@@ -22,7 +22,7 @@ function createEventObjectType(context) {
             dataAsJson: {
                 type: graphQlLib.Json,
                 resolve: (env) => env.source.data
-            },
+            }
         }
     });
 }
