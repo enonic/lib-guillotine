@@ -27,11 +27,11 @@ function getFormItems(form) {
 }
 
 
-function generateFormItemObjectType(schemaGenerator, context, namePrefix, formItem) {
+function generateFormItemObjectType(context, namePrefix, formItem) {
     var formItemObjectType;
     switch (formItem.formItemType) {
     case 'ItemSet':
-        formItemObjectType = generateItemSetObjectType(schemaGenerator, context, namePrefix, formItem);
+        formItemObjectType = generateItemSetObjectType(context, namePrefix, formItem);
         break;
     case 'Layout':
         //Should already be filtered
@@ -40,7 +40,7 @@ function generateFormItemObjectType(schemaGenerator, context, namePrefix, formIt
         formItemObjectType = generateInputObjectType(context, formItem);
         break;
     case 'OptionSet':
-        formItemObjectType = generateOptionSetObjectType(schemaGenerator, context, namePrefix, formItem);
+        formItemObjectType = generateOptionSetObjectType(context, namePrefix, formItem);
         break;
     }
 
@@ -56,7 +56,7 @@ function generateFormItemObjectType(schemaGenerator, context, namePrefix, formIt
     }
 }
 
-function generateItemSetObjectType(schemaGenerator, context, namePrefix, itemSet) {
+function generateItemSetObjectType(context, namePrefix, itemSet) {
     let name = namePrefix + '_' + namingLib.generateCamelCase(itemSet.label, true);
     let createItemSetTypeParams = {
         name: context.uniqueName(name),
@@ -70,12 +70,12 @@ function generateItemSetObjectType(schemaGenerator, context, namePrefix, itemSet
 
     formItems.forEach(function (item) {
         createItemSetTypeParams.fields[namingLib.sanitizeText(item.name)] = {
-            type: generateFormItemObjectType(schemaGenerator, context, namePrefix, item),
+            type: generateFormItemObjectType(context, namePrefix, item),
             args: generateFormItemArguments(context, item),
             resolve: generateFormItemResolveFunction(item)
         }
     });
-    return graphQlLib.createOutputObjectType(schemaGenerator, context, createItemSetTypeParams);
+    return graphQlLib.createObjectType(context, createItemSetTypeParams);
 }
 
 function generateInputObjectType(context, input) {
@@ -133,9 +133,9 @@ function generateInputObjectType(context, input) {
     return graphQlLib.GraphQLString;
 }
 
-function generateOptionSetObjectType(schemaGenerator, context, namePrefix, optionSet) {
+function generateOptionSetObjectType(context, namePrefix, optionSet) {
     let name = namePrefix + '_' + namingLib.generateCamelCase(optionSet.label, true);
-    let optionSetEnum = generateOptionSetEnum(schemaGenerator, context, optionSet, name);
+    let optionSetEnum = generateOptionSetEnum(context, optionSet, name);
     let createOptionSetTypeParams = {
         name: context.uniqueName(name),
         description: optionSet.label,
@@ -153,16 +153,16 @@ function generateOptionSetObjectType(schemaGenerator, context, namePrefix, optio
 
     optionSet.options.forEach(function (option) {
         createOptionSetTypeParams.fields[namingLib.sanitizeText(option.name)] = {
-            type: generateOptionObjectType(schemaGenerator, context, namePrefix, option),
+            type: generateOptionObjectType(context, namePrefix, option),
             resolve: function (env) {
                 return env.source[option.name];
             }
         }
     });
-    return graphQlLib.createOutputObjectType(schemaGenerator, context, createOptionSetTypeParams);
+    return graphQlLib.createObjectType(context, createOptionSetTypeParams);
 }
 
-function generateOptionSetEnum(schemaGenerator, context, optionSet, optionSetName) {
+function generateOptionSetEnum(context, optionSet, optionSetName) {
     let enumValues = {};
 
     let name = optionSetName + '_OptionEnum';
@@ -174,16 +174,16 @@ function generateOptionSetEnum(schemaGenerator, context, optionSet, optionSetNam
         enumValues[optionName] = option.name;
     });
 
-    return schemaGenerator.createEnumType({
+    return context.schemaGenerator.createEnumType({
         name: context.uniqueName(name),
         description: optionSet.label + ' option enum.',
         values: enumValues
     });
 }
 
-function generateOptionObjectType(schemaGenerator, context, namePrefix, option) {
+function generateOptionObjectType(context, namePrefix, option) {
     if (option.items.length > 0) {
-        return generateItemSetObjectType(schemaGenerator, context, namePrefix, option);
+        return generateItemSetObjectType(context, namePrefix, option);
     } else {
         return graphQlLib.GraphQLString;
     }

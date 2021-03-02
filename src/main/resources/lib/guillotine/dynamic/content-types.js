@@ -9,13 +9,13 @@ const namingLib = require('/lib/guillotine/util/naming');
 const mediaContentTypeRegexp = /^media:/;
 const imageContentTypeRegexp = /^media:image$/;
 
-exports.createContentTypeTypes = function (schemaGenerator, context) {
+exports.createContentTypeTypes = function (context) {
 
     //For each content type
     exports.getAllowedContentTypes(context).forEach(function (contentType) {
 
         //Generates the object type for this content type
-        var contentTypeObjectType = generateContentTypeObjectType(schemaGenerator, context, contentType);
+        var contentTypeObjectType = generateContentTypeObjectType(context, contentType);
         context.addDictionaryType(contentTypeObjectType);
     });
 };
@@ -40,7 +40,7 @@ function generateAllowedContentTypeRegexp(context) {
     return new RegExp('^(?:base|media|portal' + siteApplicationKeys + '):');
 }
 
-function generateContentTypeObjectType(schemaGenerator, context, contentType) {
+function generateContentTypeObjectType(context, contentType) {
     var name = generateContentTypeName(contentType);
 
     var createContentTypeTypeParams = {
@@ -58,10 +58,10 @@ function generateContentTypeObjectType(schemaGenerator, context, contentType) {
     }
 
     createContentTypeTypeParams.fields.data = formLib.getFormItems(contentType.form).length > 0 ? {
-        type: generateContentDataObjectType(schemaGenerator, context, contentType)
+        type: generateContentDataObjectType(context, contentType)
     } : undefined;
 
-    var contentTypeObjectType = graphQlLib.createOutputObjectType(schemaGenerator, context, createContentTypeTypeParams);
+    var contentTypeObjectType = graphQlLib.createObjectType(context, createContentTypeTypeParams);
     context.putContentTypeType(contentType.name, contentTypeObjectType);
     return contentTypeObjectType;
 }
@@ -112,7 +112,7 @@ function addImageFields(context, createContentTypeTypeParams) {
     }
 }
 
-function generateContentDataObjectType(schemaGenerator, context, contentType) {
+function generateContentDataObjectType(context, contentType) {
     var name = generateContentTypeName(contentType) + '_Data';
     var createContentTypeDataTypeParams = {
         name: context.uniqueName(name),
@@ -125,12 +125,12 @@ function generateContentDataObjectType(schemaGenerator, context, contentType) {
 
         //Creates a data field corresponding to this form item
         createContentTypeDataTypeParams.fields[namingLib.sanitizeText(formItem.name)] = {
-            type: formLib.generateFormItemObjectType(schemaGenerator, context, generateContentTypeName(contentType), formItem),
+            type: formLib.generateFormItemObjectType(context, generateContentTypeName(contentType), formItem),
             args: formLib.generateFormItemArguments(context, formItem),
             resolve: formLib.generateFormItemResolveFunction(formItem)
         }
     });
-    return graphQlLib.createOutputObjectType(schemaGenerator, context, createContentTypeDataTypeParams);
+    return graphQlLib.createObjectType(context, createContentTypeDataTypeParams);
 }
 
 

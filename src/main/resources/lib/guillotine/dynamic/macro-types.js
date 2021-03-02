@@ -11,7 +11,7 @@ function getMacroDescriptors(applicationsKeys) {
     return __.toNativeObject(descriptorBean.getMacroDescriptors(applicationsKeys));
 }
 
-function createMacroDataConfigType(schemaGenerator, context) {
+function createMacroDataConfigType(context) {
     let macroDescriptors = getMacroDescriptors(context.options.applications);
 
     let macroConfigTypeFields = {};
@@ -32,13 +32,13 @@ function createMacroDataConfigType(schemaGenerator, context) {
 
         libs.form.getFormItems(descriptor.form).forEach(function (formItem) {
             macroDescriptorFields[libs.naming.sanitizeText(formItem.name)] = {
-                type: libs.form.generateFormItemObjectType(schemaGenerator, context, descriptorTypeName, formItem),
+                type: libs.form.generateFormItemObjectType(context, descriptorTypeName, formItem),
                 args: libs.form.generateFormItemArguments(context, formItem),
                 resolve: libs.form.generateFormItemResolveFunction(formItem)
             }
         });
 
-        const descriptorConfigType = libs.graphQL.createOutputObjectType(schemaGenerator, context, {
+        const descriptorConfigType = libs.graphQL.createObjectType(context, {
             name: descriptorTypeName,
             description: `Macro descriptor config for application ['${descriptor.applicationKey}'] and descriptor ['${descriptor.name}']`,
             fields: macroDescriptorFields
@@ -55,7 +55,7 @@ function createMacroDataConfigType(schemaGenerator, context) {
     });
 
     if (Object.keys(macroConfigTypeFields).length > 0) {
-        context.types['MacroDataConfigType'] = libs.graphQL.createOutputObjectType(schemaGenerator, context, {
+        context.types['MacroDataConfigType'] = libs.graphQL.createObjectType(context, {
             name: context.uniqueName('MacroDataConfig'),
             description: 'Macro component config.',
             fields: macroConfigTypeFields

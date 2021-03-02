@@ -5,7 +5,7 @@ const graphqlLib = require('/lib/guillotine/graphql');
 const schemaGenerator = graphqlLib.schemaGenerator();
 
 exports.testGenerateFormItemObjectType = function () {
-    let objectType = formLib.generateFormItemObjectType(schemaGenerator, {}, 'namePrefix', {
+    let objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
         inputType: 'AttachmentUploader',
         formItemType: 'Input',
         occurrences: {
@@ -14,7 +14,7 @@ exports.testGenerateFormItemObjectType = function () {
     });
     testingLib.assertEquals('Attachment', objectType.name);
 
-    objectType = formLib.generateFormItemObjectType(schemaGenerator, {}, 'namePrefix', {
+    objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
         formItemType: "Input",
         name: "dateTimeField",
         label: "DateTime Field",
@@ -34,7 +34,7 @@ exports.testGenerateFormItemObjectType = function () {
     });
     testingLib.assertEquals('DateTime', objectType.name);
 
-    objectType = formLib.generateFormItemObjectType(schemaGenerator, {}, 'namePrefix', {
+    objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
         formItemType: "Input",
         name: "dateTimeField",
         label: "DateTime Field",
@@ -48,7 +48,7 @@ exports.testGenerateFormItemObjectType = function () {
     });
     testingLib.assertEquals('LocalDateTime', objectType.name);
 
-    objectType = formLib.generateFormItemObjectType(schemaGenerator, {}, 'namePrefix', {
+    objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
         formItemType: "Input",
         name: "timeField",
         label: "Time Field",
@@ -62,7 +62,7 @@ exports.testGenerateFormItemObjectType = function () {
     });
     testingLib.assertEquals('LocalTime', objectType.name);
 
-    objectType = formLib.generateFormItemObjectType(schemaGenerator, {}, 'namePrefix', {
+    objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
         formItemType: "Input",
         name: "dateField",
         label: "Date Field",
