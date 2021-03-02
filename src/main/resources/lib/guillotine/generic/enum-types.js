@@ -1,7 +1,5 @@
-const graphQlLib = require('/lib/guillotine/graphql');
-
-function createEnumTypes(context) {
-    context.types.urlType = graphQlLib.createEnumType({
+function createEnumTypes(schemaGenerator, context) {
+    context.types.urlType = schemaGenerator.createEnumType({
         name: context.uniqueName('UrlType'),
         description: 'URL type.',
         values: {
@@ -9,6 +7,6 @@ function createEnumTypes(context) {
             'absolute': 'absolute'
         }
     });
-};
+}
 
 exports.createEnumTypes = createEnumTypes;

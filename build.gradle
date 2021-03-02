@@ -33,7 +33,7 @@ dependencies {
     compile "com.enonic.xp:lib-portal:${xpVersion}"
     compile "com.enonic.xp:lib-common:${xpVersion}"
     compile "com.enonic.xp:lib-websocket:${xpVersion}"
-    compile 'com.enonic.lib:lib-graphql:1.2.1-SNAPSHOT'
+    compile 'com.enonic.lib:lib-graphql:2.0.0-SNAPSHOT'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
     testImplementation "com.enonic.xp:testing:${xpVersion}"

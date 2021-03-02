@@ -9,24 +9,28 @@ const webSocketLib = require('/lib/xp/websocket');
 
 function createSchema(options) {
     const context = createContext(options);
-    createTypes(context);
-    return graphQlLib.createSchema({
-        query: rootQueryLib.createRootQueryType(context),
-        subscription: rootSubscriptionLib.createRootSubscriptionType(context),
+
+    const schemaGenerator = graphQlLib.schemaGenerator();
+
+    createTypes(schemaGenerator, context);
+
+    return schemaGenerator.createSchema({
+        query: rootQueryLib.createRootQueryType(schemaGenerator, context),
+        subscription: rootSubscriptionLib.createRootSubscriptionType(schemaGenerator, context),
         dictionary: context.dictionary
     });
 }
 
-function createContentApi(context) {
+function createContentApi(schemaGenerator, context) {
     context = context || createContext();
 
-    createTypes(context);
-    return contentApiLib.createContentApiType(context);
+    createTypes(schemaGenerator, context);
+    return contentApiLib.createContentApiType(schemaGenerator, context);
 }
 
-function createTypes(context) {
-    genericLib.createTypes(context);
-    dynamicLib.createTypes(context);
+function createTypes(schemaGenerator, context) {
+    genericLib.createTypes(schemaGenerator, context);
+    dynamicLib.createTypes(schemaGenerator, context);
 }
 
 function createContext(options) {

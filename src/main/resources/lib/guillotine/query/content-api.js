@@ -9,8 +9,8 @@ const validationLib = require('/lib/guillotine/util/validation');
 const wildcardLib = require('/lib/guillotine/util/wildcard');
 const factoryUtil = require('/lib/guillotine/util/factory');
 
-function createContentApiType(context) {
-    return graphQlLib.createObjectType(context, {
+function createContentApiType(schemaGenerator, context) {
+    return graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('HeadlessCms'),
         description: 'Headless CMS',
         fields: {

@@ -2,8 +2,8 @@ const graphQlLib = require('/lib/guillotine/graphql');
 
 const principalKeyRegexp = /^(?:role:([^:]+)|(?:(?:user|group):([^:]+):([^:]+)))$/;
 
-function generateTypes(context) {
-    context.types.principalKeyType = graphQlLib.createObjectType(context, {
+function generateTypes(schemaGenerator, context) {
+    context.types.principalKeyType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('PrincipalKey'),
         description: 'Principal key.',
         fields: {
@@ -14,7 +14,7 @@ function generateTypes(context) {
                 }
             },
             type: {
-                type: graphQlLib.createEnumType({
+                type: schemaGenerator.createEnumType({
                     name: context.uniqueName('PrincipalType'),
                     description: 'Principal type.',
                     values: {
@@ -42,7 +42,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.permissionType = graphQlLib.createEnumType({
+    context.types.permissionType = schemaGenerator.createEnumType({
         name: context.uniqueName('Permission'),
         description: 'Permission.',
         values: {
@@ -56,7 +56,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.accessControlEntryType = graphQlLib.createObjectType(context, {
+    context.types.accessControlEntryType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('AccessControlEntry'),
         description: 'Access control entry.',
         fields: {
@@ -72,7 +72,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.permissionsType = graphQlLib.createObjectType(context, {
+    context.types.permissionsType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
         name: context.uniqueName('Permissions'),
         description: 'Permissions.',
         fields: {
