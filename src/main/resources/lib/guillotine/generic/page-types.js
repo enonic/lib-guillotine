@@ -41,10 +41,12 @@ function generateTypes(context) {
         name: context.uniqueName('ImageType'),
         description: 'ImageType.',
         fields: {
-            imageId: {
-                type: graphQlLib.GraphQLString,
+            image: {
+                type: graphQlLib.reference('Content'),
                 resolve: function (env) {
-                    return env.source.imageId;
+                    return contentLib.get({
+                        key: env.source.imageId
+                    });
                 }
             },
             imageRef: {
