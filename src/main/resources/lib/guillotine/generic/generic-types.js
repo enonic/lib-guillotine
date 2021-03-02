@@ -243,14 +243,14 @@ function generateGenericContentFields(context) {
     };
 }
 
-function createGenericTypes(schemaGenerator, context) {
+function createGenericTypes(context) {
 
-    aclTypesLib.generateTypes(schemaGenerator, context);
-    genericContentTypesLib.generateTypes(schemaGenerator, context);
-    formTypesLib.generateTypes(schemaGenerator, context);
-    pageTypesLib.generateTypes(schemaGenerator, context);
+    aclTypesLib.generateTypes(context);
+    genericContentTypesLib.generateTypes(context);
+    formTypesLib.generateTypes(context);
+    pageTypesLib.generateTypes(context);
 
-    context.types.publishInfoType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.publishInfoType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PublishInfo'),
         description: 'Publish information.',
         fields: {
@@ -266,7 +266,7 @@ function createGenericTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.attachmentType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.attachmentType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('Attachment'),
         description: 'Attachment.',
         fields: {
@@ -302,7 +302,7 @@ function createGenericTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.extraDataType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.extraDataType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('ExtraData'),
         description: 'Extra data.',
         fields: {
@@ -315,7 +315,7 @@ function createGenericTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.iconType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.iconType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('Icon'),
         description: 'Icon.',
         fields: {
@@ -328,7 +328,7 @@ function createGenericTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.contentTypeType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.contentTypeType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('ContentType'),
         description: 'Content type.',
         fields: {
@@ -415,7 +415,7 @@ function createGenericTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.contentType = schemaGenerator.createInterfaceType({
+    context.types.contentType = context.schemaGenerator.createInterfaceType({
         name: context.uniqueName('Content'),
         typeResolver: function (content) {
             return context.contentTypeMap[content.type] || context.types.untypedContentType;
@@ -423,16 +423,16 @@ function createGenericTypes(schemaGenerator, context) {
         description: 'Content.',
         fields: exports.generateGenericContentFields(context)
     });
-    context.types.contentConnectionType = graphQlConnectionLib.createConnectionType(schemaGenerator, context.types.contentType);
+    context.types.contentConnectionType = graphQlConnectionLib.createConnectionType(context.schemaGenerator, context.types.contentType);
 
-    context.types.untypedContentType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.untypedContentType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('UntypedContent'),
         description: 'Untyped content.',
         interfaces: [context.types.contentType],
         fields: exports.generateGenericContentFields(context)
     });
 
-    context.types.queryResult = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.queryResult = graphQlLib.createObjectType(context, {
         name: context.uniqueName('QueryResult'),
         description: 'Query result.',
         fields: {
@@ -445,7 +445,7 @@ function createGenericTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.queryContentConnectionType = graphQlLib.createOutputObjectType(schemaGenerator, context, {
+    context.types.queryContentConnectionType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('QueryContentConnection'),
         description: 'QueryContentConnection',
         fields: {

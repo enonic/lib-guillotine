@@ -1,7 +1,7 @@
 const graphQlLib = require('/lib/guillotine/graphql');
 
-function createInputTypes(schemaGenerator, context) {
-    context.types.processHtmlType = schemaGenerator.createInputObjectType({
+function createInputTypes(context) {
+    context.types.processHtmlType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('ProcessHtmlInput'),
         description: 'Process HTML input type',
         fields: {
@@ -14,7 +14,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.numberRangeInputType = schemaGenerator.createInputObjectType({
+    context.types.numberRangeInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('NumberRangeInput'),
         description: 'Number range input type',
         fields: {
@@ -27,7 +27,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.dateRangeInputType = schemaGenerator.createInputObjectType({
+    context.types.dateRangeInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('DateRangeInput'),
         description: 'Date range input type',
         fields: {
@@ -41,7 +41,7 @@ function createInputTypes(schemaGenerator, context) {
     });
 
 
-    context.types.geoPointInputType = schemaGenerator.createInputObjectType({
+    context.types.geoPointInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('GeoPointInput'),
         description: 'Geo range input type',
         fields: {
@@ -54,7 +54,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.termsAggregationInputType = schemaGenerator.createInputObjectType({
+    context.types.termsAggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('TermsAggregationInput'),
         description: 'Terms aggregation input type',
         fields: {
@@ -70,7 +70,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.statsAggregationInputType = schemaGenerator.createInputObjectType({
+    context.types.statsAggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('StatsAggregationInput'),
         description: 'Stats aggregation input type',
         fields: {
@@ -80,7 +80,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.rangeAggregationInputType = schemaGenerator.createInputObjectType({
+    context.types.rangeAggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('RangeAggregationInput'),
         description: 'Range aggregation input type',
         fields: {
@@ -93,7 +93,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.dateRangeAggregationInputType = schemaGenerator.createInputObjectType({
+    context.types.dateRangeAggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('DateRangeAggregationInput'),
         description: 'DateRange aggregation input type',
         fields: {
@@ -109,7 +109,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.dateHistogramAggregationInputType = schemaGenerator.createInputObjectType({
+    context.types.dateHistogramAggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('DateHistogramAggregationInput'),
         description: 'DateHistogram aggregation input type',
         fields: {
@@ -128,7 +128,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.geoDistanceAggregationInputType = schemaGenerator.createInputObjectType({
+    context.types.geoDistanceAggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('GeoDistanceAggregationInput'),
         description: 'GeoDistance aggregation input type',
         fields: {
@@ -147,7 +147,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.aggregationInputType = schemaGenerator.createInputObjectType({
+    context.types.aggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('AggregationInput'),
         description: 'Aggregation input type',
         fields: {
@@ -178,7 +178,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.existsFilterInputType = schemaGenerator.createInputObjectType({
+    context.types.existsFilterInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('ExistsFilterInput'),
         description: 'ExistsFilter input type',
         fields: {
@@ -188,7 +188,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.notExistsFilterInputType = schemaGenerator.createInputObjectType({
+    context.types.notExistsFilterInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('NotExistsFilterInput'),
         description: 'NotExistsFilter input type',
         fields: {
@@ -198,7 +198,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.hasValueFilterInputType = schemaGenerator.createInputObjectType({
+    context.types.hasValueFilterInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('HasValueFilterInput'),
         description: 'HasValueFilter input type',
         fields: {
@@ -220,7 +220,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.idsFilterInputType = schemaGenerator.createInputObjectType({
+    context.types.idsFilterInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('IdsFilterInput'),
         description: 'IdsFilter input type',
         fields: {
@@ -230,7 +230,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.booleanFilterInputType = schemaGenerator.createInputObjectType({
+    context.types.booleanFilterInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('BooleanFilterInput'),
         description: 'BooleanFilter input type',
         fields: {
@@ -246,7 +246,7 @@ function createInputTypes(schemaGenerator, context) {
         }
     });
 
-    context.types.filterInputType = schemaGenerator.createInputObjectType({
+    context.types.filterInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('FilterInput'),
         description: 'Filter input type',
         fields: {

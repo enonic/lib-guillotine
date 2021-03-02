@@ -3,8 +3,8 @@ const graphQlRxLib = require('/lib/graphql-rx');
 const eventLib = require('/lib/xp/event');
 const ctxLib = require('/lib/xp/context');
 
-function createEventObjectType(schemaGenerator, context) {
-    return graphQlLib.createOutputObjectType(schemaGenerator, context, {
+function createEventObjectType(context) {
+    return graphQlLib.createObjectType(context, {
         name: context.uniqueName('Event'),
         fields: {
             type: {

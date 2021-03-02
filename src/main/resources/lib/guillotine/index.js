@@ -10,27 +10,25 @@ const webSocketLib = require('/lib/xp/websocket');
 function createSchema(options) {
     const context = createContext(options);
 
-    const schemaGenerator = graphQlLib.schemaGenerator();
+    createTypes(context);
 
-    createTypes(schemaGenerator, context);
-
-    return schemaGenerator.createSchema({
-        query: rootQueryLib.createRootQueryType(schemaGenerator, context),
-        subscription: rootSubscriptionLib.createRootSubscriptionType(schemaGenerator, context),
+    return context.schemaGenerator.createSchema({
+        query: rootQueryLib.createRootQueryType(context),
+        subscription: rootSubscriptionLib.createRootSubscriptionType(context),
         dictionary: context.dictionary
     });
 }
 
-function createContentApi(schemaGenerator, context) {
+function createContentApi(context) {
     context = context || createContext();
 
-    createTypes(schemaGenerator, context);
-    return contentApiLib.createContentApiType(schemaGenerator, context);
+    createTypes(context);
+    return contentApiLib.createContentApiType(context);
 }
 
-function createTypes(schemaGenerator, context) {
-    genericLib.createTypes(schemaGenerator, context);
-    dynamicLib.createTypes(schemaGenerator, context);
+function createTypes(context) {
+    genericLib.createTypes(context);
+    dynamicLib.createTypes(context);
 }
 
 function createContext(options) {
@@ -72,6 +70,8 @@ function createContext(options) {
     context.options.applications = context.options.applications || [app.name];
     context.options.allowPaths = context.options.allowPaths || [];
     context.options.subscriptionEventTypes = context.options.subscriptionEventTypes || ['node.*'];
+
+    context.schemaGenerator = graphQlLib.schemaGenerator();
 
     return context;
 }
