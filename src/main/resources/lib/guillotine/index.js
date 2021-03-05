@@ -71,7 +71,7 @@ function createContext(options) {
     context.options.allowPaths = context.options.allowPaths || [];
     context.options.subscriptionEventTypes = context.options.subscriptionEventTypes || ['node.*'];
 
-    context.schemaGenerator = graphQlLib.schemaGenerator();
+    context.schemaGenerator = graphQlLib.newSchemaGenerator();
 
     return context;
 }

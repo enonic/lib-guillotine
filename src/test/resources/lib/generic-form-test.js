@@ -2,7 +2,7 @@ const formLib = require('/lib/guillotine/dynamic/form');
 const testingLib = require('/lib/xp/testing');
 const graphqlLib = require('/lib/guillotine/graphql');
 
-const schemaGenerator = graphqlLib.schemaGenerator();
+const schemaGenerator = graphqlLib.newSchemaGenerator();
 
 exports.testGenerateFormItemObjectType = function () {
     let objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
