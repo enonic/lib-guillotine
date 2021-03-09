@@ -87,12 +87,37 @@ Guillotine also enables you to use GraphQL subscription in order to listen to ev
 
 The subscriptions are implemented using Websockets, providing instant and high performance streaming of events over HTTP.
 
-.Listen to modify events
 [source,graphQL]
+.Listen to server events for the specific site
 ----
-subscription{newEvent(type:"node.modify")}
+subscription {
+  event
+}
 ----
 
+Since image:images/v-500.svg[Since verision,opts=inline] Guillotine listens events only for a specific `repository` and `branch` which are determined from a site context.
+By default will be listened `node.*` events. In order to configure which events should be listened by application or site you must to specify the `subscriptionEventTypes` option on schema creation, in this case default config will be overwritten.
+
+[source,javascript]
+----
+var guillotineLib = require('/lib/guillotine');
+
+var SCHEMA = guillotineLib.createSchema({
+    subscriptionEventTypes: ['myapp.eventName', 'node.*']
+});
+----
+
+To start handle a Websocket event XP provides the handler named `webSocketEvent`, which will be called for every Websocket event from client. More details about Websocket in XP https://developer.enonic.com/docs/xp/stable/framework/websocket[here].
+
+Since image:images/v-500.svg[Since verision,opts=inline] Guillotine provides the `initWebSockets` function with default events handling.
+
+[source,javascript]
+----
+exports.webSocketEvent = guillotineLib.initWebSockets(SCHEMA);
+----
+
+You might want to have custom subscriptions handling.
+If default events filtering is not suitable for you, then you have to create own `Subscription` type during a schema creation and implement a custom `webSocketEvent` handler how it was done before.
 
 == Accessing GraphQL with Javascript
 
@@ -238,3 +263,5 @@ HTML fields are generated with a parameter "processHtml" allowing to replace abs
   }
 }
 ----
+
+More details about HTML processing link:htmleditor-processing.adoc[here].

@@ -79,7 +79,7 @@ var schema = guillotineLib.createSchema(); // <2>
 
 exports.post = function (req) { // <3>
  var body = JSON.parse(req.body); // <4>
- var result = graphQlLib.execute(schema, body.query, body.variables); // <5>
+ var result = JSON.stringify(graphQlLib.execute(schema, body.query, body.variables)); // <5>
  return {
      contentType: 'application/json',
      body: JSON.stringify(result)
