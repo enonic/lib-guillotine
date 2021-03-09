@@ -250,6 +250,8 @@ It allows you to :
 
 === QueryContentConnection
 
+image:images/v-500.svg[Since version,opts=inline]
+
 ==== Fields
 
 |===
@@ -264,7 +266,7 @@ It allows you to :
 |pageInfo: <<PageInfo>>
 |Paging information
 
-|aggregationAsJSON: JSON
+|aggregationAsJson: JSON
 |Result of aggregations
 
 |===
@@ -304,6 +306,8 @@ It allows you to :
 
 === QueryResult
 
+image:images/v-500.svg[Since version,opts=inline]
+
 ==== Fields
 
 |===
@@ -314,6 +318,109 @@ It allows you to :
 
 |aggregationAsJson: JSON
 |Result of aggregations
+
+|===
+
+
+=== HtmlEditorResult
+
+image:images/v-500.svg[Since version,opts=inline] Represents result of HtmlArea processing.
+
+|===
+|Name (Arguments): Type | Description
+
+|raw: String
+|HtmlEditor raw value
+
+|markup: String
+|HtmlEditor with processed value that contains replaced internal links to resources, content and translated macros. For macros without descriptors processing will be skipped
+
+|macrosAsJson: JSON
+|Represents macro details in JSON format
+
+|macros: <<MacroDataConfigType>>
+|Represents details of macros which were detected in the `HtmlArea` or `TextComponent` value
+
+|images: <<ImageType>>
+|Represents details of images which were detected in the HtmlArea value, except images with `original` styles
+
+|===
+
+=== MacroDataConfigType
+
+image:images/v-500.svg[Since version,opts=inline] Dynamic type which contains macro details. By default contains two fields: `disable` and `embed`, other fields will be added dynamically based on macro descriptors for provided `applicationKeys` during schema creation.
+Given `applicationKeys` are expected to have the same order as in the site configs. It means that first macro descriptor that was matched will be used to process it.
+
+|===
+|Name (Arguments): Type | Description
+
+|disable: <<Macro_system_disable>>
+|Related content for `disable` macro
+
+|embed: <<Macro_system_embed>>
+|Related content for `embed` macro
+
+|===
+
+=== Macro_system_disable
+
+|===
+|Name (Arguments): Type | Description
+
+|macroRef: String
+|Reference to macro in the markup
+
+|body: String
+|Related content
+
+|===
+
+=== Macro_system_embed
+
+|===
+|Name (Arguments): Type | Description
+
+|macroRef: String
+|Reference to macro in the markup
+
+|body: String
+|Related content
+
+|===
+
+=== ImageType
+
+image:images/v-500.svg[Since version,opts=inline] Represents image details in the HtmlArea markup. Example of usage <<image-processing#,here>>.
+
+|===
+|Name (Arguments): Type | Description
+
+|image: <<Content>>
+|Related content
+
+|imageRef: String
+|Reference to image in the markup
+
+|style: <<ImageStyleType>>
+|Related styles to image
+
+|===
+
+=== ImageStyleType
+
+image:images/v-500.svg[Since version,opts=inline]
+
+|===
+|Name (Arguments): Type | Description
+
+|name: String
+|Style name
+
+|aspectRatio: String
+|The `aspect-ratio` value for server-side image processing
+
+|filter: String
+|The `filter` value for server-side image processing
 
 |===
 
@@ -577,7 +684,7 @@ Direct Known Subtypes: FormInput
 |===
 |Name(Arguments):Type | Description
 
-|value: String!
+|value(processHtml: <<ProcessHtmlInput>>): <<HtmlEditorResult>>!
 |Text value
 
 |===
@@ -616,7 +723,7 @@ Direct Known Subtypes: FormInput
 |mimeType: String
 |Attachment mime type
 
-|attachmentUrl: String
+|image:images/v-500.svg[Since version,opts=inline]  attachmentUrl: String
 |Attachment URL
 
 |===
@@ -654,11 +761,26 @@ Direct Known Subtypes: FormInput
 
 |===
 
+== ProcessHtmlInput
+
+=== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|type: <<UrlType>>
+|URL type
+
+|imageWidths: [Int]
+|Allows to generate image URL for given width, which will be used in the `srcset` attribute of `img` tag.
+
+|===
+
 == Aggregation Input Types
 
 === AggregationInput
 
-Aggregations enable extracting statistical data from search results. Only one of the aggregation fields at a time can be specified.
+image:images/v-500.svg[Since version,opts=inline] Aggregations enable extracting statistical data from search results. Only one of the aggregation fields at a time can be specified.
 
 ==== Fields
 
@@ -850,6 +972,8 @@ Aggregations enable extracting statistical data from search results. Only one of
 |===
 
 == Filter Input Types
+
+image:images/v-500.svg[Since version,opts=inline]
 
 === FilterInput
 
