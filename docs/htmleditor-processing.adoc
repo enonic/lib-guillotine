@@ -1,0 +1,221 @@
+= HTML Editor processing
+
+image:images/v-500.svg[Since version,opts=inline] The default Guillotine HTML editor type provides macros and image source URLs processing in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type.
+But you might want to have custom processing of macros and images, for that you can use `macrosAsJson`, `macros` and `images` fields of the link:api.doc#HtmlEditorResult[HtmlEditorResult].
+
+== Usage
+
+=== Macros
+
+Each macro will be translated to the `editor-macro` tag with the `data-macro-ref` and `data-macro-name` attributes in the `markup` field value. Using that reference you will be able to find a macro details in the `macrosAsJson` or `macros` fields and to do a custom macro processing if needed.
+
+[NOTE]
+====
+Guillotine processes macros which have a descriptor and the system macros `disable` and `embed`, otherwise processing will be skipped. More details about macros https://developer.enonic.com/docs/xp/stable/cms/macros[here].
+====
+
+For instance, we have the `description` input form-item with `HtmlArea` type which contains `embed` macro as on the picture below:
+
+image:images/embed-macro.png[Embed Macro]
+
+Then to fetch data for `description` field you can create the following query:
+
+[source,graphql]
+----
+query {
+  guillotine {
+    get(key: "contentID") {
+      ... on com_app_example_ContentType {
+        data {
+          description {
+            raw            // (1)
+            markup         // (2)
+            macrosAsJson   // (3)
+            macros {       // (4)
+              embed {
+                macroRef
+                body
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+----
+<1> Non processed value of the `description` field
+<2> Processed value of the `description` field
+<3> Array of macros which were detected in JSON format. The order of macros will be the same as in the `raw` and `markup` fields.
+<4> link:api.adoc#MacroDataConfigType[MacroDataConfigType] allows to specify necessary fields. That field is an alternative for `macroAsJson` field
+
+
+In the result we can see something like that:
+
+[source,json]
+----
+{
+  "data": {
+    "guillotine": {
+      "get": {
+        "data": {
+          "description": {
+            "raw": "<p>[embed]&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;[/embed]</p>\n",
+            "markup": "<p><editor-macro data-macro-name=\"embed\" data-macro-ref=\"530eb4e9-8866-46b5-ac05-3dc8f083e8b7\">&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;</editor-macro></p>\n",
+            "macrosAsJson": [
+              {
+                "macroName": "embed",
+                "macroRef": "530eb4e9-8866-46b5-ac05-3dc8f083e8b7",
+                "body": "&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;"
+              }
+            ],
+            "macros": {
+              "embed": [
+                {
+                  "macroRef": "530eb4e9-8866-46b5-ac05-3dc8f083e8b7",
+                  "body": "&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
+----
+
+If you use a custom macro it is recommended to use a macro https://developer.enonic.com/docs/xp/stable/cms/macros#descriptor[descriptor] in the `/site/macros/` directory. For instance, for macro with name `testmacro` the descriptor will be placed by the following path `/site/macros/testmacro/testmacro.xml`
+
+[source,xml]
+----
+<macro>
+  <display-name>Current user</display-name>
+  <description>Shows currently logged user</description>
+  <form>
+    <input name="defaultText" type="TextLine">
+      <label>Text to show if no user logged in</label>
+    </input>
+  </form>
+</macro>
+----
+
+image:images/custom-macro.png[Custom Macro]
+
+Then to fetch data for `description` field you can create the following query:
+
+[source,graphql]
+----
+query {
+  guillotine {
+    get(key: "contentID") {
+      ... on com_app_example_ContentType {
+        data {
+          description {
+            macros {
+              testmacro {
+                macroRef
+                defaultText
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+----
+
+=== Images
+
+Since image:images/v-500.svg[Since version,opts=inline] Guillotine by default provides image processing in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type. All internal links to resources will be replaced by `server` or `absolute` link and for each `img` tag will be added the `data-image-ref`.
+Using that reference you will be able to find a image details in the `images` field and to do a custom image processing if needed.
+
+For instance, the processed value of an image looks like as below:
+
+[source,html]
+----
+<figure class="editor-align-justify">
+    <img alt="Alt text"
+         src="/site/repo/branch/appName/_/image/contentID/width-768/imageName.jpg"
+         data-image-ref="4f2439ff-ecef-4470-a4b4-d8929bce6ee2" />
+    <figcaption>Caption text</figcaption>
+</figure>
+----
+
+
+Then in order to fetch data of an image you can create the following query:
+
+[source,graphql]
+----
+query {
+  guillotine {
+    get(key: "contentID") {
+      ... on com_app_example_ContentType {
+        data {
+          htmlAreaField {
+            images {
+              imageRef                      // <1>
+              image {                       // <2>
+                ... imageFragment
+              }
+              style {                       // <3>
+                name
+                aspectRatio
+                filter
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment imageFragment on Content {
+  _id
+  type
+  ... on media_Image {
+    data {
+      caption
+    }
+  }
+  ... on media_Vector {
+    data {
+      caption
+    }
+  }
+}
+----
+<1> Reference to image in the markup
+<2> Image as link:api.adoc#Content[Content] type
+<3> Image style as link:api.adoc#ImageStyleType[ImageStyleType] type
+
+Using the `processHtml` argument which has link:api.adoc#ProcessHtmlInput[ProcessHtmlInput] type for form-item with type `HtmlArea` or for `TextComponent` field you can specify `imageWidths` to generate relevant links for specific width of an image.
+In this case `srcset` attribute will be added to `img` tags.
+
+For instance, if use the following fragment of query:
+
+[source,graphql]
+----
+htmlAreaField(processHtml: { imageWidths: [600, 992] }){
+    markup
+    images {
+      imageRef
+    }
+}
+----
+
+Result will be looked as below:
+
+[source,html]
+----
+<figure class="editor-align-justify">
+    <img alt="Alt text"
+         src="/site/repo/branch/appName/_/image/contentID/width-768/imageName.jpg"
+         data-image-ref="4f2439ff-ecef-4470-a4b4-d8929bce6ee2"
+         srcset="/site/repo/branch/appName/_/image/contentID/width-600/imageName.jpg 600w,
+                 /site/repo/branch/appName/_/image/contentID/width-992/imageName.jpg 992w"/>
+    <figcaption>Caption text</figcaption>
+</figure>
+----
