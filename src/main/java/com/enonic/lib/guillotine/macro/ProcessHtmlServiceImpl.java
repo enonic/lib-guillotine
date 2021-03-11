@@ -37,14 +37,14 @@ public class ProcessHtmlServiceImpl
     }
 
     @Override
-    public HtmlAreaProcessedResult processHtml( final ProcessHtmlParams params )
+    public HtmlEditorProcessedResult processHtml( final ProcessHtmlParams params )
     {
         if ( params.getValue() == null || params.getValue().isEmpty() )
         {
-            return HtmlAreaProcessedResult.empty();
+            return HtmlEditorProcessedResult.empty();
         }
 
-        final HtmlAreaProcessedResult.Builder builder = HtmlAreaProcessedResult.create();
+        final HtmlEditorProcessedResult.Builder builder = HtmlEditorProcessedResult.create();
 
         builder.setRaw( params.getValue() );
 

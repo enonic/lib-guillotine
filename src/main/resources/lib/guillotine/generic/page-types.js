@@ -7,6 +7,7 @@ const graphQlLib = require('/lib/guillotine/graphql');
 const componentTypesLib = require('/lib/guillotine/dynamic/component-types');
 const utilLib = require('/lib/guillotine/util/util');
 const macroTypesLib = require('/lib/guillotine/dynamic/macro-types');
+const macroLib = require('/lib/guillotine/macro');
 
 function generateTypes(context) {
     componentTypesLib.createComponentDataConfigType(context);
@@ -64,9 +65,9 @@ function generateTypes(context) {
         }
     });
 
-    context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('HtmlAreaResult'),
-        description: 'HtmlAreaResult type.',
+    context.types.htmlEditorResultType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('HtmlEditorResult'),
+        description: 'HtmlEditorResult type.',
         fields: {
             raw: {
                 type: graphQlLib.GraphQLString,
@@ -207,7 +208,15 @@ function generateTypes(context) {
         description: 'Text component data.',
         fields: {
             value: {
-                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+                type: graphQlLib.nonNull(context.types.htmlEditorResultType),
+                args: {
+                    processHtml: context.types.processHtmlType
+                },
+                resolve: function (env) {
+                    return macroLib.processHtml({
+                        value: env.source.value
+                    });
+                }
             }
         }
     });

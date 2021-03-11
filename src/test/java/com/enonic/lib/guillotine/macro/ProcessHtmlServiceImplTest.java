@@ -83,7 +83,7 @@ public class ProcessHtmlServiceImplTest
         params.setImageWidths( Arrays.asList( 1024, 2048 ) );
         params.setPortalRequest( request );
 
-        HtmlAreaProcessedResult result = instance.processHtml( params );
+        HtmlEditorProcessedResult result = instance.processHtml( params );
 
         assertNotNull( result );
         assertNotNull( result.getImages() );

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import com.enonic.lib.guillotine.macro.ProcessHtmlParams;
 import com.enonic.lib.guillotine.macro.ProcessHtmlService;
 import com.enonic.lib.guillotine.macro.ProcessHtmlServiceImpl;
-import com.enonic.lib.guillotine.mapper.HtmlAreaResultMapper;
+import com.enonic.lib.guillotine.mapper.HtmlEditorResultMapper;
 import com.enonic.xp.macro.MacroDescriptorService;
 import com.enonic.xp.macro.MacroService;
 import com.enonic.xp.portal.PortalRequest;
@@ -63,7 +63,7 @@ public class ProcessHtmlHandler
             new ProcessHtmlServiceImpl( styleDescriptorServiceSupplier.get(), portalUrlServiceSupplier.get(), macroServiceSupplier.get(),
                                         macroDescriptorServiceSupplier.get() );
 
-        return new HtmlAreaResultMapper( processHtmlService.processHtml( htmlParams ) );
+        return new HtmlEditorResultMapper( processHtmlService.processHtml( htmlParams ) );
     }
 
 }
