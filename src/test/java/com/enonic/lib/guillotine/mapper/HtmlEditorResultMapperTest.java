@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import com.enonic.lib.guillotine.macro.HtmlAreaProcessedResult;
+import com.enonic.lib.guillotine.macro.HtmlEditorProcessedResult;
 import com.enonic.lib.guillotine.macro.MacroDecorator;
 import com.enonic.lib.guillotine.macro.MacroEditorJsonSerializer;
 import com.enonic.xp.macro.Macro;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class HtmlAreaResultMapperTest
+class HtmlEditorResultMapperTest
 {
     @Test
     void serialize()
@@ -29,13 +29,13 @@ class HtmlAreaResultMapperTest
             param( "attr2", "val2" ).
             build() ) ).serialize();
 
-        HtmlAreaProcessedResult input = HtmlAreaProcessedResult.create().
+        HtmlEditorProcessedResult input = HtmlEditorProcessedResult.create().
             setMarkup(
                 "<p><editor-macro data-macro-name=\"mymacro\" data-macro-ref=\"307f02a2-7019-4012-807e-916df5779ae6\"></editor-macro></p>" ).
             setMacrosAsJson( Collections.singletonList( macroResult ) ).
             build();
 
-        HtmlAreaResultMapper instance = new HtmlAreaResultMapper( input );
+        HtmlEditorResultMapper instance = new HtmlEditorResultMapper( input );
 
         JsonMapGenerator generator = new JsonMapGenerator();
 

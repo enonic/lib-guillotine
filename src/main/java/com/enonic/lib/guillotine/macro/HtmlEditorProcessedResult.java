@@ -3,7 +3,7 @@ package com.enonic.lib.guillotine.macro;
 import java.util.List;
 import java.util.Map;
 
-public final class HtmlAreaProcessedResult
+public final class HtmlEditorProcessedResult
 {
     private final String raw;
 
@@ -15,7 +15,7 @@ public final class HtmlAreaProcessedResult
 
     private final List<Map<String, Object>> images;
 
-    private HtmlAreaProcessedResult( final Builder builder )
+    private HtmlEditorProcessedResult( final Builder builder )
     {
         this.raw = builder.raw;
         this.markup = builder.markup;
@@ -49,9 +49,9 @@ public final class HtmlAreaProcessedResult
         return images;
     }
 
-    public static HtmlAreaProcessedResult empty()
+    public static HtmlEditorProcessedResult empty()
     {
-        return HtmlAreaProcessedResult.create().build();
+        return HtmlEditorProcessedResult.create().build();
     }
 
     public static Builder create()
@@ -101,9 +101,9 @@ public final class HtmlAreaProcessedResult
             return this;
         }
 
-        public HtmlAreaProcessedResult build()
+        public HtmlEditorProcessedResult build()
         {
-            return new HtmlAreaProcessedResult( this );
+            return new HtmlEditorProcessedResult( this );
         }
     }
 }
