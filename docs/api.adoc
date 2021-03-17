@@ -772,7 +772,7 @@ Direct Known Subtypes: FormInput
 |URL type
 
 |imageWidths: [Int]
-|Allows to generate image URL for given width, which will be used in the `srcset` attribute of `img` tag.
+|Generates image URLs for given widths which will be used in the `srcset` attribute of `img` tag.
 
 |===
 
