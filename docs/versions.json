@@ -7,6 +7,10 @@
         {
             "label": "2.x",
             "checkout": "d89cc3ee3b1116e0496be6deebba41a0b72a9869"
+        },
+        {
+            "label": "next",
+            "checkout": "aa1029f2c499008b10624d19416ed4ae22fb1be5"
         }
     ]
   }
