@@ -1,24 +1,24 @@
 = HTML Editor processing
 
-image:images/v-500.svg[Since version,opts=inline] The default Guillotine HTML editor type provides macros and image source URLs processing in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type.
+image:images/v-500.svg[Since version,opts=inline] The default Guillotine HTML editor type provides processing of macros and image source URLs in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type.
 But you might want to have custom processing of macros and images, for that you can use `macrosAsJson`, `macros` and `images` fields of the link:api.doc#HtmlEditorResult[HtmlEditorResult].
 
 == Usage
 
 === Macros
 
-Each macro will be translated to the `editor-macro` tag with the `data-macro-ref` and `data-macro-name` attributes in the `markup` field value. Using that reference you will be able to find a macro details in the `macrosAsJson` or `macros` fields and to do a custom macro processing if needed.
+Each macro will be translated to an `editor-macro` tag with `data-macro-ref` and `data-macro-name` attributes in the `markup` field value. Using these references you will be able to find details of a specific macro in the `macrosAsJson` or `macros` fields and perform custom macro processing if needed.
 
 [NOTE]
 ====
-Guillotine processes macros which have a descriptor and the system macros `disable` and `embed`, otherwise processing will be skipped. More details about macros https://developer.enonic.com/docs/xp/stable/cms/macros[here].
+Guillotine processes macros which have a descriptor and built-in macros called `disable` and `embed`, otherwise processing will be skipped. More details about macros https://developer.enonic.com/docs/xp/stable/cms/macros[here].
 ====
 
-For instance, we have the `description` input form-item with `HtmlArea` type which contains `embed` macro as on the picture below:
+For instance, we have an input form item called `description` of `HtmlArea` type which contains the `embed` macro as shown below:
 
 image:images/embed-macro.png[Embed Macro]
 
-Then to fetch data for `description` field you can create the following query:
+The query below will fetch data for the `description` field:
 
 [source,graphql]
 ----
@@ -44,13 +44,13 @@ query {
   }
 }
 ----
-<1> Non processed value of the `description` field
+<1> Non-processed value of the `description` field
 <2> Processed value of the `description` field
-<3> Array of macros which were detected in JSON format. The order of macros will be the same as in the `raw` and `markup` fields.
+<3> Array of processed macros in JSON format. The order of macros will be the same as in the `raw` and `markup` fields.
 <4> link:api.adoc#MacroDataConfigType[MacroDataConfigType] allows to specify necessary fields. That field is an alternative for `macroAsJson` field
 
 
-In the result we can see something like that:
+Results of the query:
 
 [source,json]
 ----
@@ -85,7 +85,7 @@ In the result we can see something like that:
 }
 ----
 
-If you use a custom macro it is recommended to use a macro https://developer.enonic.com/docs/xp/stable/cms/macros#descriptor[descriptor] in the `/site/macros/` directory. For instance, for macro with name `testmacro` the descriptor will be placed by the following path `/site/macros/testmacro/testmacro.xml`
+If you use a custom macro it is recommended to use a macro https://developer.enonic.com/docs/xp/stable/cms/macros#descriptor[descriptor] in the `/site/macros/` directory. For instance, for a macro with name `testmacro` the descriptor will be placed by the following path `/site/macros/testmacro/testmacro.xml`
 
 [source,xml]
 ----
@@ -102,7 +102,7 @@ If you use a custom macro it is recommended to use a macro https://developer.eno
 
 image:images/custom-macro.png[Custom Macro]
 
-Then to fetch data for `description` field you can create the following query:
+The query below will fetch data for the `description` field:
 
 [source,graphql]
 ----
@@ -128,7 +128,7 @@ query {
 
 === Images
 
-Since image:images/v-500.svg[Since version,opts=inline] Guillotine by default provides image processing in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type. All internal links to resources will be replaced by `server` or `absolute` link and for each `img` tag will be added the `data-image-ref`.
+Starting from image:images/v-500.svg[Since version,opts=inline] Guillotine by default provides image processing in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type. All internal links to resources will be replaced by `server` or `absolute` link and for each `img` tag will be added the `data-image-ref`.
 Using that reference you will be able to find a image details in the `images` field and to do a custom image processing if needed.
 
 For instance, the processed value of an image looks like as below:
@@ -144,7 +144,7 @@ For instance, the processed value of an image looks like as below:
 ----
 
 
-Then in order to fetch data of an image you can create the following query:
+The query below will process images inside the field:
 
 [source,graphql]
 ----
@@ -191,10 +191,10 @@ fragment imageFragment on Content {
 <2> Image as link:api.adoc#Content[Content] type
 <3> Image style as link:api.adoc#ImageStyleType[ImageStyleType] type
 
-Using the `processHtml` argument which has link:api.adoc#ProcessHtmlInput[ProcessHtmlInput] type for form-item with type `HtmlArea` or for `TextComponent` field you can specify `imageWidths` to generate relevant links for specific width of an image.
+Using the `processHtml` argument which has link:api.adoc#ProcessHtmlInput[ProcessHtmlInput] type for a form item of type `HtmlArea` or for `TextComponent` field you can specify `imageWidths` to generate relevant links for specific widths of an image.
 In this case `srcset` attribute will be added to `img` tags.
 
-For instance, if use the following fragment of query:
+For instance, when using the following fragment of query:
 
 [source,graphql]
 ----
@@ -206,7 +206,7 @@ htmlAreaField(processHtml: { imageWidths: [600, 992] }){
 }
 ----
 
-Result will be looked as below:
+The result will look as follows:
 
 [source,html]
 ----
