@@ -95,7 +95,7 @@ subscription {
 }
 ----
 
-Since image:images/v-500.svg[Since verision,opts=inline] Guillotine listens events only for a specific `repository` and `branch` which are determined from a site context.
+Starting from image:images/v-500.svg[Since verision,opts=inline] Guillotine listens events only for a specific `repository` and `branch` which are determined from a site context.
 By default will be listened `node.*` events. In order to configure which events should be listened by application or site you must to specify the `subscriptionEventTypes` option on schema creation, in this case default config will be overwritten.
 
 [source,javascript]
@@ -109,7 +109,7 @@ var SCHEMA = guillotineLib.createSchema({
 
 To start handle a Websocket event XP provides the handler named `webSocketEvent`, which will be called for every Websocket event from client. More details about Websocket in XP https://developer.enonic.com/docs/xp/stable/framework/websocket[here].
 
-Since image:images/v-500.svg[Since verision,opts=inline] Guillotine provides the `initWebSockets` function with default events handling.
+Starting from image:images/v-500.svg[Since verision,opts=inline] Guillotine provides the `initWebSockets` function with default events handling.
 
 [source,javascript]
 ----

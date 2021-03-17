@@ -322,7 +322,7 @@ image:images/v-500.svg[Since version,opts=inline]
 |===
 
 
-=== HtmlEditorResult
+=== HtmlAreaResult
 
 image:images/v-500.svg[Since version,opts=inline] Represents result of HtmlArea processing.
 
@@ -684,7 +684,7 @@ Direct Known Subtypes: FormInput
 |===
 |Name(Arguments):Type | Description
 
-|value(processHtml: <<ProcessHtmlInput>>): <<HtmlEditorResult>>!
+|value(processHtml: <<ProcessHtmlInput>>): <<HtmlAreaResult>>!
 |Text value
 
 |===
