@@ -264,4 +264,4 @@ HTML fields are generated with a parameter "processHtml" allowing to replace abs
 }
 ----
 
-More details about HTML processing link:htmleditor-processing.adoc[here].
+More details about <<htmleditor-processing#,HTML processing>>.
