@@ -64,8 +64,8 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 - Type "HeadlessCms": Field "query" returns "QueryResult" type instead of an array of "Content" type
 - Type "HeadlessCms": Field "queryConnection" returns "QueryContentConnection" type instead of an array of "ContentConnection" type
 - Generation of field names for "OptionSet" and "ItemSet" types do not use camel-case anymore and were uniformed with the rest of field naming
-- Type "TextComponentData": Field "value" returns "HtmlEditorResult" type instead of "String" and supports the `processHtml` argument of "ProcessHtmlInput" type.
-- A form item of type "HtmlArea" returns "HtmlEditorResult" type instead of "String"
+- Type "TextComponentData": Field "value" returns "HtmlAreaResult" type instead of "String" and supports the `processHtml` argument of "ProcessHtmlInput" type.
+- A form item of type "HtmlArea" returns "HtmlAreaResult" type instead of "String"
 - A form item of type "Date" returns "Date" scalar instead of "String"
 - A form item of type "Time" returns "LocalTime" scalar instead of "String"
 - A form item of type "DateTime" returns "DateTime" scalar instead of "String" type if there is config with `timezone`, otherwise "LocalDateTime" scalar
