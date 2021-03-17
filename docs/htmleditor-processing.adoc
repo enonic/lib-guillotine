@@ -1,7 +1,7 @@
 = HTML Editor processing
 
-image:images/v-500.svg[Since version,opts=inline] The default Guillotine HTML editor type provides processing of macros and image source URLs in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type.
-But you might want to have custom processing of macros and images, for that you can use `macrosAsJson`, `macros` and `images` fields of the link:api.doc#HtmlEditorResult[HtmlEditorResult].
+image:images/v-500.svg[Since version,opts=inline] The default Guillotine HTML editor type provides processing of macros and image source URLs in the `markup` field of the <<api#HtmlEditorResult, HtmlEditorResult>> GraphQL object type.
+But you might want to have custom processing of macros and images, for that you can use `macrosAsJson`, `macros` and `images` fields of the <<api#HtmlEditorResult, HtmlEditorResult>>.
 
 == Usage
 
@@ -47,7 +47,7 @@ query {
 <1> Non-processed value of the `description` field
 <2> Processed value of the `description` field
 <3> Array of processed macros in JSON format. The order of macros will be the same as in the `raw` and `markup` fields.
-<4> link:api.adoc#MacroDataConfigType[MacroDataConfigType] allows to specify necessary fields. That field is an alternative for `macroAsJson` field
+<4> <<api#MacroDataConfigType, MacroDataConfigType>> allows to specify necessary fields. That field is an alternative for `macroAsJson` field
 
 
 Results of the query:
@@ -128,7 +128,7 @@ query {
 
 === Images
 
-Starting from image:images/v-500.svg[Since version,opts=inline] Guillotine by default provides image processing in the `markup` field of the link:api.doc#HtmlEditorResult[HtmlEditorResult] GraphQL object type. All internal links to resources will be replaced by `server` or `absolute` link and for each `img` tag will be added the `data-image-ref`.
+Starting from image:images/v-500.svg[Since version,opts=inline] Guillotine by default provides image processing in the `markup` field of the <<api#HtmlEditorResult,HtmlEditorResult>> GraphQL object type. All internal links to resources will be replaced by `server` or `absolute` link and for each `img` tag will be added the `data-image-ref`.
 Using that reference you will be able to find a image details in the `images` field and to do a custom image processing if needed.
 
 For instance, the processed value of an image looks like as below:
@@ -188,10 +188,11 @@ fragment imageFragment on Content {
 }
 ----
 <1> Reference to image in the markup
-<2> Image as link:api.adoc#Content[Content] type
-<3> Image style as link:api.adoc#ImageStyleType[ImageStyleType] type
+<2> Image as <<api#Content, Content>> type
+<3> Image style as <<api#ImageStyleType, ImageStyleType>> type
 
-Using the `processHtml` argument which has link:api.adoc#ProcessHtmlInput[ProcessHtmlInput] type for a form item of type `HtmlArea` or for `TextComponent` field you can specify `imageWidths` to generate relevant links for specific widths of an image.
+Using the `processHtml` argument which has <<api#ProcessHtmlInput, ProcessHtmlInput>> type for a form item of type `HtmlArea` or for
+`TextComponent` field you can specify `imageWidths` to generate relevant links for specific widths of an image.
 In this case `srcset` attribute will be added to `img` tags.
 
 For instance, when using the following fragment of query:
