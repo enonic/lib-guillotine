@@ -54,36 +54,36 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 
 == Breaking changes
 
-=== Breaking changes in 5.0
+=== 5.0
 
-- Type "Attachment" is returned instead of "String" for form-item with type "AttachmentUploader"
-- Type "Content" fields "dataAsJson" and "pageAsJson" return "JSON" instead of "String"
-- Fields "config" of the "PageComponentData", "LayoutComponentData" and "PartComponentData" types return "JSON" instead of "String"
+- Type "Attachment" is returned instead of "String" for a form item of type "AttachmentUploader"
+- Fields "dataAsJson" and "pageAsJson" of type "Content" return "JSON" instead of "String"
+- Fields "config" of "PageComponentData", "LayoutComponentData" and "PartComponentData" types return "JSON" instead of "String"
 - Type "Subscription": Field "newEvent" renamed to "event". The "type" and "localOnly" arguments are removed
 - Type "UrlTypeType" renamed to "UrlType"
-- Type "HeadlessCms": Field "query" returns the "QueryResult" type instead of an array of the "Content" type
-- Type "HeadlessCms": Field "queryConnection" returns the "QueryContentConnection" type instead of an array of the "ContentConnection" type
+- Type "HeadlessCms": Field "query" returns "QueryResult" type instead of an array of "Content" type
+- Type "HeadlessCms": Field "queryConnection" returns "QueryContentConnection" type instead of an array of "ContentConnection" type
 - Generation of field names for "OptionSet" and "ItemSet" types do not use camel-case anymore and were uniformed with the rest of field naming
-- Type "TextComponentData": Field "value" returns the "HtmlEditorResult" type instead of the "String" type and supports the `processHtml` argument with the "ProcessHtmlInput" type.
-- Form-item with type "HtmlArea" returns the "HtmlEditorResult" type instead of the "String" type
-- Form-item with type "Date" returns the "Date" scalar instead of the "String" type
-- Form-item with type "Time" returns the "LocalTime" scalar instead of the "String" type
-- Form-item with type "DateTime" returns the "DateTime" scalar instead of the "String" type if there is config with `timezone`, otherwise will be used the "LocalDateTime" scalar
+- Type "TextComponentData": Field "value" returns "HtmlEditorResult" type instead of "String" and supports the `processHtml` argument of "ProcessHtmlInput" type.
+- A form item of type "HtmlArea" returns "HtmlEditorResult" type instead of "String"
+- A form item of type "Date" returns "Date" scalar instead of "String"
+- A form item of type "Time" returns "LocalTime" scalar instead of "String"
+- A form item of type "DateTime" returns "DateTime" scalar instead of "String" type if there is config with `timezone`, otherwise "LocalDateTime" scalar
 
-=== Breaking changes in 4.0
+=== 4.0
 
 - Type "Content": Field "page": Removed (Use fields "pageAsJson" or "components" instead)
 - Types "Flat*Component*": Renamed to "*Component*".
 - Type "FlatDescriptorBasedComponentData": Split into 2 types: "LayoutComponentData" and "PartComponentData"
 - Fields "config": Renamed to "configAsJson"
-- Type "Content": Field "components": By default, the components of the page template are used instead if there is one.
-- Type "Content": Field "components": By default, the fragments are inlined
+- Type "Content": Field "components": By default, components of a page template are used instead if there is one.
+- Type "Content": Field "components": By default, fragments are inlined
 
-=== Breaking changes in 3.0
+=== 3.0
 
 - Type "Content": Fields "creator", "modifier", "owner" and "permissions" need one of the following roles: "cms.cm.app", "cms.admin" or "system.admin"
 
-=== Breaking changes in 2.0
+=== 2.0
 
 - Type "PrincipalKey": Field "userStore" renamed to "idProvider"
 - Type "Component": Field "controller" renamed to "descriptor"
