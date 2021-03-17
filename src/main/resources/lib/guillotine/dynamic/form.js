@@ -104,7 +104,7 @@ function generateInputObjectType(context, input) {
     case 'GeoPoint':
         return context.types.geoPointType;
     case 'HtmlArea':
-        return context.types.htmlEditorResultType;
+        return context.types.htmlAreaResultType;
     case 'ImageSelector':
         return graphQlLib.reference('Content');
     case 'ImageUploader':
