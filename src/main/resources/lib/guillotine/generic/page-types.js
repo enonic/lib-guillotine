@@ -65,9 +65,9 @@ function generateTypes(context) {
         }
     });
 
-    context.types.htmlEditorResultType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('HtmlEditorResult'),
-        description: 'HtmlEditorResult type.',
+    context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('HtmlAreaResult'),
+        description: 'HtmlAreaResult type.',
         fields: {
             raw: {
                 type: graphQlLib.GraphQLString,
@@ -208,7 +208,7 @@ function generateTypes(context) {
         description: 'Text component data.',
         fields: {
             value: {
-                type: graphQlLib.nonNull(context.types.htmlEditorResultType),
+                type: graphQlLib.nonNull(context.types.htmlAreaResultType),
                 args: {
                     processHtml: context.types.processHtmlType
                 },
