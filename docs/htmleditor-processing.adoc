@@ -52,38 +52,7 @@ query {
 
 Results of the query:
 
-[source,json]
-----
-{
-  "data": {
-    "guillotine": {
-      "get": {
-        "data": {
-          "description": {
-            "raw": "<p>[embed]&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;[/embed]</p>\n",
-            "markup": "<p><editor-macro data-macro-name=\"embed\" data-macro-ref=\"530eb4e9-8866-46b5-ac05-3dc8f083e8b7\">&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;</editor-macro></p>\n",
-            "macrosAsJson": [
-              {
-                "macroName": "embed",
-                "macroRef": "530eb4e9-8866-46b5-ac05-3dc8f083e8b7",
-                "body": "&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;"
-              }
-            ],
-            "macros": {
-              "embed": [
-                {
-                  "macroRef": "530eb4e9-8866-46b5-ac05-3dc8f083e8b7",
-                  "body": "&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6FTpJtS8NVE\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;"
-                }
-              ]
-            }
-          }
-        }
-      }
-    }
-  }
-}
-----
+image:images/embed-response-example.png[Response for embed macro]
 
 If you use a custom macro it is recommended to use a macro https://developer.enonic.com/docs/xp/stable/cms/macros#descriptor[descriptor] in the `/site/macros/` directory. For instance, for a macro with name `testmacro` the descriptor will be placed by the following path `/site/macros/testmacro/testmacro.xml`
 
