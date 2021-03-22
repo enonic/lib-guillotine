@@ -59,7 +59,7 @@ public class ProcessHtmlServiceImpl
 
         final List<MacroDecorator> processedMacros = new ArrayList<>();
 
-        builder.setMarkup( macroService.evaluateMacros( processedHtml, ( macro ) -> {
+        builder.setProcessedHtml( macroService.evaluateMacros( processedHtml, ( macro ) -> {
             if ( !registeredMacroNames.contains( macro.getName() ) )
             {
                 return macro.toString();

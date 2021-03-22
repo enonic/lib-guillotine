@@ -7,7 +7,7 @@ public final class HtmlEditorProcessedResult
 {
     private final String raw;
 
-    private final String markup;
+    private final String processedHtml;
 
     private final List<Map<String, Object>> macrosAsJson;
 
@@ -18,7 +18,7 @@ public final class HtmlEditorProcessedResult
     private HtmlEditorProcessedResult( final Builder builder )
     {
         this.raw = builder.raw;
-        this.markup = builder.markup;
+        this.processedHtml = builder.processedHtml;
         this.macrosAsJson = builder.macrosAsJson;
         this.macros = builder.macros;
         this.images = builder.images;
@@ -29,9 +29,9 @@ public final class HtmlEditorProcessedResult
         return raw;
     }
 
-    public String getMarkup()
+    public String getProcessedHtml()
     {
-        return markup;
+        return processedHtml;
     }
 
     public List<Map<String, Object>> getMacrosAsJson()
@@ -63,7 +63,7 @@ public final class HtmlEditorProcessedResult
     {
         private String raw;
 
-        private String markup;
+        private String processedHtml;
 
         private List<Map<String, Object>> macrosAsJson;
 
@@ -77,9 +77,9 @@ public final class HtmlEditorProcessedResult
             return this;
         }
 
-        public Builder setMarkup( final String markup )
+        public Builder setProcessedHtml( final String processedHtml )
         {
-            this.markup = markup;
+            this.processedHtml = processedHtml;
             return this;
         }
 
