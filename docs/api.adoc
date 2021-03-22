@@ -322,7 +322,7 @@ image:images/v-500.svg[Since version,opts=inline]
 |===
 
 
-=== HtmlAreaResult
+=== RichText
 
 image:images/v-500.svg[Since version,opts=inline] Represents result of HtmlArea processing.
 
@@ -330,23 +330,23 @@ image:images/v-500.svg[Since version,opts=inline] Represents result of HtmlArea 
 |Name (Arguments): Type | Description
 
 |raw: String
-|HtmlEditor raw value
+|HtmlArea raw value
 
-|markup: String
-|HtmlEditor with processed value that contains replaced internal links to resources, content and translated macros. For macros without descriptors processing will be skipped
+|processedHtml: String
+|HtmlArea with processed value that contains replaced internal links to resources, content and translated macros. For macros without descriptors processing will be skipped
 
 |macrosAsJson: JSON
 |Represents macro details in JSON format
 
-|macros: <<MacroDataConfigType>>
+|macros: <<MacroDataConfig>>
 |Represents details of macros which were detected in the `HtmlArea` or `TextComponent` value
 
-|images: <<ImageType>>
+|images: [<<Image>>]
 |Represents details of images which were detected in the HtmlArea value, except images with `original` styles
 
 |===
 
-=== MacroDataConfigType
+=== MacroDataConfig
 
 image:images/v-500.svg[Since version,opts=inline] Dynamic type which contains macro details. By default contains two fields: `disable` and `embed`, other fields will be added dynamically based on macro descriptors for provided `applicationKeys` during schema creation.
 Given `applicationKeys` are expected to have the same order as in the site configs. It means that first macro descriptor that was matched will be used to process it.
@@ -368,7 +368,7 @@ Given `applicationKeys` are expected to have the same order as in the site confi
 |Name (Arguments): Type | Description
 
 |macroRef: String
-|Reference to macro in the markup
+|Reference to macro in the processedHtml field
 
 |body: String
 |Related content
@@ -381,16 +381,16 @@ Given `applicationKeys` are expected to have the same order as in the site confi
 |Name (Arguments): Type | Description
 
 |macroRef: String
-|Reference to macro in the markup
+|Reference to macro in the processedHtml field
 
 |body: String
 |Related content
 
 |===
 
-=== ImageType
+=== Image
 
-image:images/v-500.svg[Since version,opts=inline] Represents image details in the HtmlArea markup. Example of usage <<image-processing#,here>>.
+image:images/v-500.svg[Since version,opts=inline] Represents details for image found and processed in the <<RichText>> type.
 
 |===
 |Name (Arguments): Type | Description
@@ -399,14 +399,14 @@ image:images/v-500.svg[Since version,opts=inline] Represents image details in th
 |Related content
 
 |imageRef: String
-|Reference to image in the markup
+|Reference to image in the processedHtml field
 
-|style: <<ImageStyleType>>
+|style: <<ImageStyle>>
 |Related styles to image
 
 |===
 
-=== ImageStyleType
+=== ImageStyle
 
 image:images/v-500.svg[Since version,opts=inline]
 
@@ -684,7 +684,7 @@ Direct Known Subtypes: FormInput
 |===
 |Name(Arguments):Type | Description
 
-|value(processHtml: <<ProcessHtmlInput>>): <<HtmlAreaResult>>!
+|value(processHtml: <<ProcessHtmlInput>>): <<RichText>>!
 |Text value
 
 |===
