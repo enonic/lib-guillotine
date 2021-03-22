@@ -51,8 +51,7 @@ public class ProcessHtmlServiceImpl
         final List<Map<String, Object>> images = new ArrayList<>();
 
         String processedHtml = new HtmlLinkProcessor( styleDescriptorService, portalUrlService ).
-            process( unescapeValue( params.getValue() ), params.getType(), params.getPortalRequest(), params.getImageWidths(),
-                     images::add );
+            process( params.getValue(), params.getType(), params.getPortalRequest(), params.getImageWidths(), images::add );
 
         builder.setImages( images );
 
@@ -113,10 +112,5 @@ public class ProcessHtmlServiceImpl
         return macroDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) ).
             stream().
             map( MacroDescriptor::getName ).collect( Collectors.toList() );
-    }
-
-    private String unescapeValue( String value )
-    {
-        return value.replace( "\\", "" );
     }
 }
