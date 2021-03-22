@@ -1,13 +1,13 @@
 = HTML Editor processing
 
-image:images/v-500.svg[Since version,opts=inline] The default Guillotine HTML editor type provides processing of macros and image source URLs in the `markup` field of the <<api#htmlarearesult, HtmlAreaResult>> GraphQL object type.
-But you might want to have custom processing of macros and images, for that you can use `macrosAsJson`, `macros` and `images` fields of the <<api#htmlarearesult, HtmlAreaResult>>.
+image:images/v-500.svg[Since version,opts=inline] The default Guillotine HTML editor type provides processing of macros and image source URLs in the `processedHtml` field of the <<api#richtext, RichText>> GraphQL object type.
+But you might want to have custom processing of macros and images, for that you can use `macrosAsJson`, `macros` and `images` fields of the <<api#richtext, RichText>>.
 
 == Usage
 
 === Macros
 
-Each macro will be translated to an `editor-macro` tag with `data-macro-ref` and `data-macro-name` attributes in the `markup` field value. Using these references you will be able to find details of a specific macro in the `macrosAsJson` or `macros` fields and perform custom macro processing if needed.
+Each macro will be translated to an `editor-macro` tag with `data-macro-ref` and `data-macro-name` attributes in the `processedHtml` field value. Using these references you will be able to find details of a specific macro in the `macrosAsJson` or `macros` fields and perform custom macro processing if needed.
 
 [NOTE]
 ====
@@ -29,7 +29,7 @@ query {
         data {
           description {
             raw            // (1)
-            markup         // (2)
+            processedHtml  // (2)
             macrosAsJson   // (3)
             macros {       // (4)
               embed {
@@ -46,8 +46,8 @@ query {
 ----
 <1> Non-processed value of the `description` field
 <2> Processed value of the `description` field
-<3> Array of processed macros in JSON format. The order of macros will be the same as in the `raw` and `markup` fields.
-<4> <<api#macrodataconfigtype, MacroDataConfigType>> allows to specify necessary fields. That field is an alternative for `macroAsJson` field
+<3> Array of processed macros in JSON format. The order of macros will be the same as in the `raw` and `processedHtml` fields.
+<4> <<api#macrodataconfig, MacroDataConfig>> allows to specify necessary fields. That field is an alternative for `macroAsJson` field
 
 
 Results of the query:
@@ -97,7 +97,7 @@ query {
 
 === Images
 
-Starting from image:images/v-500.svg[Since version,opts=inline] Guillotine by default provides image processing in the `markup` field of the <<api#htmlarearesult,HtmlAreaResult>> GraphQL object type. All internal links to resources will be replaced by `server` or `absolute` link and for each `img` tag will be added the `data-image-ref`.
+Starting from image:images/v-500.svg[Since version,opts=inline] Guillotine by default provides image processing in the `processedHtml` field of the <<api#richtext,RichText>> GraphQL object type. All internal links to resources will be replaced by `server` or `absolute` link and for each `img` tag will be added the `data-image-ref`.
 Using that reference you will be able to find a image details in the `images` field and to do a custom image processing if needed.
 
 For instance, the processed value of an image looks like as below:
@@ -156,9 +156,9 @@ fragment imageFragment on Content {
   }
 }
 ----
-<1> Reference to image in the markup
+<1> Reference to image in the processedHtml field
 <2> Image as <<api#content, Content>> type
-<3> Image style as <<api#imagestyletype, ImageStyleType>> type
+<3> Image style as <<api#imagestyle, ImageStyle>> type
 
 Using the `processHtml` argument which has <<api#processhtmlinput, ProcessHtmlInput>> type for a form item of type `HtmlArea` or for
 `TextComponent` field you can specify `imageWidths` to generate relevant links for specific widths of an image.
@@ -169,7 +169,7 @@ For instance, when using the following fragment of query:
 [source,graphql]
 ----
 htmlAreaField(processHtml: { imageWidths: [600, 992] }){
-    markup
+    processedHtml
     images {
       imageRef
     }
