@@ -14,8 +14,8 @@ function generateTypes(context) {
     macroTypesLib.createMacroDataConfigType(context);
 
     context.types.imageStyleType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('ImageStyleType'),
-        description: 'ImageStyleType.',
+        name: context.uniqueName('ImageStyle'),
+        description: 'ImageStyle type.',
         fields: {
             name: {
                 type: graphQlLib.GraphQLString,
@@ -39,8 +39,8 @@ function generateTypes(context) {
     });
 
     context.types.imageType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('ImageType'),
-        description: 'ImageType.',
+        name: context.uniqueName('Image'),
+        description: 'Image type.',
         fields: {
             image: {
                 type: graphQlLib.reference('Content'),
@@ -65,9 +65,9 @@ function generateTypes(context) {
         }
     });
 
-    context.types.htmlAreaResultType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('HtmlAreaResult'),
-        description: 'HtmlAreaResult type.',
+    context.types.richTextType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('RichText'),
+        description: 'RichText type.',
         fields: {
             raw: {
                 type: graphQlLib.GraphQLString,
@@ -75,10 +75,10 @@ function generateTypes(context) {
                     return env.source.raw;
                 }
             },
-            markup: {
+            processedHtml: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
-                    return env.source.markup;
+                    return env.source.processedHtml;
                 }
             },
             macrosAsJson: {
@@ -208,7 +208,7 @@ function generateTypes(context) {
         description: 'Text component data.',
         fields: {
             value: {
-                type: graphQlLib.nonNull(context.types.htmlAreaResultType),
+                type: graphQlLib.nonNull(context.types.richTextType),
                 args: {
                     processHtml: context.types.processHtmlType
                 },

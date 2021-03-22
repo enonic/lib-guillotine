@@ -7,8 +7,8 @@ exports.testProcessHtml = function () {
         type: "server"
     });
 
-    testingLib.assertNotNull(result.markup);
-    testingLib.assertTrue(result.markup.startsWith("<editor-macro data-macro-name=\"mymacro\" data-macro-ref="));
+    testingLib.assertNotNull(result.processedHtml);
+    testingLib.assertTrue(result.processedHtml.startsWith("<editor-macro data-macro-name=\"mymacro\" data-macro-ref="));
     testingLib.assertNotNull(result.macrosAsJson);
     testingLib.assertEquals("mymacro", result.macrosAsJson[0].macroName);
     testingLib.assertNotNull(result.macrosAsJson[0].macroRef);
