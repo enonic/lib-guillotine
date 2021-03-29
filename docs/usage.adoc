@@ -207,11 +207,13 @@ be converted to a link to the related content(s).
 {
   guillotine {
     query(contentTypes:"com.enonic.app.myapp:post") {
-      displayName
-      ... on com_enonic_app_myapp_Post {
-        data {          
-          author {
-            displayName
+      hits {
+        displayName
+        ... on com_enonic_app_myapp_Post {
+          data {
+            author {
+              displayName
+            }
           }
         }
       }
@@ -232,9 +234,11 @@ Guillotine uses this functionality by generating, on every image, a field "image
 {
   guillotine {
     query(contentTypes:"media:image") {
-      displayName
-      ... on media_Image {
-        imageUrl(scale:"block(800,200)",type:absolute)
+      hits {
+        displayName
+        ... on media_Image {
+          imageUrl(scale:"block(800,200)",type:absolute)
+        }
       }
     }
   }
@@ -250,13 +254,15 @@ HTML fields are generated with a parameter "processHtml" allowing to replace abs
 {
   guillotine {
     query(contentTypes:"com.enonic.app.myapp:post") {
-      ... on com_enonic_app_myapp_Post {
-        data {
-          author {
-            displayName
+      hits {
+        ... on com_enonic_app_myapp_Post {
+          data {
+            author {
+              displayName
+            }
+            tags
+            post(processHtml:{type:absolute})
           }
-          tags
-          post(processHtml:{type:absolute})
         }
       }
     }
