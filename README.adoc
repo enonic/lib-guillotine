@@ -68,7 +68,7 @@ from "ComponentType>ComponentDataApplicationConfig" to "<ComponentType>_<applica
 - Type "UrlTypeType" renamed to "UrlType"
 - Type "HeadlessCms": Field "query" returns type "QueryResult" instead of an array of type "Content".
 
-*NB! Make sure to wrap your query inside the "hits" field (<<docs/guillotine/stable/usage#using_the_api,see example>>)*
+*NB! Make sure to wrap your query inside the "hits" field (https://developer.enonic.com/docs/guillotine/stable/usage#using_the_api[see example])*
 
 - Type "HeadlessCms": Field "queryConnection" returns type "QueryContentConnection" instead of an array of type "ContentConnection"
 - Generation of field names for types "OptionSet" and "ItemSet" do not use camel-case anymore and were uniformed with the rest of field naming
