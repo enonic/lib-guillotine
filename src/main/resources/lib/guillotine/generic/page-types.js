@@ -10,7 +10,6 @@ const macroTypesLib = require('/lib/guillotine/dynamic/macro-types');
 const macroLib = require('/lib/guillotine/macro');
 
 function generateTypes(context) {
-    componentTypesLib.createComponentDataConfigType(context);
     macroTypesLib.createMacroDataConfigType(context);
 
     context.types.imageStyleType = graphQlLib.createObjectType(context, {
@@ -101,6 +100,8 @@ function generateTypes(context) {
             }
         }
     });
+
+    componentTypesLib.createComponentDataConfigType(context);
 
     context.types.componentTypeType = context.schemaGenerator.createEnumType({
         name: context.uniqueName('ComponentType'),
