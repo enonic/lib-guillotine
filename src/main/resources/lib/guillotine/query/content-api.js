@@ -114,18 +114,17 @@ function createContentApiType(context) {
                 }
             },
             query: {
-                type: context.types.queryResult,
+                type: graphQlLib.list(context.types.contentType),
                 args: {
                     query: graphQlLib.GraphQLString,
                     offset: graphQlLib.GraphQLInt,
                     first: graphQlLib.GraphQLInt,
                     sort: graphQlLib.GraphQLString,
                     contentTypes: graphQlLib.list(graphQlLib.GraphQLString),
-                    aggregations: graphQlLib.list(context.types.aggregationInputType),
                     filters: graphQlLib.list(context.types.filterInputType)
                 },
                 resolve: function (env) {
-                    validationLib.validateArgumentsForQueryField(env);
+                    validationLib.validateArguments(env.args);
 
                     const query = wildcardLib.replaceSitePath(env.args.query, '/content' + portalLib.getSite()._path);
 
@@ -137,13 +136,6 @@ function createContentApiType(context) {
                         contentTypes: env.args.contentTypes
                     };
 
-                    if (env.args.aggregations) {
-                        let aggregations = {};
-                        env.args.aggregations.forEach(aggregation => {
-                            factoryUtil.createAggregation(aggregations, aggregation);
-                        });
-                        queryParams.aggregations = aggregations;
-                    }
                     if (env.args.filters) {
                         queryParams.filters = factoryUtil.createFilters(env.args.filters);
                     }
@@ -153,10 +145,7 @@ function createContentApiType(context) {
                     let hits = result.hits;
                     hits.forEach(node => transformNodeIfExistsAttachments(node));
 
-                    return {
-                        hits: hits,
-                        aggregationsAsJson: result.aggregations
-                    };
+                    return hits;
                 }
             },
             queryConnection: {
