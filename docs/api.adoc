@@ -25,7 +25,7 @@ This documentation lists and describes all static GraphQL types
 |===
 
 == Object Types
-=== Query 
+=== Query
 
 ==== Fields
 |===
@@ -37,7 +37,7 @@ This documentation lists and describes all static GraphQL types
 
 === HeadlessCms 
 
-Gathers all content retrieval requests. 
+Gathers all content retrieval requests.
 
 ==== Remarks
 
@@ -79,9 +79,8 @@ Gathers all content retrieval requests.
  first: Int,
  sort: String,
  contentTypes: [String],
- aggregations: [<<AggregationInput>>],
  filters: [<<FilterInput>>]
- ): [<<QueryResult>>]
+ ): [<<Content>>]
 |Queries contents
 
 |queryConnection(
@@ -180,15 +179,15 @@ Interface of all contents.
 |Link to the content parent
 
 |children(
-offset: Int, 
-first: Int, 
+offset: Int,
+first: Int,
 sort: String
 ): [<<Content>>]
 |Link to the direct child contents
 
 |childrenConnection(
-after: String, 
-first: Int, 
+after: String,
+first: Int,
 sort: String
 ): <<ContentConnection>>
 |Connection to the direct child contents
@@ -199,7 +198,7 @@ sort: String
 
 ==== Direct Known Subtypes
 
-Direct Known Subtypes: 
+Direct Known Subtypes:
 portal_Site
 , base_Folder
 , media_Code
@@ -303,24 +302,6 @@ image:images/v-500.svg[Since version,opts=inline]
 |Has more related contents at end cursor
 
 |===
-
-=== QueryResult
-
-image:images/v-500.svg[Since version,opts=inline]
-
-==== Fields
-
-|===
-|Name (Arguments): Type | Description
-
-|hits: [<<Content>>]
-|Related contents
-
-|aggregationAsJson: JSON
-|Result of aggregations
-
-|===
-
 
 === RichText
 
