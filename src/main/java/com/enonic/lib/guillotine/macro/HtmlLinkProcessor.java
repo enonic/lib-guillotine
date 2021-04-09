@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
@@ -122,6 +121,7 @@ public class HtmlLinkProcessor
                 switch ( type )
                 {
                     case CONTENT_TYPE:
+                    {
                         PageUrlParams pageUrlParams = new PageUrlParams().
                             type( urlType ).
                             id( id ).
@@ -129,7 +129,9 @@ public class HtmlLinkProcessor
                         final String pageUrl = portalUrlService.pageUrl( pageUrlParams );
                         processedHtml = processedHtml.replaceFirst( Pattern.quote( attrValue ), "\"" + pageUrl + "\"" );
                         break;
+                    }
                     case IMAGE_TYPE:
+                    {
                         final Map<String, String> urlParams = extractUrlParams( urlParamsString );
 
                         ImageStyle imageStyle = getImageStyle( imageStyleMap, urlParams );
@@ -173,7 +175,9 @@ public class HtmlLinkProcessor
 
                         processedHtml = processedHtml.replaceFirst( Pattern.quote( attrValue ), replacement.toString() );
                         break;
+                    }
                     default:
+                    {
                         AttachmentUrlParams attachmentUrlParams = new AttachmentUrlParams().
                             type( urlType ).
                             id( id ).
@@ -182,8 +186,20 @@ public class HtmlLinkProcessor
 
                         final String attachmentUrl = portalUrlService.attachmentUrl( attachmentUrlParams );
 
-                        processedHtml = processedHtml.replaceFirst( Pattern.quote( attrValue ), "\"" + attachmentUrl + "\"" );
+                        final StringBuilder replacement = new StringBuilder( "\"" + attachmentUrl + "\"" );
+
+                        if ( "img".equals( tagName ) && "src".equals( attr ) )
+                        {
+                            final String imgEditorRef = UUID.randomUUID().toString();
+
+                            replacement.append( " data-image-ref=\"" ).append( imgEditorRef ).append( "\"" );
+
+                            imageConsumer.accept( buildStyleProjection( id, imgEditorRef, imageStyleMap.get( "editor-style-original" ) ) );
+                        }
+
+                        processedHtml = processedHtml.replaceFirst( Pattern.quote( attrValue ), replacement.toString() );
                         break;
+                    }
                 }
             }
         }
@@ -204,9 +220,9 @@ public class HtmlLinkProcessor
             styleProjection.put( "name", imageStyle.getName() );
             styleProjection.put( "aspectRatio", imageStyle.getAspectRatio() );
             styleProjection.put( "filter", imageStyle.getFilter() );
-        }
 
-        imageProjection.put( "style", styleProjection );
+            imageProjection.put( "style", styleProjection );
+        }
 
         return imageProjection;
     }
