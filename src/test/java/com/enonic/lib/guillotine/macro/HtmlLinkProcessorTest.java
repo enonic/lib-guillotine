@@ -13,6 +13,7 @@ import com.enonic.xp.content.ContentPath;
 import com.enonic.xp.data.PropertyTree;
 import com.enonic.xp.portal.PortalRequest;
 import com.enonic.xp.portal.RenderMode;
+import com.enonic.xp.portal.url.AttachmentUrlParams;
 import com.enonic.xp.portal.url.ImageUrlParams;
 import com.enonic.xp.portal.url.PortalUrlService;
 import com.enonic.xp.site.Site;
@@ -75,6 +76,25 @@ public class HtmlLinkProcessorTest
 
         assertTrue( result.contains( "<img alt=\"matrix.jpg\" class=\"custom-class\" src=\"imageUrl\" data-image-ref=" ) );
         assertFalse( result.contains( "srcset=" ) );
+    }
+
+    @Test
+    public void testProcessOriginalImage()
+    {
+        StyleDescriptorService styleDescriptorService = Mockito.mock( StyleDescriptorService.class );
+        PortalUrlService portalUrlService = Mockito.mock( PortalUrlService.class );
+
+        when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( StyleDescriptors.empty() );
+        when( portalUrlService.attachmentUrl( any( AttachmentUrlParams.class ) ) ).thenReturn( "imageUrl" );
+
+        HtmlLinkProcessor instance = new HtmlLinkProcessor( styleDescriptorService, portalUrlService );
+
+        String result = instance.process(
+            "<figure class=\"captioned editor-align-justify editor-style-original\"><img alt=\"the-dark-knight.jpg\" src=\"media://content-id\" style=\"width:100%\" />\n" +
+                "<figcaption>Original</figcaption></figure>", "server", createPortalRequest(), null, image -> {
+            } );
+
+        assertTrue( result.contains( "<img alt=\"the-dark-knight.jpg\" src=\"imageUrl\" data-image-ref=" ) );
     }
 
     private PortalRequest createPortalRequest()
