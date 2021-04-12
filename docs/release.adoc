@@ -1,0 +1,54 @@
+== Release Notes
+
+=== 5.0
+
+- Added support of `aggregations` for the `queryConnection` field of the `HeadlessCms` type
+- Added support of `filters` for the `queryConnection` and `query` fields of the `HeadlessCms` type
+- Added the `attachmentUrl` field to the `Attachment` type
+- Added macro processing for a field with the `HtmlArea` type
+- Added the ability to fetch details for images which were found in the result of processing of `HtmlArea` field
+- Added the `srcset` attribute to a `img` tag if `imageWidths` given for field with `HtmlArea` type
+- Updated event processing for subscriptions. Listens events for specific site and branch. Event types can be configurable using `subscriptionEventTypes` option.
+- Added default WS event handler `guillotineLib.initWebSockets(SCHEMA)`
+
+
+== Breaking changes
+
+=== 5.0
+- Naming for component types like Part, Page and Layout was changed:
+
+from "<ComponentType>ComponentDataDescriptorConfig" to "<ComponentType>_<applicationKey>_<descriptorName>" and
+
+from "ComponentType>ComponentDataApplicationConfig" to "<ComponentType>_<applicationKey>_ComponentDataApplicationConfig"
+
+- Type "Attachment" is returned instead of "String" for a form item of type "AttachmentUploader"
+- Fields "dataAsJson" and "pageAsJson" of type "Content" return "JSON" instead of "String"
+- Fields "config" of "PageComponentData", "LayoutComponentData" and "PartComponentData" types return "JSON" instead of "String"
+- Type "Subscription": Field "newEvent" renamed to "event". The "type" and "localOnly" arguments are removed
+- Type "UrlTypeType" renamed to "UrlType"
+- Type "HeadlessCms": Field "queryConnection" returns type "QueryContentConnection" instead of an array of type "ContentConnection"
+- Generation of field names for types "OptionSet" and "ItemSet" do not use camel-case anymore and were uniformed with the rest of field naming
+- Type "TextComponentData": Field "value" returns type "RichText" instead of "String" and supports the `processHtml` argument of type "ProcessHtmlInput".
+- A form item of type "HtmlArea" returns type "RichText" instead of "String"
+- A form item of type "Date" returns "Date" scalar instead of "String"
+- A form item of type "Time" returns "LocalTime" scalar instead of "String"
+- A form item of type "DateTime" returns "DateTime" scalar instead of type "String" if there is A config with `timezone`, otherwise "LocalDateTime" scalar
+
+=== 4.0
+
+- Type "Content": Field "page": Removed (Use fields "pageAsJson" or "components" instead)
+- Types "Flat*Component*": Renamed to "*Component*".
+- Type "FlatDescriptorBasedComponentData": Split into 2 types: "LayoutComponentData" and "PartComponentData"
+- Fields "config": Renamed to "configAsJson"
+- Type "Content": Field "components": By default, components of a page template are used instead if there is one.
+- Type "Content": Field "components": By default, fragments are inlined
+
+=== 3.0
+
+- Type "Content": Fields "creator", "modifier", "owner" and "permissions" need one of the following roles: "cms.cm.app", "cms.admin" or "system.admin"
+
+=== 2.0
+
+- Type "PrincipalKey": Field "userStore" renamed to "idProvider"
+- Type "Component": Field "controller" renamed to "descriptor"
+- Type "Component": Field "name" removed
