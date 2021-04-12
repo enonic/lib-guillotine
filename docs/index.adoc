@@ -1,9 +1,9 @@
 = Headless CMS for Enonic XP - Project Guillotine
 
-Get instant access to XP's Content API and query language with GraphQL
+Get instant access to XP's Content API and query language over GraphQL
 
 == Introduction
-Project Guillotine extends Enonic XP's existing CMS capabilities by exposing it through a GraphQL API.
+Project Guillotine adds a headless CMS GraphQL API to your site.
 
 Guillotine builds on the following components:
 
@@ -35,13 +35,13 @@ In addition to being a highly capable headless CMS, Enonic XP provides the follo
 
 == Deployment
 
-With a running instance of Enonic XP installed, you will need to deploy the API on the platform. There are essentially two ways of deploying, as a standalone application, or by embedding Guillotine in your app.
+With a running instance of Enonic XP installed, you will need to deploy the API on the platform. There are essentially two ways of deploying: by embedding Guillotine witin your app, or by installing the Guillotine application.
 
 <<deployment#,Details on deployment>>
 
 == Usage
 
-Once installed, you get access to a range of capabilities, from running queries and following references to activating subscriptions.
+Once deployed, you get access to a range of capabilities, from running queries and following references to activating subscriptions.
 
 Learn more about the <<api#,API>>, and <<usage#,how to use it>>.
 
