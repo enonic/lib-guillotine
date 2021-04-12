@@ -1,54 +1,59 @@
-== Release Notes
+= Release Notes
 
-=== 5.0
+== Version 5.0
 
-- Added support of `aggregations` for the `queryConnection` field of the `HeadlessCms` type
-- Added support of `filters` for the `queryConnection` and `query` fields of the `HeadlessCms` type
-- Added the `attachmentUrl` field to the `Attachment` type
-- Added macro processing for a field with the `HtmlArea` type
-- Added the ability to fetch details for images which were found in the result of processing of `HtmlArea` field
-- Added the `srcset` attribute to a `img` tag if `imageWidths` given for field with `HtmlArea` type
-- Updated event processing for subscriptions. Listens events for specific site and branch. Event types can be configurable using `subscriptionEventTypes` option.
-- Added default WS event handler `guillotineLib.initWebSockets(SCHEMA)`
+This release simplifies use of rich text content, introduces aggregations and filters, adds scalars for JSON and other common data types, improvements to the subscriptions API and improved consistency in type and field naming. 
+
+=== Aggregations
+Aggregations are now available when using `queryConnections`
+
+=== Filters
+`queryConnection` and `query` now also support filters
+
+=== Attachments
+`attachmentUrl` field has been added to the `Attachment` type
+
+=== Rich text 
+Content produced by the HtmlArea input type is now pre-processed to give front-end developers more control over the result. Rather than returning a basic string response, a RichText object, with several interesting new fields is returned.
+
+The most imporant capabilities are:
+
+Macros:: The `processedHtml` field now returns macro placeholder elements with references the macro configuration data with can be retrived via another field. This simplifies custom processing of macros in your client.
+
+Images::
+A default img element is still in the markup, but now additionally includes a reference to data object of the image. This enables developers to customise the end result and presentation of images.
+
+Image srcset::
+The processHtml function now supports a new parameter for imageWidth. Simply pass in the imageWidths you would like to use, and an srcset will automatically be generated for each image, including the default style settings.
+
+=== Subscriptions
+New event processing for subscriptions only listens for events specific to site/project and branch. Event filter can be further tuned using `subscriptionEventTypes` option.
+
+A new default WS event handler `guillotineLib.initWebSockets(SCHEMA)` has also been added.
 
 
 == Breaking changes
 
-=== 5.0
-- Naming for component types like Part, Page and Layout was changed:
+Type renaming:: Component types like Part, Page and Layout was changed:
+from `<ComponentType>ComponentDataDescriptorConfig` to `<ComponentType>_<applicationKey>_<descriptorName>`, and
+from `ComponentType>ComponentDataApplicationConfig` to `<ComponentType>_<applicationKey>_ComponentDataApplicationConfig`.
 
-from "<ComponentType>ComponentDataDescriptorConfig" to "<ComponentType>_<applicationKey>_<descriptorName>" and
+Attachment type:: is now returned instead of String for `AttachmentUploader` input types.
 
-from "ComponentType>ComponentDataApplicationConfig" to "<ComponentType>_<applicationKey>_ComponentDataApplicationConfig"
+asJson::  `dataAsJson` and `pageAsJson`, as well as component `config` fields now return `JSON` instead of `String`.
 
-- Type "Attachment" is returned instead of "String" for a form item of type "AttachmentUploader"
-- Fields "dataAsJson" and "pageAsJson" of type "Content" return "JSON" instead of "String"
-- Fields "config" of "PageComponentData", "LayoutComponentData" and "PartComponentData" types return "JSON" instead of "String"
-- Type "Subscription": Field "newEvent" renamed to "event". The "type" and "localOnly" arguments are removed
-- Type "UrlTypeType" renamed to "UrlType"
-- Type "HeadlessCms": Field "queryConnection" returns type "QueryContentConnection" instead of an array of type "ContentConnection"
-- Generation of field names for types "OptionSet" and "ItemSet" do not use camel-case anymore and were uniformed with the rest of field naming
-- Type "TextComponentData": Field "value" returns type "RichText" instead of "String" and supports the `processHtml` argument of type "ProcessHtmlInput".
-- A form item of type "HtmlArea" returns type "RichText" instead of "String"
-- A form item of type "Date" returns "Date" scalar instead of "String"
-- A form item of type "Time" returns "LocalTime" scalar instead of "String"
-- A form item of type "DateTime" returns "DateTime" scalar instead of type "String" if there is A config with `timezone`, otherwise "LocalDateTime" scalar
+Subscription:: field `newEvent` has been renamed to `event`. The `type` and  `localOnly` arguments have been removed. Events are now also filtered, so only site/project related events are returned.
 
-=== 4.0
+UrlTypeType:: has been renamed to `UrlType`
 
-- Type "Content": Field "page": Removed (Use fields "pageAsJson" or "components" instead)
-- Types "Flat*Component*": Renamed to "*Component*".
-- Type "FlatDescriptorBasedComponentData": Split into 2 types: "LayoutComponentData" and "PartComponentData"
-- Fields "config": Renamed to "configAsJson"
-- Type "Content": Field "components": By default, components of a page template are used instead if there is one.
-- Type "Content": Field "components": By default, fragments are inlined
+queryConnection:: field now returns type `QueryContentConnection` instead of an array of type `ContentConnection`
 
-=== 3.0
+Field name generation:: to comply with GraphQL from the types `OptionSet` and `ItemSet` no longer use camel-case. This is consistent with other field name generation in Guillotine.
 
-- Type "Content": Fields "creator", "modifier", "owner" and "permissions" need one of the following roles: "cms.cm.app", "cms.admin" or "system.admin"
+TextComponent and HtmlArea:: based fields now returns type `RichText` instead of `String` and supports the `processHtml` argument of type `ProcessHtmlInput`.
 
-=== 2.0
+Date:: input type now return `Date` scalar instead of `String`
 
-- Type "PrincipalKey": Field "userStore" renamed to "idProvider"
-- Type "Component": Field "controller" renamed to "descriptor"
-- Type "Component": Field "name" removed
+Time:: input type now return `LocalTime` scalar instead of `String`
+
+DateTime:: input type now return `DateTime` scalar instead of `String` if there is A config with `timezone`, otherwise "LocalDateTime" scalar
