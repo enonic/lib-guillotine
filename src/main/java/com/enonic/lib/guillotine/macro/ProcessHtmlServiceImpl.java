@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.enonic.xp.app.ApplicationKey;
@@ -55,12 +56,12 @@ public class ProcessHtmlServiceImpl
 
         builder.setImages( images );
 
-        final List<String> registeredMacroNames = getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() );
+        final Map<String, MacroDescriptor> registeredMacros = getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() );
 
         final List<MacroDecorator> processedMacros = new ArrayList<>();
 
         builder.setProcessedHtml( macroService.evaluateMacros( processedHtml, ( macro ) -> {
-            if ( !registeredMacroNames.contains( macro.getName() ) )
+            if ( !registeredMacros.containsKey( macro.getName() ) )
             {
                 return macro.toString();
             }
@@ -75,7 +76,8 @@ public class ProcessHtmlServiceImpl
         if ( !processedMacros.isEmpty() )
         {
             final List<Map<String, Object>> macrosAsJson = processedMacros.stream().
-                map( macro -> new MacroEditorJsonSerializer( macro ).serialize() ).collect( Collectors.toList() );
+                map( macro -> new MacroEditorJsonSerializer( macro, registeredMacros.get( macro.getMacro().getName() ) ).serialize() ).
+                collect( Collectors.toList() );
 
             builder.setMacrosAsJson( macrosAsJson );
             builder.setMacros( buildMacros( macrosAsJson ) );
@@ -102,7 +104,7 @@ public class ProcessHtmlServiceImpl
         return macros;
     }
 
-    private List<String> getRegisteredMacrosInSystemForSite( final Site site )
+    private Map<String, MacroDescriptor> getRegisteredMacrosInSystemForSite( final Site site )
     {
         final List<ApplicationKey> applicationKeys = site.getSiteConfigs().stream().
             map( SiteConfig::getApplicationKey ).collect( Collectors.toList() );
@@ -111,6 +113,6 @@ public class ProcessHtmlServiceImpl
 
         return macroDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) ).
             stream().
-            map( MacroDescriptor::getName ).collect( Collectors.toList() );
+            collect( Collectors.toMap( MacroDescriptor::getName, Function.identity() ) );
     }
 }
