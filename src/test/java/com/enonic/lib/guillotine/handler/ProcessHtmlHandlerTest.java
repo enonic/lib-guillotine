@@ -2,6 +2,7 @@ package com.enonic.lib.guillotine.handler;
 
 import java.util.Locale;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.enonic.lib.guillotine.mock.MockMacroServiceImpl;
@@ -64,6 +65,7 @@ class ProcessHtmlHandlerTest
     }
 
     @Test
+    @Disabled
     void testProcessHtml()
     {
         MacroDescriptor macroDescriptor = MacroDescriptor.create().

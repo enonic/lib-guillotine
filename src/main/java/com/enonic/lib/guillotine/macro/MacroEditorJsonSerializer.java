@@ -34,6 +34,9 @@ public class MacroEditorJsonSerializer
         result.put( "macroName", macro.getMacro().getName() );
         result.put( "macroRef", macro.getId() );
 
+        final Map<String, Object> config = new LinkedHashMap<>();
+        config.put( "body", macro.getMacro().getBody() );
+
         final ImmutableMultimap<String, String> params = macro.getMacro().getParameters();
 
         for ( String key : params.keySet() )
@@ -44,15 +47,15 @@ public class MacroEditorJsonSerializer
 
             if ( occurrences != null && occurrences.isMultiple() )
             {
-                result.put( key, values );
+                config.put( key, values );
             }
             else
             {
-                result.put( key, Objects.requireNonNullElse( values, List.of() ).isEmpty() ? null : values.get( 0 ) );
+                config.put( key, Objects.requireNonNullElse( values, List.of() ).isEmpty() ? null : values.get( 0 ) );
             }
         }
 
-        result.put( "body", macro.getMacro().getBody() );
+        result.put( "config", config );
 
         return result;
     }
