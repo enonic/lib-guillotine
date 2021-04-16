@@ -86,10 +86,10 @@ function generateTypes(context) {
                     return env.source.macrosAsJson;
                 }
             },
-            macros: context.types.MacroDataConfigType && {
-                type: context.types.MacroDataConfigType,
+            macros:  {
+                type: graphQlLib.list(context.types.macroDataConfigType),
                 resolve: function (env) {
-                    return env.source.macros;
+                    return env.source.macrosAsJson;
                 }
             },
             images: {
