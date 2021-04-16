@@ -1,7 +1,6 @@
 package com.enonic.lib.guillotine.macro;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -80,28 +79,9 @@ public class ProcessHtmlServiceImpl
                 collect( Collectors.toList() );
 
             builder.setMacrosAsJson( macrosAsJson );
-            builder.setMacros( buildMacros( macrosAsJson ) );
         }
 
         return builder.build();
-    }
-
-    private Map<String, List<Map<String, Object>>> buildMacros( final List<Map<String, Object>> macrosAsJson )
-    {
-        final Map<String, List<Map<String, Object>>> macros = new HashMap<>();
-
-        macrosAsJson.forEach( macroAsJson -> {
-            final Object macroName = macroAsJson.get( "macroName" );
-
-            if ( !macros.containsKey( macroName.toString() ) )
-            {
-                macros.put( macroName.toString(), new ArrayList<>() );
-            }
-
-            macros.get( macroName.toString() ).add( macroAsJson );
-        } );
-
-        return macros;
     }
 
     private Map<String, MacroDescriptor> getRegisteredMacrosInSystemForSite( final Site site )

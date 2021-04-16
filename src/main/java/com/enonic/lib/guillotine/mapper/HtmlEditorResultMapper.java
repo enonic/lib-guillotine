@@ -27,13 +27,6 @@ public class HtmlEditorResultMapper
         }
         gen.end();
 
-        gen.map( "macros" );
-        if ( htmlEditorResult.getMacros() != null )
-        {
-            htmlEditorResult.getMacros().forEach( gen::value );
-        }
-        gen.end();
-
         gen.array( "images" );
         if ( htmlEditorResult.getImages() != null )
         {

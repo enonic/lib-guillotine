@@ -11,8 +11,6 @@ public final class HtmlEditorProcessedResult
 
     private final List<Map<String, Object>> macrosAsJson;
 
-    private final Map<String, List<Map<String, Object>>> macros;
-
     private final List<Map<String, Object>> images;
 
     private HtmlEditorProcessedResult( final Builder builder )
@@ -20,7 +18,6 @@ public final class HtmlEditorProcessedResult
         this.raw = builder.raw;
         this.processedHtml = builder.processedHtml;
         this.macrosAsJson = builder.macrosAsJson;
-        this.macros = builder.macros;
         this.images = builder.images;
     }
 
@@ -37,11 +34,6 @@ public final class HtmlEditorProcessedResult
     public List<Map<String, Object>> getMacrosAsJson()
     {
         return macrosAsJson;
-    }
-
-    public Map<String, List<Map<String, Object>>> getMacros()
-    {
-        return macros;
     }
 
     public List<Map<String, Object>> getImages()
@@ -67,7 +59,7 @@ public final class HtmlEditorProcessedResult
 
         private List<Map<String, Object>> macrosAsJson;
 
-        private Map<String, List<Map<String, Object>>> macros;
+        private List<Map<String, Object>> macros;
 
         private List<Map<String, Object>> images;
 
@@ -86,12 +78,6 @@ public final class HtmlEditorProcessedResult
         public Builder setMacrosAsJson( final List<Map<String, Object>> macrosAsJson )
         {
             this.macrosAsJson = macrosAsJson;
-            return this;
-        }
-
-        public Builder setMacros( final Map<String, List<Map<String, Object>>> macros )
-        {
-            this.macros = macros;
             return this;
         }
 

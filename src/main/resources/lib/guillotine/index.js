@@ -37,12 +37,16 @@ function createContext(options) {
         dictionary: [],
         nameCountMap: {},
         contentTypeMap: {},
+        macroTypeMap: {},
         options: {},
         addDictionaryType: function (objectType) {
             this.dictionary.push(objectType);
         },
         putContentTypeType: function (name, objectType) {
             this.contentTypeMap[name] = objectType;
+        },
+        putMacroType: function(name, objectType) {
+            this.macroTypeMap[name] = objectType;
         },
         uniqueName: function (name) {
             var uniqueName = name;
