@@ -1,5 +1,6 @@
 package com.enonic.lib.guillotine.macro;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,19 @@ public class MacroEditorJsonSerializer
     {
         final Map<String, Object> result = new LinkedHashMap<>();
 
-        result.put( "macroName", macro.getMacro().getName() );
-        result.put( "macroRef", macro.getId() );
+        result.put( "ref", macro.getId() );
+        result.put( "name", macro.getMacro().getName() );
+        result.put( "descriptor", descriptor.getKey().toString() );
+        result.put( "config", Collections.singletonMap( macro.getMacro().getName(), createMacroData() ) );
+
+        return result;
+    }
+
+    private Map<String, Object> createMacroData()
+    {
+        final Map<String, Object> macroData = new LinkedHashMap<>();
+
+        macroData.put( "body", macro.getMacro().getBody() );
 
         final ImmutableMultimap<String, String> params = macro.getMacro().getParameters();
 
@@ -44,17 +56,15 @@ public class MacroEditorJsonSerializer
 
             if ( occurrences != null && occurrences.isMultiple() )
             {
-                result.put( key, values );
+                macroData.put( key, values );
             }
             else
             {
-                result.put( key, Objects.requireNonNullElse( values, List.of() ).isEmpty() ? null : values.get( 0 ) );
+                macroData.put( key, Objects.requireNonNullElse( values, List.of() ).isEmpty() ? null : values.get( 0 ) );
             }
         }
 
-        result.put( "body", macro.getMacro().getBody() );
-
-        return result;
+        return macroData;
     }
 
     private Occurrences getOccurrences( final FormItem formItem )

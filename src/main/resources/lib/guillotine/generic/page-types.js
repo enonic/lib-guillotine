@@ -49,7 +49,7 @@ function generateTypes(context) {
                     });
                 }
             },
-            imageRef: {
+            ref: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
                     return env.source.imageRef;
@@ -86,10 +86,10 @@ function generateTypes(context) {
                     return env.source.macrosAsJson;
                 }
             },
-            macros: context.types.MacroDataConfigType && {
-                type: context.types.MacroDataConfigType,
+            macros: {
+                type: graphQlLib.list(context.types.macroType),
                 resolve: function (env) {
-                    return env.source.macros;
+                    return env.source.macrosAsJson;
                 }
             },
             images: {
