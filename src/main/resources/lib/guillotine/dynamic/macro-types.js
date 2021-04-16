@@ -19,49 +19,79 @@ function createMacroDataConfigType(context) {
     macroDescriptors.forEach(descriptor => {
         let sanitizeDescriptorName = libs.naming.sanitizeText(descriptor.name);
 
-        let descriptorTypeName = `Macro_${libs.naming.sanitizeText(descriptor.applicationKey)}_${sanitizeDescriptorName}`;
+        let macroTypeName = `Macro_${libs.naming.sanitizeText(descriptor.applicationKey)}_${sanitizeDescriptorName}`;
 
-        let macroDescriptorFields = {
-            macroRef: {
+        let macroDataConfigTypeName = `${macroTypeName}_DataConfig`;
+
+        let macroDataConfigFields = {
+            body: {
                 type: libs.graphQL.GraphQLString,
                 resolve: function (env) {
-                    return env.source.macroRef;
+                    return env.source.body;
                 }
             }
         };
 
         libs.form.getFormItems(descriptor.form).forEach(function (formItem) {
-            macroDescriptorFields[libs.naming.sanitizeText(formItem.name)] = {
-                type: libs.form.generateFormItemObjectType(context, descriptorTypeName, formItem),
+            macroDataConfigFields[libs.naming.sanitizeText(formItem.name)] = {
+                type: libs.form.generateFormItemObjectType(context, macroDataConfigTypeName, formItem),
                 args: libs.form.generateFormItemArguments(context, formItem),
                 resolve: libs.form.generateFormItemResolveFunction(formItem)
             }
         });
 
-        const descriptorConfigType = libs.graphQL.createObjectType(context, {
-            name: descriptorTypeName,
-            description: `Macro descriptor config for application ['${descriptor.applicationKey}'] and descriptor ['${descriptor.name}']`,
-            fields: macroDescriptorFields
+        let macroDataConfigType = libs.graphQL.createObjectType(context, {
+            name: macroDataConfigTypeName,
+            description: `Macro descriptor data config for application ['${descriptor.applicationKey}'] and descriptor ['${descriptor.name}']`,
+            fields: macroDataConfigFields
         });
 
-        // assumption that macro descriptors have the same order if them was given from site configs
-        // It means that first macro descriptor which was matched will be used to process it
-        if (!macroDescriptorFields.hasOwnProperty(sanitizeDescriptorName)) {
-            macroConfigTypeFields[sanitizeDescriptorName] = {
-                type: libs.graphQL.list(descriptorConfigType),
-                resolve: (env) => env.source[descriptor.name]
+        macroConfigTypeFields[sanitizeDescriptorName] = {
+            type: macroDataConfigType,
+            resolve: function (env) {
+                return env.source[descriptor.name];
             }
         }
     });
 
-    if (Object.keys(macroConfigTypeFields).length > 0) {
-        context.types['MacroDataConfigType'] = libs.graphQL.createObjectType(context, {
-            name: context.uniqueName('MacroDataConfig'),
-            description: 'Macro component config.',
-            fields: macroConfigTypeFields
-        });
-    }
-}
+    context.types.macroConfigType = libs.graphQL.createObjectType(context, {
+        name: 'MacroConfig',
+        description: `Macro config type.`,
+        interfaces: [context.types.macroType],
+        fields: macroConfigTypeFields
+    });
 
+    context.types.macroType = libs.graphQL.createObjectType(context, {
+        name: 'Macro',
+        description: `Macro type.`,
+        interfaces: [context.types.macroType],
+        fields: {
+            ref: {
+                type: libs.graphQL.GraphQLString,
+                resolve: function (env) {
+                    return env.source.ref;
+                }
+            },
+            name: {
+                type: libs.graphQL.GraphQLString,
+                resolve: function (env) {
+                    return env.source.name;
+                }
+            },
+            descriptor: {
+                type: libs.graphQL.GraphQLString,
+                resolve: function (env) {
+                    return env.source.descriptor;
+                }
+            },
+            config: {
+                type: context.types.macroConfigType,
+                resolve: function (env) {
+                    return env.source.config
+                }
+            }
+        }
+    });
+}
 
 exports.createMacroDataConfigType = createMacroDataConfigType;

@@ -1,10 +1,9 @@
 package com.enonic.lib.guillotine.macro;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.enonic.xp.app.ApplicationKey;
@@ -80,28 +79,9 @@ public class ProcessHtmlServiceImpl
                 collect( Collectors.toList() );
 
             builder.setMacrosAsJson( macrosAsJson );
-            builder.setMacros( buildMacros( macrosAsJson ) );
         }
 
         return builder.build();
-    }
-
-    private Map<String, List<Map<String, Object>>> buildMacros( final List<Map<String, Object>> macrosAsJson )
-    {
-        final Map<String, List<Map<String, Object>>> macros = new HashMap<>();
-
-        macrosAsJson.forEach( macroAsJson -> {
-            final Object macroName = macroAsJson.get( "macroName" );
-
-            if ( !macros.containsKey( macroName.toString() ) )
-            {
-                macros.put( macroName.toString(), new ArrayList<>() );
-            }
-
-            macros.get( macroName.toString() ).add( macroAsJson );
-        } );
-
-        return macros;
     }
 
     private Map<String, MacroDescriptor> getRegisteredMacrosInSystemForSite( final Site site )
@@ -111,8 +91,16 @@ public class ProcessHtmlServiceImpl
 
         applicationKeys.add( ApplicationKey.SYSTEM );
 
-        return macroDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) ).
-            stream().
-            collect( Collectors.toMap( MacroDescriptor::getName, Function.identity() ) );
+        final Map<String, MacroDescriptor> result = new LinkedHashMap<>();
+
+        macroDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) ).
+            forEach( macroDescriptor -> {
+                if ( !result.containsKey( macroDescriptor.getName() ) )
+                {
+                    result.put( macroDescriptor.getName(), macroDescriptor );
+                }
+            } );
+
+        return result;
     }
 }
