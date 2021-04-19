@@ -132,7 +132,7 @@ query {
         data {
           htmlAreaField {
             images {
-              imageRef                      // <1>
+              ref                           // <1>
               image {                       // <2>
                 ... imageFragment
               }
@@ -179,7 +179,7 @@ For instance, when using the following fragment of query:
 htmlAreaField(processHtml: { imageWidths: [600, 992] }){
     processedHtml
     images {
-      imageRef
+      ref
     }
 }
 ----
