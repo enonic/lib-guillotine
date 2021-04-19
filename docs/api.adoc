@@ -319,7 +319,7 @@ image:images/v-500.svg[Since version,opts=inline] Represents result of HtmlArea 
 |macrosAsJson: JSON
 |Represents macro details in JSON format
 
-|macros: <<MacroDataConfig>>
+|macros: [<<Macro>>]
 |Represents details of macros which were detected in the `HtmlArea` or `TextComponent` value
 
 |images: [<<Image>>]
@@ -327,7 +327,7 @@ image:images/v-500.svg[Since version,opts=inline] Represents result of HtmlArea 
 
 |===
 
-=== MacroDataConfig
+=== Macro
 
 image:images/v-500.svg[Since version,opts=inline] Dynamic type which contains macro details. By default contains two fields: `disable` and `embed`, other fields will be added dynamically based on macro descriptors for provided `applicationKeys` during schema creation.
 Given `applicationKeys` are expected to have the same order as in the site configs. It means that first macro descriptor that was matched will be used to process it.
@@ -335,34 +335,56 @@ Given `applicationKeys` are expected to have the same order as in the site confi
 |===
 |Name (Arguments): Type | Description
 
-|disable: <<Macro_system_disable>>
-|Related content for `disable` macro
+|ref: String
+|Reference to macro in the processedHtml field
 
-|embed: <<Macro_system_embed>>
-|Related content for `embed` macro
+|name: String
+|Macro name
+
+|descriptor: String
+|Macro descriptor, for instance `app:macroName`
+
+|body: String
+|Related content
+
+|config: <<MacroConfig>>
+|Macro config
 
 |===
 
-=== Macro_system_disable
+=== MacroConfig
+
+Dynamic type, that contains fields based on macro names which are belong to apps of the site.
 
 |===
 |Name (Arguments): Type | Description
 
-|macroRef: String
-|Reference to macro in the processedHtml field
+|disable: <<Macro_system_disable_DataConfig>>
+|Related content for `disable` macro
+
+|embed: <<Macro_system_embed_DataConfig>>
+|Related content for `embed` macro
+
+|macroName: Macro_<appKey>_<macroName>_DataConfig
+|Related content for macro with name = `macroName` for an application with applicationKey = `appKey`
+
+|===
+
+
+=== Macro_system_disable_DataConfig
+
+|===
+|Name (Arguments): Type | Description
 
 |body: String
 |Related content
 
 |===
 
-=== Macro_system_embed
+=== Macro_system_embed_DataConfig
 
 |===
 |Name (Arguments): Type | Description
-
-|macroRef: String
-|Reference to macro in the processedHtml field
 
 |body: String
 |Related content
