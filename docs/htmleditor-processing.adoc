@@ -32,9 +32,13 @@ query {
             processedHtml  // (2)
             macrosAsJson   // (3)
             macros {       // (4)
-              embed {
-                macroRef
-                body
+              ref
+              name
+              descriptor
+              config {
+                embed {
+                  body
+                }
               }
             }
           }
@@ -47,7 +51,7 @@ query {
 <1> Non-processed value of the `description` field
 <2> Processed value of the `description` field
 <3> Array of processed macros in JSON format. The order of macros will be the same as in the `raw` and `processedHtml` fields.
-<4> <<api#macrodataconfig, MacroDataConfig>> allows to specify necessary fields. That field is an alternative for `macroAsJson` field
+<4> <<api#macro, Macro>> allows to specify necessary fields. That field is an alternative for `macroAsJson` field
 
 
 Results of the query:
@@ -82,9 +86,13 @@ query {
         data {
           description {
             macros {
-              testmacro {
-                macroRef
-                defaultText
+              ref
+              name
+              descriptor
+              config {
+                testmacro {
+                  defaultText
+                }
               }
             }
           }
