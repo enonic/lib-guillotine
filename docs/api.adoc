@@ -401,7 +401,7 @@ image:images/v-500.svg[Since version,opts=inline] Represents details for image f
 |image: <<Content>>
 |Related content
 
-|imageRef: String
+|ref: String
 |Reference to image in the processedHtml field
 
 |style: <<ImageStyle>>
