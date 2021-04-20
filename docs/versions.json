@@ -1,16 +1,9 @@
 {
-    "versions": [
-        {
-            "label": "stable",
-            "checkout": "cdcd26756f6c8cc76111411892cc81cfabac4924"
-        },
-        {
-            "label": "2.x",
-            "checkout": "d89cc3ee3b1116e0496be6deebba41a0b72a9869"
-        },
-        {
-            "label": "next",
-            "checkout": "3e15347b9da36be7bc544edf929e7a7a8d4d6932"
-        }
-    ]
-  }
+  "versions": [
+    {
+      "label": "stable",
+      "checkout": "master",
+      "latest": true
+    }
+  ]
+}
