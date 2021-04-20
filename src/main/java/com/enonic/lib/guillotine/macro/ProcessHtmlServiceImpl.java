@@ -1,7 +1,7 @@
 package com.enonic.lib.guillotine.macro;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,17 +51,16 @@ public class ProcessHtmlServiceImpl
         final List<Map<String, Object>> images = new ArrayList<>();
 
         String processedHtml = new HtmlLinkProcessor( styleDescriptorService, portalUrlService ).
-            process( unescapeValue( params.getValue() ), params.getType(), params.getPortalRequest(), params.getImageWidths(),
-                     images::add );
+            process( params.getValue(), params.getType(), params.getPortalRequest(), params.getImageWidths(), images::add );
 
         builder.setImages( images );
 
-        final List<String> registeredMacroNames = getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() );
+        final Map<String, MacroDescriptor> registeredMacros = getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() );
 
         final List<MacroDecorator> processedMacros = new ArrayList<>();
 
-        builder.setMarkup( macroService.evaluateMacros( processedHtml, ( macro ) -> {
-            if ( !registeredMacroNames.contains( macro.getName() ) )
+        builder.setProcessedHtml( macroService.evaluateMacros( processedHtml, ( macro ) -> {
+            if ( !registeredMacros.containsKey( macro.getName() ) )
             {
                 return macro.toString();
             }
@@ -76,47 +75,32 @@ public class ProcessHtmlServiceImpl
         if ( !processedMacros.isEmpty() )
         {
             final List<Map<String, Object>> macrosAsJson = processedMacros.stream().
-                map( macro -> new MacroEditorJsonSerializer( macro ).serialize() ).collect( Collectors.toList() );
+                map( macro -> new MacroEditorJsonSerializer( macro, registeredMacros.get( macro.getMacro().getName() ) ).serialize() ).
+                collect( Collectors.toList() );
 
             builder.setMacrosAsJson( macrosAsJson );
-            builder.setMacros( buildMacros( macrosAsJson ) );
         }
 
         return builder.build();
     }
 
-    private Map<String, List<Map<String, Object>>> buildMacros( final List<Map<String, Object>> macrosAsJson )
-    {
-        final Map<String, List<Map<String, Object>>> macros = new HashMap<>();
-
-        macrosAsJson.forEach( macroAsJson -> {
-            final Object macroName = macroAsJson.get( "macroName" );
-
-            if ( !macros.containsKey( macroName.toString() ) )
-            {
-                macros.put( macroName.toString(), new ArrayList<>() );
-            }
-
-            macros.get( macroName.toString() ).add( macroAsJson );
-        } );
-
-        return macros;
-    }
-
-    private List<String> getRegisteredMacrosInSystemForSite( final Site site )
+    private Map<String, MacroDescriptor> getRegisteredMacrosInSystemForSite( final Site site )
     {
         final List<ApplicationKey> applicationKeys = site.getSiteConfigs().stream().
             map( SiteConfig::getApplicationKey ).collect( Collectors.toList() );
 
         applicationKeys.add( ApplicationKey.SYSTEM );
 
-        return macroDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) ).
-            stream().
-            map( MacroDescriptor::getName ).collect( Collectors.toList() );
-    }
+        final Map<String, MacroDescriptor> result = new LinkedHashMap<>();
 
-    private String unescapeValue( String value )
-    {
-        return value.replace( "\\", "" );
+        macroDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) ).
+            forEach( macroDescriptor -> {
+                if ( !result.containsKey( macroDescriptor.getName() ) )
+                {
+                    result.put( macroDescriptor.getName(), macroDescriptor );
+                }
+            } );
+
+        return result;
     }
 }

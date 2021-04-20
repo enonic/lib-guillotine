@@ -432,19 +432,6 @@ function createGenericTypes(context) {
         fields: exports.generateGenericContentFields(context)
     });
 
-    context.types.queryResult = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('QueryResult'),
-        description: 'Query result.',
-        fields: {
-            hits: {
-                type: graphQlLib.list(context.types.contentType)
-            },
-            aggregationsAsJson: {
-                type: graphQlLib.Json
-            }
-        }
-    });
-
     context.types.queryContentConnectionType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('QueryContentConnection'),
         description: 'QueryContentConnection',

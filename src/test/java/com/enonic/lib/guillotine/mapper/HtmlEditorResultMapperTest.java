@@ -10,7 +10,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.enonic.lib.guillotine.macro.HtmlEditorProcessedResult;
 import com.enonic.lib.guillotine.macro.MacroDecorator;
 import com.enonic.lib.guillotine.macro.MacroEditorJsonSerializer;
+import com.enonic.xp.form.Form;
+import com.enonic.xp.form.Input;
+import com.enonic.xp.form.Occurrences;
+import com.enonic.xp.inputtype.InputTypeName;
 import com.enonic.xp.macro.Macro;
+import com.enonic.xp.macro.MacroDescriptor;
+import com.enonic.xp.macro.MacroKey;
 import com.enonic.xp.script.serializer.JsonMapGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,14 +29,30 @@ class HtmlEditorResultMapperTest
     @Test
     void serialize()
     {
+        MacroDescriptor macroDescriptor = MacroDescriptor.create().
+            displayName( "TestMacro" ).
+            key( MacroKey.from( "myapp:mymacro" ) ).
+            form( Form.create().
+                addFormItem( Input.create().
+                    name( "attr1" ).
+                    label( "Label" ).
+                    inputType( InputTypeName.TEXT_LINE ).occurrences( Occurrences.create( 0, 2 ) ).build() ).
+                addFormItem( Input.create().
+                    name( "attr2" ).
+                    label( "Label" ).
+                    inputType( InputTypeName.TEXT_LINE ).build() ).
+                build() ).
+            build();
+
         Map<String, Object> macroResult = new MacroEditorJsonSerializer( MacroDecorator.from( Macro.create().
             name( "mymacro" ).
-            param( "attr1", "val1" ).
+            param( "attr1", "val11" ).
+            param( "attr1", "val12" ).
             param( "attr2", "val2" ).
-            build() ) ).serialize();
+            build() ), macroDescriptor ).serialize();
 
         HtmlEditorProcessedResult input = HtmlEditorProcessedResult.create().
-            setMarkup(
+            setProcessedHtml(
                 "<p><editor-macro data-macro-name=\"mymacro\" data-macro-ref=\"307f02a2-7019-4012-807e-916df5779ae6\"></editor-macro></p>" ).
             setMacrosAsJson( Collections.singletonList( macroResult ) ).
             build();
@@ -46,20 +68,26 @@ class HtmlEditorResultMapperTest
         assertNotNull( actualJson );
         assertEquals(
             "<p><editor-macro data-macro-name=\"mymacro\" data-macro-ref=\"307f02a2-7019-4012-807e-916df5779ae6\"></editor-macro></p>",
-            actualJson.path( "markup" ).asText() );
+            actualJson.path( "processedHtml" ).asText() );
         assertTrue( actualJson.path( "macrosAsJson" ).isArray() );
 
         JsonNode macrosAsJson = actualJson.path( "macrosAsJson" ).get( 0 );
 
-        assertEquals( "mymacro", macrosAsJson.path( "macroName" ).asText() );
+        assertEquals( "mymacro", macrosAsJson.path( "name" ).asText() );
 
-        assertTrue( macrosAsJson.path( "attr1" ).isArray() );
-        assertEquals( "val1", macrosAsJson.path( "attr1" ).get( 0 ).asText() );
+        JsonNode config = macrosAsJson.get( "config" );
 
-        assertTrue( macrosAsJson.path( "attr2" ).isArray() );
-        assertEquals( "val2", macrosAsJson.path( "attr2" ).get( 0 ).asText() );
+        JsonNode macroConfig = config.get( "mymacro" );
 
-        assertTrue( macrosAsJson.path( "body" ).asText().isEmpty() );
-        assertFalse( macrosAsJson.path( "macroRef" ).asText().isEmpty() );
+        assertTrue( macroConfig.path( "attr1" ).isArray() );
+        assertEquals( "val11", macroConfig.path( "attr1" ).get( 0 ).asText() );
+        assertEquals( "val12", macroConfig.path( "attr1" ).get( 1 ).asText() );
+
+        assertFalse( macroConfig.path( "attr2" ).isArray() );
+        assertEquals( "val2", macroConfig.path( "attr2" ).asText() );
+
+        assertTrue( macroConfig.path( "body" ).asText().isEmpty() );
+        assertFalse( macrosAsJson.path( "ref" ).asText().isEmpty() );
+        assertEquals( "mymacro", macrosAsJson.path( "name" ).asText() );
     }
 }

@@ -18,19 +18,12 @@ public class HtmlEditorResultMapper
     public void serialize( final MapGenerator gen )
     {
         gen.value( "raw", htmlEditorResult.getRaw() );
-        gen.value( "markup", htmlEditorResult.getMarkup() );
+        gen.value( "processedHtml", htmlEditorResult.getProcessedHtml() );
 
         gen.array( "macrosAsJson" );
         if ( htmlEditorResult.getMacrosAsJson() != null )
         {
             htmlEditorResult.getMacrosAsJson().forEach( gen::value );
-        }
-        gen.end();
-
-        gen.map( "macros" );
-        if ( htmlEditorResult.getMacros() != null )
-        {
-            htmlEditorResult.getMacros().forEach( gen::value );
         }
         gen.end();
 

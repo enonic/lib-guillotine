@@ -10,12 +10,11 @@ const macroTypesLib = require('/lib/guillotine/dynamic/macro-types');
 const macroLib = require('/lib/guillotine/macro');
 
 function generateTypes(context) {
-    componentTypesLib.createComponentDataConfigType(context);
     macroTypesLib.createMacroDataConfigType(context);
 
     context.types.imageStyleType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('ImageStyleType'),
-        description: 'ImageStyleType.',
+        name: context.uniqueName('ImageStyle'),
+        description: 'ImageStyle type.',
         fields: {
             name: {
                 type: graphQlLib.GraphQLString,
@@ -39,8 +38,8 @@ function generateTypes(context) {
     });
 
     context.types.imageType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('ImageType'),
-        description: 'ImageType.',
+        name: context.uniqueName('Image'),
+        description: 'Image type.',
         fields: {
             image: {
                 type: graphQlLib.reference('Content'),
@@ -50,7 +49,7 @@ function generateTypes(context) {
                     });
                 }
             },
-            imageRef: {
+            ref: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
                     return env.source.imageRef;
@@ -65,9 +64,9 @@ function generateTypes(context) {
         }
     });
 
-    context.types.htmlEditorResultType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('HtmlEditorResult'),
-        description: 'HtmlEditorResult type.',
+    context.types.richTextType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('RichText'),
+        description: 'RichText type.',
         fields: {
             raw: {
                 type: graphQlLib.GraphQLString,
@@ -75,10 +74,10 @@ function generateTypes(context) {
                     return env.source.raw;
                 }
             },
-            markup: {
+            processedHtml: {
                 type: graphQlLib.GraphQLString,
                 resolve: function (env) {
-                    return env.source.markup;
+                    return env.source.processedHtml;
                 }
             },
             macrosAsJson: {
@@ -87,10 +86,10 @@ function generateTypes(context) {
                     return env.source.macrosAsJson;
                 }
             },
-            macros: context.types.MacroDataConfigType && {
-                type: context.types.MacroDataConfigType,
+            macros: {
+                type: graphQlLib.list(context.types.macroType),
                 resolve: function (env) {
-                    return env.source.macros;
+                    return env.source.macrosAsJson;
                 }
             },
             images: {
@@ -101,6 +100,8 @@ function generateTypes(context) {
             }
         }
     });
+
+    componentTypesLib.createComponentDataConfigType(context);
 
     context.types.componentTypeType = context.schemaGenerator.createEnumType({
         name: context.uniqueName('ComponentType'),
@@ -208,7 +209,7 @@ function generateTypes(context) {
         description: 'Text component data.',
         fields: {
             value: {
-                type: graphQlLib.nonNull(context.types.htmlEditorResultType),
+                type: graphQlLib.nonNull(context.types.richTextType),
                 args: {
                     processHtml: context.types.processHtmlType
                 },
