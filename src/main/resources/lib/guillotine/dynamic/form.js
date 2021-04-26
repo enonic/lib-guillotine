@@ -231,9 +231,8 @@ function generateFormItemResolveFunction(formItem) {
                         Object.keys(content.attachments).forEach((key) => {
                             content.attachments[key]['__nodeId'] = content._id;
                         });
-
-                        value = content;
                     }
+                    value = content;
                 }
             }
             return value;
