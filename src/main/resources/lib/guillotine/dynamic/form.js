@@ -241,8 +241,8 @@ function generateFormItemResolveFunction(formItem) {
         return function (env) {
             validationLib.validateArguments(env.args);
             let values = utilLib.forceArray(env.source[formItem.name]);
-            if (env.args.offset != null || env.args.offset != null) {
-                return values.slice(env.args.offset, env.args.first);
+            if (env.args.offset != null || env.args.first != null) {
+                values = values.slice(env.args.offset, env.args.first);
             }
             if ('HtmlArea' === formItem.inputType) {
                 values = values.map(function (value) {
