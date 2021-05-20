@@ -1,7 +1,6 @@
 const graphQlLib = require('/lib/guillotine/graphql');
 const graphQlRxLib = require('/lib/graphql-rx');
 const eventLib = require('/lib/xp/event');
-const ctxLib = require('/lib/xp/context');
 
 function createEventObjectType(context) {
     return graphQlLib.createObjectType(context, {
@@ -28,8 +27,6 @@ function createEventObjectType(context) {
 }
 
 function createNewEventPublisher(context) {
-    const siteCtx = ctxLib.get();
-
     const processor = graphQlRxLib.createPublishProcessor();
 
     eventLib.listener({
@@ -44,15 +41,7 @@ function createNewEventPublisher(context) {
                                     ? subscriptionEventType.substring(0, subscriptionEventType.length - 1)
                                     : subscriptionEventType;
 
-                    let eventMatched = false;
-
                     if (event.type.startsWith(eventType)) {
-                        eventMatched = isEventMatched(event, siteCtx, event.type);
-                    } else if (subscriptionEventType === event.type) {
-                        eventMatched = isEventMatched(event, siteCtx, subscriptionEventType);
-                    }
-
-                    if (eventMatched) {
                         processor.onNext(event);
                         return true;
                     }
@@ -61,18 +50,6 @@ function createNewEventPublisher(context) {
         }
     });
     return processor;
-}
-
-function isEventMatched(event, siteCtx, type) {
-    if (!type.startsWith("node.")) {
-        return true;
-    }
-
-    return event.data.nodes.some(node => {
-        if (node.repo === siteCtx.repository && node.branch === siteCtx.branch) {
-            return true;
-        }
-    });
 }
 
 exports.createEventObjectType = createEventObjectType;
