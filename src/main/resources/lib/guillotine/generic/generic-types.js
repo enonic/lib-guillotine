@@ -102,6 +102,12 @@ function generateGenericContentFields(context) {
                 return extraDatas;
             }
         },
+        xAsJson: {
+            type: graphQlLib.Json,
+            resolve: function (env) {
+                return env.source.x;
+            }
+        },
         pageAsJson: {
             type: graphQlLib.Json,
             args: {
