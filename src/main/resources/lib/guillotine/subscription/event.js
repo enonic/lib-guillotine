@@ -16,9 +16,6 @@ function createEventObjectType(context) {
             localOrigin: {
                 type: graphQlLib.GraphQLBoolean
             },
-            distributed: {
-                type: graphQlLib.GraphQLBoolean
-            },
             dataAsJson: {
                 type: graphQlLib.Json,
                 resolve: (env) => env.source.data
