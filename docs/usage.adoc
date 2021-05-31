@@ -4,7 +4,7 @@ This section describes how access and use the GraphQL API
 
 == Introduction
 
-GraphQL is a query language developed by Facebook. 
+GraphQL is a query language developed by Facebook.
 Compared to RESTful APIs, GraphQL is strongly typed and self-documented. It also enable client developers to request exactly the information required in as few requests as possible.
 
 http://graphql.org/learn[Learn more about GraphQL...]
@@ -13,7 +13,7 @@ http://graphql.org/learn[Learn more about GraphQL...]
 
 Sites in Enonic XP represent the main container of content. Like any other item in the CMS, sites are also content.
 
-In addition to being a special container of content, your may also add applications to sites. Applications define the content types, and potentially other capabilities that will be added to the site. 
+In addition to being a special container of content, your may also add applications to sites. Applications define the content types, and potentially other capabilities that will be added to the site.
 
 == Context
 
@@ -91,12 +91,42 @@ The subscriptions are implemented using Websockets, providing instant and high p
 .Listen to server events for the specific site
 ----
 subscription {
-  event
+  event {
+    type
+    dataAsJson
+  }
 }
 ----
 
-Starting from image:images/v-500.svg[Since verision,opts=inline] Guillotine listens events only for a specific `repository` and `branch` which are determined from a site context.
-By default will be listened `node.*` events. In order to configure which events should be listened by application or site you must to specify the `subscriptionEventTypes` option on schema creation, in this case default config will be overwritten.
+Starting from image:images/v-500.svg[Since verision,opts=inline] Guillotine listens to node events only for a specific repository and branch of the site.
+
+.Provide `branch`, `repositoryId` and `siteId` in the `data` object for WebSocket request:
+
+[source,javascript]
+----
+const portalLib = require('/lib/xp/portal');
+
+webSocket: {
+    data: {
+        branch: req.branch,
+        repositoryId: req.repositoryId,
+        siteId: portalLib.getSite()._id
+    },
+    subProtocols: ['graphql-ws']
+}
+----
+
+or use the `guillotineLib.createWebSocketData(req)` method which is available starting from image:images/v-5.1.0.svg[Since verision,opts=inline].
+
+[source,javascript]
+----
+webSocket: {
+    data: guillotineLib.createWebSocketData(req),
+    subProtocols: ['graphql-ws']
+}
+----
+
+Only `node.*` events are listened to by default. In order to configure which events should be listened to by an application or a site the `subscriptionEventTypes` option must be specified on schema creation, in this case default config will be overwritten.
 
 [source,javascript]
 ----
@@ -180,7 +210,7 @@ All types implementing `Content` share the same fields at the exception of the f
 Multiple relations are generated to allow to navigate between contents.
 By default, each content has the following relations:
 
-* parent: Link to the parent content 
+* parent: Link to the parent content
 * children: Link to the child contents
 * site: Link to the nearest site content
 
@@ -243,7 +273,7 @@ Guillotine uses this functionality by generating, on every image, a field "image
 
 === HTML
 
-HTML fields are generated with a parameter "processHtml" allowing to replace abstract internal links by generated URLs. 
+HTML fields are generated with a parameter "processHtml" allowing to replace abstract internal links by generated URLs.
 
 .*Example: Process HTML* - Retrieve the Superhero blog posts. For each post, return its author display name, tags and processed content.
 ----
