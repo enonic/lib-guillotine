@@ -151,7 +151,10 @@ Interface of all contents.
 |dataAsJson: JSON
 |Content data
 
-|x: [<<ExtraData>>]
+|[.line-through]#x: [<<ExtraData>>]#
+|Content extra data. *This field is deprecated and will be removed starting from version 6.0.0.*
+
+|xAsJson: JSON
 |Content extra data
 
 |pageAsJson: JSON
