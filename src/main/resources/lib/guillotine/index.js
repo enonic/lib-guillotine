@@ -57,25 +57,28 @@ eventLib.listener({
 
 function createInternalSchema(siteId, branch, schemaOptions) {
     let siteConfigs = utilLib.forceArray(getSite(siteId, branch).data.siteConfig);
-    let applicationKeys = siteConfigs.map((siteConfigEntry) => siteConfigEntry.applicationKey);
-
-    let siteConfig = getSiteConfig(siteId, branch);
-    let allowPaths = utilLib.forceArray(siteConfig && siteConfig.allowPaths);
+    let applicationKeys = siteConfigs.map(siteConfigEntry => siteConfigEntry.applicationKey);
 
     let options = {
-        applications: applicationKeys,
-        allowPaths: allowPaths
+        applications: applicationKeys
     };
 
     if (schemaOptions) {
         if (schemaOptions.applications) {
-            options.applications = schemaOptions.applications;
+            let apps = {};
+            utilLib.forceArray(schemaOptions.applications).forEach(applicationKey => {
+                apps[applicationKey] = applicationKey;
+            });
+            let uniqueAppKeys = Object.keys(apps);
+            if (uniqueAppKeys.length) {
+                options.applications = options.applications.concat(uniqueAppKeys);
+            }
         }
         if (schemaOptions.allowPaths) {
-            options.allowPaths = schemaOptions.allowPaths;
+            options.allowPaths = utilLib.forceArray(schemaOptions.allowPaths);
         }
         if (schemaOptions.subscriptionEventTypes) {
-            options.subscriptionEventTypes = schemaOptions.subscriptionEventTypes;
+            options.subscriptionEventTypes = utilLib.forceArray(schemaOptions.subscriptionEventTypes);
         }
     }
 
@@ -86,12 +89,6 @@ function getSite(siteId, branch) {
     return contextLib.run({
         branch: branch
     }, () => contentLib.get({key: siteId}));
-}
-
-function getSiteConfig(siteId, branch) {
-    return contextLib.run({
-        branch: branch
-    }, () => contentLib.getSiteConfig({key: siteId}));
 }
 
 function invalidate(siteId, branch) {
