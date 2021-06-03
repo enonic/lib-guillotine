@@ -11,9 +11,9 @@ http://graphql.org/learn[Learn more about GraphQL...]
 
 == Sites
 
-Sites in Enonic XP represent the main container of content. Like any other item in the CMS, sites are also content.
+A site in Enonic XP represents main container of content, while being a content item itself.
 
-In addition to being a special container of content, your may also add applications to sites. Applications define the content types, and potentially other capabilities that will be added to the site.
+In addition to being a content container, a site may also have applications assigned to it. An application defines content types and potentially other capabilities (macros, filters, extra-data etc.) that will be added to the site along with the app.
 
 == Context
 
