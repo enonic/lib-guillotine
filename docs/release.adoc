@@ -1,5 +1,15 @@
 = Release Notes
 
+== Version 5.2
+
+This release introduces improvements to the aggregations
+
+=== Improvements
+
+- Added the `min`, `max` and `count` aggregations.
+- Added the `minDocCount` field to the `TermsAggregationInput` aggregation.
+
+
 == Version 5.1
 
 This release introduces improvements to the subscriptions API, new functions to simplify execution of a GraphQL query and bugs fixes.
