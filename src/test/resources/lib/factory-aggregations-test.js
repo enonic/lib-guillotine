@@ -217,3 +217,62 @@ exports.testCreateGeoDistanceAggregation = function () {
     }, result);
 
 };
+
+exports.testMinAggregation = function () {
+    let inputAggregation = {
+        name: "minPrice",
+        min: {
+            field: "data.price"
+        }
+    };
+
+    let result = factoryLib.createAggregation({}, inputAggregation);
+
+    testingLib.assertJsonEquals({
+        "minPrice": {
+            "min": {
+                "field": "data.price"
+            }
+        }
+    }, result);
+};
+
+
+exports.testMaxAggregation = function () {
+    let inputAggregation = {
+        name: "maxPrice",
+        max: {
+            field: "data.price"
+        }
+    };
+
+    let result = factoryLib.createAggregation({}, inputAggregation);
+
+    testingLib.assertJsonEquals({
+        "maxPrice": {
+            "max": {
+                "field": "data.price"
+            }
+        }
+    }, result);
+};
+
+
+exports.testCountAggregation = function () {
+    let inputAggregation = {
+        name: "countWithPrice",
+        count: {
+            field: "data.price"
+        }
+    };
+
+    let result = factoryLib.createAggregation({}, inputAggregation);
+
+    testingLib.assertJsonEquals({
+        "countWithPrice": {
+            "count": {
+                "field": "data.price"
+            }
+        }
+    }, result);
+};

@@ -147,6 +147,36 @@ function createInputTypes(context) {
         }
     });
 
+    context.types.minAggregationInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('MinAggregationInput'),
+        description: 'MinAggregation input type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+            }
+        }
+    });
+
+    context.types.maxAggregationInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('MaxAggregationInput'),
+        description: 'MaxAggregation input type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+            }
+        }
+    });
+
+    context.types.valueCountAggregationInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('ValueCountAggregationInput'),
+        description: 'ValueCount Aggregation input type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+            }
+        }
+    });
+
     context.types.aggregationInputType = context.schemaGenerator.createInputObjectType({
         name: context.uniqueName('AggregationInput'),
         description: 'Aggregation input type',
@@ -174,6 +204,15 @@ function createInputTypes(context) {
             },
             geoDistance: {
                 type: context.types.geoDistanceAggregationInputType
+            },
+            min: {
+                type: context.types.minAggregationInputType
+            },
+            max: {
+                type: context.types.maxAggregationInputType
+            },
+            count: {
+                type: context.types.valueCountAggregationInputType
             }
         }
     });
