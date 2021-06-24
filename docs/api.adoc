@@ -817,6 +817,15 @@ image:images/v-500.svg[Since version,opts=inline] Aggregations enable extracting
 |getDistance: <<GeoDistanceAggregationInput>>
 |GeoDistance aggregation
 
+|min: <<MinAggregationInput>>
+|Min aggregation
+
+|max: <<MaxAggregationInput>>
+|Max aggregation
+
+|count: <<ValueCountAggregationInput>>
+|ValueCount aggregation
+
 |===
 
 
@@ -850,6 +859,42 @@ image:images/v-500.svg[Since version,opts=inline] Aggregations enable extracting
 
 |===
 
+=== MinAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|===
+
+
+=== MaxAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|===
+
+=== ValueCountAggregationInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|field: String!
+|The property path
+
+|===
 
 === RangeAggregationInput
 
