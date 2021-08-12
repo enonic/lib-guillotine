@@ -296,7 +296,7 @@ function createWebSocketData(req) {
 
 function execute(params) {
     let query = required(params, 'query');
-    let variables = required(params, 'variables');
+    let variables = valueOrDefault(params.variables, {});
     let siteId = valueOrDefault(params.siteId, portalLib.getSite()._id);
     let branch = valueOrDefault(params.branch, contextLib.get().branch);
     let schemaOptions = valueOrDefault(params.schemaOptions, {});
