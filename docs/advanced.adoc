@@ -166,7 +166,7 @@ List of properties for `params` object:
 |
 
 |variables:Object
-|Variables for GraphQL query. Property is required.
+|Variables for GraphQL query. Property is optional.
 |
 
 |siteId:String
