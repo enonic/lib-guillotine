@@ -59,9 +59,13 @@ function createInternalSchema(siteId, branch, schemaOptions) {
     let siteConfigs = utilLib.forceArray(getSite(siteId, branch).data.siteConfig);
     let applicationKeys = siteConfigs.map(siteConfigEntry => siteConfigEntry.applicationKey);
 
-    let options = {
-        applications: applicationKeys
-    };
+    let options = {};
+    if (schemaOptions) {
+        for (const optionKey in schemaOptions) {
+            options[optionKey] = schemaOptions[optionKey];
+        }
+    }
+    options.applications = applicationKeys;
 
     if (schemaOptions) {
         if (schemaOptions.applications) {
