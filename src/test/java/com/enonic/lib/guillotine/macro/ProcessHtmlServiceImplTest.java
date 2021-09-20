@@ -81,6 +81,7 @@ public class ProcessHtmlServiceImplTest
                 "</figcaption>\n</figure>\n\n<p><a href=\"content://e45caba3-510a-467c-8a48-5d471eef4d7f\" target=\"_blank\">My Link</a></p>\n" );
         params.setType( "server" );
         params.setImageWidths( Arrays.asList( 1024, 2048 ) );
+        params.setImageSizes( "(max-width: 1920px) 1024px" );
         params.setPortalRequest( request );
 
         HtmlEditorProcessedResult result = instance.processHtml( params );

@@ -99,7 +99,7 @@ public class HtmlLinkProcessor
     }
 
     public String process( final String text, final String urlType, final PortalRequest portalRequest, final List<Integer> imageWidths,
-                           final Consumer<Map<String, Object>> imageConsumer )
+                           final String imageSizes, final Consumer<Map<String, Object>> imageConsumer )
     {
         String processedHtml = text;
         final ImmutableMap<String, ImageStyle> imageStyleMap = getImageStyleMap( portalRequest );
@@ -168,6 +168,11 @@ public class HtmlLinkProcessor
                             if ( !srcsetValues.isEmpty() )
                             {
                                 replacement.append( " srcset=\"" ).append( srcsetValues ).append( "\"" );
+                            }
+
+                            if ( imageSizes != null && !imageSizes.isBlank() )
+                            {
+                                replacement.append( " sizes=\"" ).append( imageSizes ).append( "\"" );
                             }
 
                             imageConsumer.accept( buildStyleProjection( id, imgEditorRef, imageStyle ) );

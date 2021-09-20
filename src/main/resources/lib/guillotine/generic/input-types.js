@@ -10,6 +10,9 @@ function createInputTypes(context) {
             },
             imageWidths: {
                 type: graphQlLib.list(graphQlLib.GraphQLInt)
+            },
+            imageSizes: {
+                type: graphQlLib.GraphQLString
             }
         }
     });
