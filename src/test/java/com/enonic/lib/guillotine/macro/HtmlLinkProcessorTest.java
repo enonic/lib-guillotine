@@ -45,20 +45,22 @@ public class HtmlLinkProcessorTest
         String result = instance.process( "" + "<figure class=\"editor-style-image-cinema\">" +
                                               "<img alt=\"matrix.jpg\" src=\"image://content-id?style=editor-style-image-cinema\" />" +
                                               "<figcaption>Caption</figcaption>" + "</figure>", "server", createPortalRequest(),
-                                          Arrays.asList( 760, 1024 ), image -> {
+                                          Arrays.asList( 760, 1024 ), "(max-width: 1024px) 760px", image -> {
             } );
 
         assertTrue( result.contains( "<img alt=\"matrix.jpg\" src=\"imageUrl\" data-image-ref=" ) );
         assertTrue( result.contains( "srcset=\"imageUrl 760w,imageUrl 1024w\"" ) );
+        assertTrue( result.contains( "sizes=\"(max-width: 1024px) 760px\"" ) );
 
         result = instance.process( "" + "<figure class=\"editor-style-image-cinema\">" +
                                        "<img alt=\"matrix.jpg\" class=\"custom-class\" src=\"image://content-id?style=editor-style-image-cinema\" />" +
                                        "<figcaption>Caption</figcaption>" + "</figure>", "server", createPortalRequest(),
-                                   Arrays.asList( 1024, 2048 ), image -> {
+                                   Arrays.asList( 1024, 2048 ), "(max-width: 1024px) 1024px", image -> {
             } );
 
         assertTrue( result.contains( "<img alt=\"matrix.jpg\" class=\"custom-class\" src=\"imageUrl\" data-image-ref=" ) );
         assertTrue( result.contains( "srcset=\"imageUrl 1024w,imageUrl 2048w\"" ) );
+        assertTrue( result.contains( "sizes=\"(max-width: 1024px) 1024px\"" ) );
 
         when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn(
             StyleDescriptors.from( StyleDescriptor.create().
@@ -71,11 +73,13 @@ public class HtmlLinkProcessorTest
 
         result = instance.process( "" + "<figure class=\"editor-style-image-cinema\">" +
                                        "<img alt=\"matrix.jpg\" class=\"custom-class\" src=\"image://content-id?style=editor-style-image-cinema\" />" +
-                                       "<figcaption>Caption</figcaption>" + "</figure>", "server", createPortalRequest(), null, image -> {
-        } );
+                                       "<figcaption>Caption</figcaption>" + "</figure>", "server", createPortalRequest(), null, null,
+                                   image -> {
+                                   } );
 
         assertTrue( result.contains( "<img alt=\"matrix.jpg\" class=\"custom-class\" src=\"imageUrl\" data-image-ref=" ) );
         assertFalse( result.contains( "srcset=" ) );
+        assertFalse( result.contains( "sizes=" ) );
     }
 
     @Test
@@ -91,7 +95,7 @@ public class HtmlLinkProcessorTest
 
         String result = instance.process(
             "<figure class=\"captioned editor-align-justify editor-style-original\"><img alt=\"the-dark-knight.jpg\" src=\"media://content-id\" style=\"width:100%\" />\n" +
-                "<figcaption>Original</figcaption></figure>", "server", createPortalRequest(), null, image -> {
+                "<figcaption>Original</figcaption></figure>", "server", createPortalRequest(), null, null, image -> {
             } );
 
         assertTrue( result.contains( "<img alt=\"the-dark-knight.jpg\" src=\"imageUrl\" data-image-ref=" ) );

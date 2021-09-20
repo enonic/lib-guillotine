@@ -15,6 +15,8 @@ public class ProcessHtmlParams
 
     private List<Integer> imageWidths;
 
+    private String imageSizes;
+
     public String getValue()
     {
         return value;
@@ -56,6 +58,17 @@ public class ProcessHtmlParams
     public ProcessHtmlParams setImageWidths( final List<Integer> imageWidths )
     {
         this.imageWidths = imageWidths;
+        return this;
+    }
+
+    public String getImageSizes()
+    {
+        return imageSizes;
+    }
+
+    public ProcessHtmlParams setImageSizes( final String imageSizes )
+    {
+        this.imageSizes = imageSizes;
         return this;
     }
 }

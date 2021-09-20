@@ -137,7 +137,7 @@ exports.testBooleanShouldFilter = function () {
 
     let result = factoryLib.createFilters(inputFilters);
 
-    testingLib.assertTrue([
+    testingLib.assertJsonEquals([
         {
             "boolean": {
                 "should": [
