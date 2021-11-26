@@ -115,7 +115,7 @@ Interface of all contents.
 |_name: String!
 |Content name
 
-|_path: String!
+|_path(type: <<SiteRelativeInput>>): String!
 |Content path
 
 |creator: <<PrincipalKey>>
@@ -779,6 +779,18 @@ Direct Known Subtypes: FormInput
 
 |imageWidths: [Int]
 |Generates image URLs for given widths which will be used in the `srcset` attribute of `img` tag.
+
+|===
+
+=== SiteRelativeInput
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|relative: Boolean
+|Relative path or not
 
 |===
 

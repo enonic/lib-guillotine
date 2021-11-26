@@ -312,6 +312,16 @@ function createInputTypes(context) {
             }
         }
     });
+
+    context.types.siteRelativeInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('SiteRelativeInput'),
+        description: 'Site Relative input type',
+        fields: {
+            relative: {
+                type: graphQlLib.GraphQLBoolean
+            }
+        }
+    });
 }
 
 exports.createInputTypes = createInputTypes;

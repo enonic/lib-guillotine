@@ -23,7 +23,18 @@ function generateGenericContentFields(context) {
             type: graphQlLib.nonNull(graphQlLib.GraphQLString)
         },
         _path: {
-            type: graphQlLib.nonNull(graphQlLib.GraphQLString)
+            type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            args: {
+                type: context.types.siteRelativeInputType
+            },
+            resolve: function (env) {
+                if (env.args.type && env.args.type.relative === true) {
+                    let sitePath = portalLib.getSite()._path;
+                    return env.source._path.replace(sitePath, '') || '/';
+                } else {
+                    return env.source._path;
+                }
+            }
         },
         _references: {
             type: graphQlLib.list(graphQlLib.reference('Content')),
