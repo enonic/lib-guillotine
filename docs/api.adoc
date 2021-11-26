@@ -115,7 +115,7 @@ Interface of all contents.
 |_name: String!
 |Content name
 
-|_path: String!
+|_path(siteRelative: GraphQLBoolean): String!
 |Content path
 
 |creator: <<PrincipalKey>>
