@@ -184,6 +184,10 @@ List of properties for `params` object:
 |schemaOptions:Object
 |SchemaOptions object to customize schema. Property is optional.
 |
+
+|context:Object
+|GraphQL context. Accessible in resolve function via `env.context`. Property is optional.
+|
 |===
 
 List of properties for `schemaOptions` object:
