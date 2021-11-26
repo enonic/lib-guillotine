@@ -299,14 +299,15 @@ function createWebSocketData(req) {
 }
 
 function execute(params) {
-    let query = required(params, 'query');
-    let variables = valueOrDefault(params.variables, {});
-    let siteId = valueOrDefault(params.siteId, portalLib.getSite()._id);
-    let branch = valueOrDefault(params.branch, contextLib.get().branch);
-    let schemaOptions = valueOrDefault(params.schemaOptions, {});
-    let schema = valueOrDefault(params.schema, getSchema(siteId, branch, schemaOptions));
+    const query = required(params, 'query');
+    const variables = valueOrDefault(params.variables, {});
+    const siteId = valueOrDefault(params.siteId, portalLib.getSite()._id);
+    const branch = valueOrDefault(params.branch, contextLib.get().branch);
+    const schemaOptions = valueOrDefault(params.schemaOptions, {});
+    const schema = valueOrDefault(params.schema, getSchema(siteId, branch, schemaOptions));
+    const context = valueOrDefault(params.context, {});
 
-    return JSON.stringify(graphQlLib.execute(schema, query, variables));
+    return JSON.stringify(graphQlLib.execute(schema, query, variables, context));
 }
 
 exports.createSchema = createSchema;
