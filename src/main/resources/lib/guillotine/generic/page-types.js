@@ -214,9 +214,15 @@ function generateTypes(context) {
                     processHtml: context.types.processHtmlType
                 },
                 resolve: function (env) {
-                    return macroLib.processHtml({
+                    let params = {
                         value: env.source.value
-                    });
+                    };
+                    if (env.args.processHtml) {
+                        params['type'] = env.args.processHtml.type;
+                        params['imageWidths'] = env.args.processHtml.imageWidths
+                        params['imageSizes'] = env.args.processHtml.imageSizes;
+                    }
+                    return macroLib.processHtml(params);
                 }
             }
         }
