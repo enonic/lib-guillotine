@@ -115,8 +115,8 @@ Interface of all contents.
 |_name: String!
 |Content name
 
-|_path: String!
-|Content path
+|_path(type: <<ContentPathType>>): String!
+|Content path. The `type` argument is supported starting from version image:images/v-530.svg[Since version,opts=inline].
 
 |creator: <<PrincipalKey>>
 |Content creator
@@ -1180,3 +1180,7 @@ Enum values: page
 , part
 , text
 , fragment
+
+=== ContentPathType
+
+Enum values: siteRelative
