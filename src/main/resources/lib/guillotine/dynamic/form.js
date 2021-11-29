@@ -253,6 +253,7 @@ function generateFormItemResolveFunction(formItem) {
                     if (env.args.processHtml) {
                         processHtmlParams['type'] = env.args.processHtml.type;
                         processHtmlParams['imageWidths'] = env.args.processHtml.imageWidths
+                        processHtmlParams['imageSizes'] = env.args.processHtml.imageSizes;
                     }
                     return macroLib.processHtml(processHtmlParams);
                 });
