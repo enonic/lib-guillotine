@@ -22,7 +22,7 @@ dependencies {
     compile "com.enonic.xp:lib-websocket:${xpVersion}"
     compile 'com.enonic.lib:lib-graphql:2.0.1-SNAPSHOT'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation "com.enonic.xp:testing:${xpVersion}"
 }
 
