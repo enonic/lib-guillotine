@@ -780,6 +780,9 @@ Direct Known Subtypes: FormInput
 |imageWidths: [Int]
 |Generates image URLs for given widths which will be used in the `srcset` attribute of `img` tag.
 
+|image:images/v-530.svg[Since version,opts=inline] imageSizes: String
+|Specifies image width for a specific browser resolution in the following format: `(media-condition) width`. Multiple sizes are comma-separated.
+
 |===
 
 == Aggregation Input Types
