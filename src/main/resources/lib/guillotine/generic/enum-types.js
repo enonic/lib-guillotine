@@ -12,7 +12,8 @@ function createEnumTypes(context) {
         name: context.uniqueName('ContentPathType'),
         description: 'Content path type.',
         values: {
-            'siteRelative': 'siteRelative'
+            'siteRelative': 'siteRelative',
+            'site': 'site'
         }
     });
 }

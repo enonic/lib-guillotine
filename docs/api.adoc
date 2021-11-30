@@ -1186,4 +1186,15 @@ Enum values: page
 
 === ContentPathType
 
-Enum values: siteRelative
+==== Values
+
+|===
+|Value | Description
+
+|siteRelative
+|Returns the relative path without initial '/' i.e. `my-content/path`
+
+|site
+|Returns the relative path with initial '/' i.e. `/my-content/path`
+
+|===

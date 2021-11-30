@@ -28,13 +28,18 @@ function generateGenericContentFields(context) {
                 type: context.types.contentPathType
             },
             resolve: function (env) {
-                if (env.args.type === 'siteRelative') {
+                if (env.args.type) {
                     let sitePath = contextLib.run({
                         principals: ["role:system.admin"]
                     }, function () {
                         return portalLib.getSite()._path;
                     });
-                    return env.source._path.replace(sitePath, '') || '/';
+                    let normalizedPath = env.source._path.replace(sitePath, '');
+                    if (env.args.type === 'siteRelative') {
+                        return normalizedPath.startsWith("/") ? normalizedPath.substring(1) : normalizedPath;
+                    } else {
+                        return normalizedPath || '/';
+                    }
                 } else {
                     return env.source._path;
                 }
