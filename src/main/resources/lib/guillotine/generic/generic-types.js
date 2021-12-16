@@ -34,7 +34,8 @@ function generateGenericContentFields(context) {
                     }, function () {
                         return portalLib.getSite()._path;
                     });
-                    return env.source._path.replace(sitePath, '') || '/';
+                    let normalizedPath = env.source._path.replace(sitePath, '');
+                    return normalizedPath.startsWith("/") ? normalizedPath.substring(1) : normalizedPath;
                 } else {
                     return env.source._path;
                 }
