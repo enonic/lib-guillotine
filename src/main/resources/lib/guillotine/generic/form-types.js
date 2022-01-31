@@ -12,7 +12,7 @@ function generateTypes(context) {
         }
     });
 
-    context.types.formItemType = context.schemaGenerator.createInterfaceType({
+    context.types.formItemType = graphQlLib.createInterfaceType(context, {
         name: context.uniqueName('FormItem'),
         typeResolver: function (contentType) {
             switch (contentType.formItemType) {
