@@ -438,7 +438,7 @@ function createGenericTypes(context) {
         }
     });
 
-    context.types.contentType = context.schemaGenerator.createInterfaceType({
+    context.types.contentType = graphQlLib.createInterfaceType(context, {
         name: context.uniqueName('Content'),
         typeResolver: function (content) {
             return context.contentTypeMap[content.type] || context.types.untypedContentType;
@@ -448,7 +448,7 @@ function createGenericTypes(context) {
     });
     context.types.contentConnectionType = graphQlConnectionLib.createConnectionType(context.schemaGenerator, context.types.contentType);
 
-    context.types.untypedContentType = graphQlLib.createObjectType(context, {
+    context.types.untypedContentType = graphQlLib.createContentObjectType(context, {
         name: context.uniqueName('UntypedContent'),
         description: 'Untyped content.',
         interfaces: [context.types.contentType],

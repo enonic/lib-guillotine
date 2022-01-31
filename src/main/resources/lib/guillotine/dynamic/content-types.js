@@ -61,7 +61,7 @@ function generateContentTypeObjectType(context, contentType) {
         type: generateContentDataObjectType(context, contentType)
     } : undefined;
 
-    var contentTypeObjectType = graphQlLib.createObjectType(context, createContentTypeTypeParams);
+    var contentTypeObjectType = graphQlLib.createContentObjectType(context, createContentTypeTypeParams);
     context.putContentTypeType(contentType.name, contentTypeObjectType);
     return contentTypeObjectType;
 }
