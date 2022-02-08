@@ -26,6 +26,9 @@ function canAccessCmsData() {
 }
 
 function filterForbiddenContent(content, context) {
+    if (context.isProjectMode()) {
+        return content;
+    }
     for (let allowedContentPath of getAllowedContentPaths(context)) {
         if (content._path === allowedContentPath || content._path.indexOf(allowedContentPath + '/') === 0) {
             return content;
@@ -37,8 +40,7 @@ function filterForbiddenContent(content, context) {
 function adaptQuery(query, context) {
     const allowedNodePaths = getAllowedNodePaths(context);
     const queryPrefix = allowedNodePaths.map(nodePath => '_path = "' + nodePath + '" OR _path LIKE "' + nodePath + '/*"').join(" OR ");
-    const adaptedQuery = '(' + queryPrefix + ')' + (query ? ' AND (' + query + ')' : '');
-    return adaptedQuery;
+    return context.isProjectMode() ? query : '(' + queryPrefix + ')' + (query ? ' AND (' + query + ')' : '');
 }
 
 function getAllowedNodePaths(context) {
@@ -46,7 +48,7 @@ function getAllowedNodePaths(context) {
 }
 
 function getAllowedContentPaths(context) {
-    return context.options.allowPaths.concat(portalLib.getSite()._path);
+    return context.options.allowPaths.concat(context.isProjectMode() ? [] : portalLib.getSite()._path);
 }
 
 

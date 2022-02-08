@@ -1,6 +1,7 @@
 package com.enonic.lib.guillotine.macro;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,10 @@ public class ProcessHtmlServiceImpl
 
         builder.setImages( images );
 
-        final Map<String, MacroDescriptor> registeredMacros = getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() );
+        // TODO
+        final Map<String, MacroDescriptor> registeredMacros = params.getPortalRequest().getSite() != null
+            ? getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() )
+            : new HashMap<>();
 
         final List<MacroDecorator> processedMacros = new ArrayList<>();
 

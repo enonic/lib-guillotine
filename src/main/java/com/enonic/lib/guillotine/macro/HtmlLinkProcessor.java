@@ -18,15 +18,19 @@ import com.google.common.collect.ImmutableSet;
 
 import com.enonic.xp.app.ApplicationKey;
 import com.enonic.xp.app.ApplicationKeys;
+import com.enonic.xp.context.Context;
+import com.enonic.xp.context.ContextAccessor;
 import com.enonic.xp.portal.PortalRequest;
 import com.enonic.xp.portal.url.AttachmentUrlParams;
 import com.enonic.xp.portal.url.ImageUrlParams;
 import com.enonic.xp.portal.url.PageUrlParams;
 import com.enonic.xp.portal.url.PortalUrlService;
+import com.enonic.xp.project.ProjectName;
 import com.enonic.xp.site.Site;
 import com.enonic.xp.style.ImageStyle;
 import com.enonic.xp.style.StyleDescriptorService;
 import com.enonic.xp.style.StyleDescriptors;
+import com.enonic.xp.web.servlet.ServletRequestUrlHelper;
 
 public class HtmlLinkProcessor
 {
@@ -143,7 +147,17 @@ public class HtmlLinkProcessor
                             filter( getFilter( imageStyle ) ).
                             portalRequest( portalRequest );
 
-                        final String imageUrl = portalUrlService.imageUrl( imageUrlParams );
+                        String imageUrl = portalUrlService.imageUrl( imageUrlParams );
+
+                        // TODO
+                        if (portalRequest.getSite() == null) {
+                            final Context context = ContextAccessor.current();
+                            String repo = ProjectName.from( context.getRepositoryId() ).toString();
+                            String branch = context.getBranch().toString();
+                            imageUrl = ( urlType.equals( "absolute" )
+                                ? ServletRequestUrlHelper.getServerUrl( portalRequest.getRawRequest() )
+                                : "" ) + "/site/" + repo + "/" + branch + imageUrl.substring( imageUrl.indexOf( "/_/image" ) );
+                        }
 
                         final StringBuilder replacement = new StringBuilder( "\"" + imageUrl + "\"" );
 

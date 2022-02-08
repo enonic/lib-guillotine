@@ -181,8 +181,13 @@ function createContext(options) {
     context.options.applications = context.options.applications || [app.name];
     context.options.allowPaths = context.options.allowPaths || [];
     context.options.subscriptionEventTypes = context.options.subscriptionEventTypes || ['node.*'];
+    context.options.mode = context.options.mode || 'site'; // supported values are `site` and `project`
 
     context.schemaGenerator = graphQlLib.newSchemaGenerator();
+
+    context.isProjectMode = function () {
+        return context.options.mode === 'project';
+    };
 
     return context;
 }
@@ -301,12 +306,15 @@ function createWebSocketData(req) {
 function execute(params) {
     const query = required(params, 'query');
     const variables = valueOrDefault(params.variables, {});
-    const siteId = valueOrDefault(params.siteId, portalLib.getSite()._id);
-    const branch = valueOrDefault(params.branch, contextLib.get().branch);
     const schemaOptions = valueOrDefault(params.schemaOptions, {});
-    const schema = valueOrDefault(params.schema, getSchema(siteId, branch, schemaOptions));
     const context = valueOrDefault(params.context, {});
 
+    let schema = params.schema;
+    if (!schema) {
+        let siteId = valueOrDefault(params.siteId, portalLib.getSite()._id);
+        let branch = valueOrDefault(params.branch, contextLib.get().branch);
+        schema = getSchema(siteId, branch, schemaOptions);
+    }
     return JSON.stringify(graphQlLib.execute(schema, query, variables, context));
 }
 
