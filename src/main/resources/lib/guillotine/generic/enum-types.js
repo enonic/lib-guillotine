@@ -15,6 +15,15 @@ function createEnumTypes(context) {
             'siteRelative': 'siteRelative'
         }
     });
+
+    context.types.mediaIntentType = context.schemaGenerator.createEnumType({
+        name: context.uniqueName('MediaIntentType'),
+        description: 'Media intent type.',
+        values: {
+            'download': 'download',
+            'inline': 'inline'
+        }
+    });
 }
 
 exports.createEnumTypes = createEnumTypes;

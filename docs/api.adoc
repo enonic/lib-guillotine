@@ -328,6 +328,9 @@ image:images/v-500.svg[Since version,opts=inline] Represents result of HtmlArea 
 |images: [<<Image>>]
 |Represents details of images which were detected in the HtmlArea value, except images with `original` styles
 
+|links: [<<Link>>]
+|Represents details of links which were detected in the HtmlArea value, which represent `content` or `media`
+
 |===
 
 === Macro
@@ -427,6 +430,42 @@ image:images/v-500.svg[Since version,opts=inline]
 
 |filter: String
 |The `filter` value for server-side image processing
+
+|===
+
+=== Media
+
+image:images/v-550.svg[Since version,opts=inline]
+
+|===
+|Name (Arguments): Type | Description
+
+|intent: <<MediaIntentType>>
+|Link intent.
+
+|content: <<Content>>
+|Related content
+
+|===
+
+=== Link
+
+image:images/v-550.svg[Since version,opts=inline]
+
+|===
+|Name (Arguments): Type | Description
+
+|uri: String
+|Link URI
+
+|ref: String
+|Reference to link in the `processedHtml` field
+
+|media: <<Media>>
+|Related media content. This field has `null` value for non-media content
+
+|content: <<Content>>
+|Related content. This field has `null` value for media content
 
 |===
 
@@ -1187,3 +1226,8 @@ Enum values: page
 === ContentPathType
 
 Enum values: siteRelative
+
+=== MediaIntentType
+
+Enum values: download
+, inline

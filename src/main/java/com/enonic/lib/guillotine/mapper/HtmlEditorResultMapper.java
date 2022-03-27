@@ -33,5 +33,12 @@ public class HtmlEditorResultMapper
             htmlEditorResult.getImages().forEach( gen::value );
         }
         gen.end();
+
+        gen.array( "links" );
+        if ( htmlEditorResult.getLinks() != null )
+        {
+            htmlEditorResult.getLinks().forEach( gen::value );
+        }
+        gen.end();
     }
 }

@@ -13,12 +13,15 @@ public final class HtmlEditorProcessedResult
 
     private final List<Map<String, Object>> images;
 
+    private final List<Map<String, Object>> links;
+
     private HtmlEditorProcessedResult( final Builder builder )
     {
         this.raw = builder.raw;
         this.processedHtml = builder.processedHtml;
         this.macrosAsJson = builder.macrosAsJson;
         this.images = builder.images;
+        this.links = builder.links;
     }
 
     public String getRaw()
@@ -41,6 +44,11 @@ public final class HtmlEditorProcessedResult
         return images;
     }
 
+    public List<Map<String, Object>> getLinks()
+    {
+        return links;
+    }
+
     public static HtmlEditorProcessedResult empty()
     {
         return HtmlEditorProcessedResult.create().build();
@@ -60,6 +68,8 @@ public final class HtmlEditorProcessedResult
         private List<Map<String, Object>> macrosAsJson;
 
         private List<Map<String, Object>> images;
+
+        private List<Map<String, Object>> links;
 
         public Builder setRaw( final String raw )
         {
@@ -82,6 +92,12 @@ public final class HtmlEditorProcessedResult
         public Builder setImages( final List<Map<String, Object>> images )
         {
             this.images = images;
+            return this;
+        }
+
+        public Builder setLinks( final List<Map<String, Object>> links )
+        {
+            this.links = links;
             return this;
         }
 
