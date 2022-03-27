@@ -64,6 +64,60 @@ function generateTypes(context) {
         }
     });
 
+    context.types.mediaType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('Media'),
+        description: 'Media type.',
+        fields: {
+            content: {
+                type: graphQlLib.reference('Content'),
+                resolve: function (env) {
+                    return env.source.contentId ? contentLib.get({
+                        key: env.source.contentId
+                    }) : null;
+                }
+            },
+            intent: {
+                type: context.types.mediaIntentType,
+                resolve: function (env) {
+                    return env.source.intent;
+                }
+            }
+        }
+    });
+
+    context.types.linkType = graphQlLib.createObjectType(context, {
+        name: context.uniqueName('Link'),
+        description: 'Link type.',
+        fields: {
+            ref: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.linkRef;
+                }
+            },
+            uri: {
+                type: graphQlLib.GraphQLString,
+                resolve: function (env) {
+                    return env.source.uri;
+                }
+            },
+            media: {
+                type: context.types.mediaType,
+                resolve: function (env) {
+                    return env.source.media;
+                }
+            },
+            content: {
+                type: graphQlLib.reference('Content'),
+                resolve: function (env) {
+                    return env.source.contentId ? contentLib.get({
+                        key: env.source.contentId
+                    }) : null;
+                }
+            }
+        }
+    });
+
     context.types.richTextType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('RichText'),
         description: 'RichText type.',
@@ -96,6 +150,12 @@ function generateTypes(context) {
                 type: graphQlLib.list(context.types.imageType),
                 resolve: function (env) {
                     return env.source.images;
+                }
+            },
+            links: {
+                type: graphQlLib.list(context.types.linkType),
+                resolve: function (env) {
+                    return env.source.links;
                 }
             }
         }

@@ -99,7 +99,8 @@ public class HtmlLinkProcessor
     }
 
     public String process( final String text, final String urlType, final PortalRequest portalRequest, final List<Integer> imageWidths,
-                           final String imageSizes, final Consumer<Map<String, Object>> imageConsumer )
+                           final String imageSizes, final Consumer<Map<String, Object>> imageConsumer,
+                           final Consumer<Map<String, Object>> linkConsumer )
     {
         String processedHtml = text;
         final ImmutableMap<String, ImageStyle> imageStyleMap = getImageStyleMap( portalRequest );
@@ -127,7 +128,19 @@ public class HtmlLinkProcessor
                             id( id ).
                             portalRequest( portalRequest );
                         final String pageUrl = portalUrlService.pageUrl( pageUrlParams );
-                        processedHtml = processedHtml.replaceFirst( Pattern.quote( attrValue ), "\"" + pageUrl + "\"" );
+
+                        final StringBuilder replacement = new StringBuilder( "\"" + pageUrl + "\"" );
+
+                        if ( "a".equals( tagName ) )
+                        {
+                            final String linkEditorRef = UUID.randomUUID().toString();
+
+                            replacement.append( " data-link-ref=\"" ).append( linkEditorRef ).append( "\"" );
+
+                            linkConsumer.accept( buildLinkProjection( id, linkEditorRef, link, mode ) );
+                        }
+
+                        processedHtml = processedHtml.replaceFirst( Pattern.quote( attrValue ), replacement.toString() );
                         break;
                     }
                     case IMAGE_TYPE:
@@ -193,7 +206,15 @@ public class HtmlLinkProcessor
 
                         final StringBuilder replacement = new StringBuilder( "\"" + attachmentUrl + "\"" );
 
-                        if ( "img".equals( tagName ) && "src".equals( attr ) )
+                        if ( "a".equals( tagName ) )
+                        {
+                            final String linkEditorRef = UUID.randomUUID().toString();
+
+                            replacement.append( " data-link-ref=\"" ).append( linkEditorRef ).append( "\"" );
+
+                            linkConsumer.accept( buildLinkProjection( id, linkEditorRef, link, mode ) );
+                        }
+                        else if ( "img".equals( tagName ) && "src".equals( attr ) )
                         {
                             final String imgEditorRef = UUID.randomUUID().toString();
 
@@ -230,6 +251,25 @@ public class HtmlLinkProcessor
         }
 
         return imageProjection;
+    }
+
+    private Map<String, Object> buildLinkProjection( String id, String linkRef, String uri, String download )
+    {
+        final Map<String, Object> projection = new LinkedHashMap<>();
+
+        projection.put( "contentId", download != null ? null : id); // only for content
+        projection.put( "linkRef", linkRef );
+        projection.put( "uri", uri );
+
+        if ( download != null )
+        {
+            Map<String, Object> mediaAsMap = new LinkedHashMap<>();
+            mediaAsMap.put( "intent", download );
+            mediaAsMap.put( "contentId", id );
+            projection.put( "media", mediaAsMap ); // only for media
+        }
+
+        return projection;
     }
 
     private ImmutableMap<String, ImageStyle> getImageStyleMap( final PortalRequest portalRequest )
