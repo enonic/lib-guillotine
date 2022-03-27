@@ -51,11 +51,14 @@ public class ProcessHtmlServiceImpl
 
         final List<Map<String, Object>> images = new ArrayList<>();
 
+        final List<Map<String, Object>> links = new ArrayList<>();
+
         String processedHtml = new HtmlLinkProcessor( styleDescriptorService, portalUrlService ).
             process( params.getValue(), params.getType(), params.getPortalRequest(), params.getImageWidths(), params.getImageSizes(),
-                     images::add );
+                     images::add, links::add );
 
         builder.setImages( images );
+        builder.setLinks( links );
 
         // TODO
         final Map<String, MacroDescriptor> registeredMacros = params.getPortalRequest().getSite() != null

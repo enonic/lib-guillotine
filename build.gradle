@@ -45,7 +45,7 @@ test {
     useJUnitPlatform()
 }
 
-def docsDir = file("${buildDir}/docs")
+def docsDir = file( "${buildDir}/docs" )
 
 asciidoctor {
     sourceDir = file( 'docs' )
