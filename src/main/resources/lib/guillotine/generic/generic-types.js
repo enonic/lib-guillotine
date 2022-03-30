@@ -15,6 +15,26 @@ const validationLib = require('/lib/guillotine/util/validation');
 const utilLib = require('/lib/guillotine/util/util');
 const urlResolverLib = require('/lib/guillotine/util/url-helper');
 
+function transformNodeIfAttachmentsExist(node) {
+    if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
+        if (node.data && node.data['__nodeId']) {
+            removeNodeIdPropIfNeeded(node.data);
+        }
+    }
+    return node;
+}
+
+function removeNodeIdPropIfNeeded(obj) {
+    delete obj['__nodeId'];
+
+    Object.keys(obj).forEach(prop => {
+        let holderProp = obj[prop];
+        if (typeof holderProp === 'object' && !Array.isArray(holderProp)) {
+            removeNodeIdPropIfNeeded(holderProp);
+        }
+    });
+}
+
 function generateGenericContentFields(context) {
     return {
         _id: {
@@ -102,7 +122,8 @@ function generateGenericContentFields(context) {
         dataAsJson: {
             type: graphQlLib.Json,
             resolve: function (env) {
-                return env.source.data;
+                const node = JSON.parse(JSON.stringify(env.source));
+                return transformNodeIfAttachmentsExist(node).data;
             }
         },
         x: {
