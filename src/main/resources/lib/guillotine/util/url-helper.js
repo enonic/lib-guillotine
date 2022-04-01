@@ -9,15 +9,23 @@ function buildRepoAndBranchPartUrl() {
     return `${repo}/${branch}`;
 }
 
-function buildUrl(url, endpointTypePath) {
+function buildUrl(url, urlType, endpointTypePath) {
     let endpointTypePathIndex = url.indexOf(endpointTypePath);
-    return `${url.substring(0, endpointTypePathIndex)}/${buildRepoAndBranchPartUrl()}${url.substring(endpointTypePathIndex)}`;
+
+    if (urlType === 'absolute') {
+        let protocol = url.substring(0, url.indexOf("://"));
+        let parts = url.substring(url.indexOf("://") + 3).split('/', -1);
+        let domain = parts.length > 0 ? parts[0] : 'localhost:8080';
+        return `${protocol}://${domain}/site/${buildRepoAndBranchPartUrl()}${url.substring(endpointTypePathIndex)}`
+    } else {
+        return `/site/${buildRepoAndBranchPartUrl()}${url.substring(endpointTypePathIndex)}`;
+    }
 }
 
-function resolveAttachmentUrl(params, isProjectMode) {
+function resolveAttachmentUrl(params, urlType, isProjectMode) {
     const url = portalLib.attachmentUrl(params);
 
-    return isProjectMode ? buildUrl(url, '/_/attachment') : url;
+    return isProjectMode ? buildUrl(url, urlType, '/_/attachment') : url;
 }
 
 exports.resolveAttachmentUrlById = function (env, isProjectMode) {
@@ -28,7 +36,7 @@ exports.resolveAttachmentUrlById = function (env, isProjectMode) {
         params: env.args.params && JSON.parse(env.args.params)
     };
 
-    return resolveAttachmentUrl(params, isProjectMode);
+    return resolveAttachmentUrl(params, env.args.type, isProjectMode);
 }
 
 exports.resolveAttachmentUrlByName = function (env, isProjectMode) {
@@ -40,7 +48,7 @@ exports.resolveAttachmentUrlByName = function (env, isProjectMode) {
         params: env.args.params && JSON.parse(env.args.params)
     };
 
-    return resolveAttachmentUrl(params, isProjectMode);
+    return resolveAttachmentUrl(params, env.args.type, isProjectMode);
 }
 
 exports.resolveImageUrl = function (env, isProjectMode) {
@@ -53,9 +61,9 @@ exports.resolveImageUrl = function (env, isProjectMode) {
         filter: env.args.filter,
         type: env.args.type,
         params: env.args.params && JSON.parse(env.args.params)
-    })
+    });
 
-    return isProjectMode ? buildUrl(url, '/_/image') : url;
+    return isProjectMode ? buildUrl(url, env.args.type, '/_/image') : url;
 }
 
 exports.resolvePageUrl = function (env, isProjectMode) {

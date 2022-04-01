@@ -469,6 +469,8 @@ function createGenericTypes(context) {
         fields: exports.generateGenericContentFields(context)
     });
 
+    context.addDictionaryType(context.types.untypedContentType);
+
     context.types.queryContentConnectionType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('QueryContentConnection'),
         description: 'QueryContentConnection',
