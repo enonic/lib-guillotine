@@ -21,14 +21,14 @@ public final class UrlHelper
     private static String buildRepoAndBranchPartUrl()
     {
         Context context = ContextAccessor.current();
-        return context.getRepositoryId().toString().substring( "com.enonic.cms".length() ) + "/" + context.getBranch().toString();
+        return context.getRepositoryId().toString().substring( "com.enonic.cms.".length() ) + "/" + context.getBranch().toString();
     }
 
     private static String buildUrl( final String urlType, final String url, final PortalRequest portalRequest,
                                     final String endpointSubPath )
     {
-        return urlType.equals( UrlTypeConstants.ABSOLUTE )
-            ? ServletRequestUrlHelper.getServerUrl( portalRequest.getRawRequest() )
-            : "" + "/site/" + buildRepoAndBranchPartUrl() + url.substring( url.indexOf( endpointSubPath ) );
+        final String urlPrefix =
+            urlType.equals( UrlTypeConstants.ABSOLUTE ) ? ServletRequestUrlHelper.getServerUrl( portalRequest.getRawRequest() ) : "";
+        return urlPrefix + "/site/" + buildRepoAndBranchPartUrl() + url.substring( url.indexOf( endpointSubPath ) );
     }
 }
