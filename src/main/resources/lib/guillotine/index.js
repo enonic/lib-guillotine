@@ -181,12 +181,12 @@ function createContext(options) {
     context.options.applications = context.options.applications || [app.name];
     context.options.allowPaths = context.options.allowPaths || [];
     context.options.subscriptionEventTypes = context.options.subscriptionEventTypes || ['node.*'];
-    context.options.mode = context.options.mode || 'site'; // supported values are `site` and `project`
 
     context.schemaGenerator = graphQlLib.newSchemaGenerator();
 
     context.isProjectMode = function () {
-        return context.options.mode === 'project';
+        const site = portalLib.getSite();
+        return typeof site === 'undefined' || site === null;
     };
 
     return context;
