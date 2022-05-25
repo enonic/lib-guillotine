@@ -127,6 +127,7 @@ public class HtmlLinkProcessor
                             type( urlType ).
                             id( id ).
                             portalRequest( portalRequest );
+
                         final String pageUrl = portalUrlService.pageUrl( pageUrlParams );
 
                         final StringBuilder replacement = new StringBuilder( "\"" + pageUrl + "\"" );
@@ -156,12 +157,7 @@ public class HtmlLinkProcessor
                             filter( getFilter( imageStyle ) ).
                             portalRequest( portalRequest );
 
-                        String imageUrl = portalUrlService.imageUrl( imageUrlParams );
-
-                        if ( portalRequest.getSite() == null )
-                        {
-                            imageUrl = UrlHelper.resolveImageUrl( urlType, imageUrl, portalRequest );
-                        }
+                        final String imageUrl = portalUrlService.imageUrl( imageUrlParams );
 
                         final StringBuilder replacement = new StringBuilder( "\"" + imageUrl + "\"" );
 
@@ -176,8 +172,7 @@ public class HtmlLinkProcessor
                                         filter( getFilter( imageStyle ) ).
                                         portalRequest( portalRequest );
 
-                                    return UrlHelper.resolveImageUrl( urlType, portalUrlService.imageUrl( imageParams ), portalRequest ) +
-                                        " " + imageWidth + "w";
+                                    return portalUrlService.imageUrl( imageParams ) + " " + imageWidth + "w";
                                 } ).collect( Collectors.joining( "," ) );
 
                             final String imgEditorRef = UUID.randomUUID().toString();
@@ -208,11 +203,7 @@ public class HtmlLinkProcessor
                             download( DOWNLOAD_MODE.equals( mode ) ).
                             portalRequest( portalRequest );
 
-                        String attachmentUrl = portalUrlService.attachmentUrl( attachmentUrlParams );
-                        if ( portalRequest.getSite() == null )
-                        {
-                            attachmentUrl = UrlHelper.resolveAttachmentUrl( urlType, attachmentUrl, portalRequest );
-                        }
+                        final String attachmentUrl = portalUrlService.attachmentUrl( attachmentUrlParams );
 
                         final StringBuilder replacement = new StringBuilder( "\"" + attachmentUrl + "\"" );
 
@@ -267,7 +258,7 @@ public class HtmlLinkProcessor
     {
         final Map<String, Object> projection = new LinkedHashMap<>();
 
-        projection.put( "contentId", download != null ? null : id); // only for content
+        projection.put( "contentId", download != null ? null : id ); // only for content
         projection.put( "linkRef", linkRef );
         projection.put( "uri", uri );
 

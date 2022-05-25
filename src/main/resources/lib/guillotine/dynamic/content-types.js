@@ -75,7 +75,7 @@ function addMediaFields(context, createContentTypeTypeParams) {
             params: graphQlLib.GraphQLString
         },
         resolve: function (env) {
-            return urlResolverLib.resolveAttachmentUrlById(env, context.isProjectMode());
+            return urlResolverLib.resolveAttachmentUrlById(env);
         }
     }
 }
@@ -93,7 +93,7 @@ function addImageFields(context, createContentTypeTypeParams) {
             params: graphQlLib.GraphQLString
         },
         resolve: function (env) {
-            return urlResolverLib.resolveImageUrl(env, context.isProjectMode());
+            return urlResolverLib.resolveImageUrl(env);
         }
     }
 }
