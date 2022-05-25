@@ -333,7 +333,7 @@ function createGenericTypes(context) {
                     params: graphQlLib.GraphQLString
                 },
                 resolve: function (env) {
-                    return urlResolverLib.resolveAttachmentUrlByName(env, context.isProjectMode());
+                    return urlResolverLib.resolveAttachmentUrlByName(env);
                 }
             }
         }
