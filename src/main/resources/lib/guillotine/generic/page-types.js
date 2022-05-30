@@ -369,8 +369,14 @@ function resolvePageTemplateId(content) {
 }
 
 function getDefaultPageTemplate(content) {
+    const site = portalLib.getSite();
+
+    if (typeof site === 'undefined' || site === null) {
+        return null;
+    }
+
     const bean = __.newBean('com.enonic.lib.guillotine.handler.GetDefaultPageTemplateBean');
-    bean.siteId = portalLib.getSite()._id;
+    bean.siteId = site._id;
     bean.contentType = content.type;
     const template = bean.execute();
     return template == null ? null : __.toNativeObject(template);

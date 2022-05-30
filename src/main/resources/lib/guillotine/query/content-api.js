@@ -214,7 +214,7 @@ function createContentApiType(context) {
 
 function getContent(env, context) {
     if (env.args.key) {
-        const key = context.isProjectMode() ? env.args.key : wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
+        const key = context.isGlobalMode() ? env.args.key : wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
         const content = contentLib.get({
             key: key
         });
