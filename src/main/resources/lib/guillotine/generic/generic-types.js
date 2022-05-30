@@ -50,6 +50,10 @@ function generateGenericContentFields(context) {
             },
             resolve: function (env) {
                 if (env.args.type === 'siteRelative') {
+                    if (context.isGlobalMode()) {
+                        // in this case we must return non-null value, because this field is defined as nonNull
+                        return env.source._path;
+                    }
                     let sitePath = contextLib.run({
                         principals: ["role:system.admin"]
                     }, function () {
@@ -153,7 +157,7 @@ function generateGenericContentFields(context) {
                 resolveFragment: graphQlLib.GraphQLBoolean,
             },
             resolve: function (env) {
-                const pageTemplate = env.args.resolveTemplate === true && !context.isProjectMode() ? pageTypesLib.resolvePageTemplate(env.source) : null;
+                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
                 let page = pageTemplate == null ? env.source.page : pageTemplate.page;
                 if (env.args.resolveFragment !== false && page && page.regions) {
                     pageTypesLib.inlineFragmentContentComponents(page);
@@ -164,7 +168,7 @@ function generateGenericContentFields(context) {
         pageTemplate: {
             type: graphQlLib.reference('Content'),
             resolve: (env) => {
-                return !context.isProjectMode() ? pageTypesLib.resolvePageTemplate(env.source) : null;
+                return pageTypesLib.resolvePageTemplate(env.source);
             }
         },
         components: {
@@ -174,9 +178,7 @@ function generateGenericContentFields(context) {
                 resolveFragment: graphQlLib.GraphQLBoolean,
             },
             resolve: function (env) {
-                const pageTemplate = env.args.resolveTemplate === true && !context.isProjectMode()
-                                     ? pageTypesLib.resolvePageTemplate(env.source)
-                                     : null;
+                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
                 const nodeId = pageTemplate == null ? env.source._id : pageTemplate._id;
                 var context = contextLib.get();
                 var node = nodeLib.connect({
@@ -210,7 +212,7 @@ function generateGenericContentFields(context) {
                 params: graphQlLib.GraphQLString
             },
             resolve: function (env) {
-                return urlResolverLib.resolvePageUrl(env, context.isProjectMode());
+                return urlResolverLib.resolvePageUrl(env, context.isGlobalMode());
             }
         },
         site: {
