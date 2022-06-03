@@ -35,6 +35,26 @@ function removeNodeIdPropIfNeeded(obj) {
     });
 }
 
+function transformNodeIfAttachmentsExist(node) {
+    if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
+        if (node.data && node.data['__nodeId']) {
+            removeNodeIdPropIfNeeded(node.data);
+        }
+    }
+    return node;
+}
+
+function removeNodeIdPropIfNeeded(obj) {
+    delete obj['__nodeId'];
+
+    Object.keys(obj).forEach(prop => {
+        let holderProp = obj[prop];
+        if (typeof holderProp === 'object' && !Array.isArray(holderProp)) {
+            removeNodeIdPropIfNeeded(holderProp);
+        }
+    });
+}
+
 function generateGenericContentFields(context) {
     return {
         _id: {
