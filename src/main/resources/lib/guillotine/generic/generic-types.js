@@ -232,7 +232,7 @@ function generateGenericContentFields(context) {
                 params: graphQlLib.GraphQLString
             },
             resolve: function (env) {
-                return urlResolverLib.resolvePageUrl(env, context.isGlobalMode());
+                return urlResolverLib.resolvePageUrl(env);
             }
         },
         site: {
