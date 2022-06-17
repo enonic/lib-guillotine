@@ -125,11 +125,8 @@ function createContentApiType(context) {
                 },
                 resolve: function (env) {
                     validationLib.validateArguments(env.args);
-
-                    const query = wildcardLib.replaceSitePath(env.args.query, '/content' + portalLib.getSite()._path);
-
                     let queryParams = {
-                        query: securityLib.adaptQuery(query, context),
+                        query: securityLib.adaptQuery(env.args.query, context),
                         start: env.args.offset,
                         count: env.args.first,
                         sort: env.args.sort,
@@ -217,8 +214,8 @@ function createContentApiType(context) {
 
 function getContent(env, context) {
     if (env.args.key) {
-        const key = wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
-        var content = contentLib.get({
+        const key = context.isGlobalMode() ? env.args.key : wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
+        const content = contentLib.get({
             key: key
         });
         return content && securityLib.filterForbiddenContent(content, context);

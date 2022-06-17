@@ -1,5 +1,5 @@
 const contentLib = require('/lib/xp/content');
-const portalLib = require('/lib/xp/portal');
+const urlResolverLib = require('/lib/guillotine/util/url-helper');
 
 const graphQlLib = require('/lib/guillotine/graphql');
 const genericTypesLib = require('/lib/guillotine/generic/generic-types');
@@ -34,10 +34,10 @@ exports.getAllowedContentType = function (context, name) {
 };
 
 function generateAllowedContentTypeRegexp(context) {
-    var siteApplicationKeys = context.options.applications.map(function (applicationKey) {
+    var applicationKeys = context.options.applications.map(function (applicationKey) {
         return '|' + applicationKey.replace(/\./g, '\\.');
     }).join('');
-    return new RegExp('^(?:base|media|portal' + siteApplicationKeys + '):');
+    return new RegExp('^(?:base|media|portal' + applicationKeys + '):');
 }
 
 function generateContentTypeObjectType(context, contentType) {
@@ -75,12 +75,7 @@ function addMediaFields(context, createContentTypeTypeParams) {
             params: graphQlLib.GraphQLString
         },
         resolve: function (env) {
-            return portalLib.attachmentUrl({
-                id: env.source._id,
-                download: env.args.download,
-                type: env.args.type,
-                params: env.args.params && JSON.parse(env.args.params)
-            });
+            return urlResolverLib.resolveAttachmentUrlById(env);
         }
     }
 }
@@ -98,16 +93,7 @@ function addImageFields(context, createContentTypeTypeParams) {
             params: graphQlLib.GraphQLString
         },
         resolve: function (env) {
-            return portalLib.imageUrl({
-                id: env.source._id,
-                scale: env.args.scale,
-                quality: env.args.quality,
-                background: env.args.background,
-                format: env.args.format,
-                filter: env.args.filter,
-                type: env.args.type,
-                params: env.args.params && JSON.parse(env.args.params)
-            });
+            return urlResolverLib.resolveImageUrl(env);
         }
     }
 }

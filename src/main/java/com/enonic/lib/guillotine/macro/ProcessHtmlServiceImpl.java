@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.enonic.xp.app.ApplicationKey;
@@ -59,7 +60,9 @@ public class ProcessHtmlServiceImpl
         builder.setImages( images );
         builder.setLinks( links );
 
-        final Map<String, MacroDescriptor> registeredMacros = getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() );
+        final Map<String, MacroDescriptor> registeredMacros = params.getPortalRequest().getSite() != null
+            ? getRegisteredMacrosInSystemForSite( params.getPortalRequest().getSite() )
+            : getRegisteredMacrosInSystem();
 
         final List<MacroDecorator> processedMacros = new ArrayList<>();
 
@@ -90,10 +93,10 @@ public class ProcessHtmlServiceImpl
 
     private Map<String, MacroDescriptor> getRegisteredMacrosInSystemForSite( final Site site )
     {
-        final List<ApplicationKey> applicationKeys = site.getSiteConfigs().stream().
-            map( SiteConfig::getApplicationKey ).collect( Collectors.toList() );
-
+        final List<ApplicationKey> applicationKeys = new ArrayList<>();
         applicationKeys.add( ApplicationKey.SYSTEM );
+        applicationKeys.addAll( site.getSiteConfigs().stream().
+            map( SiteConfig::getApplicationKey ).collect( Collectors.toList() ) );
 
         final Map<String, MacroDescriptor> result = new LinkedHashMap<>();
 
@@ -106,5 +109,10 @@ public class ProcessHtmlServiceImpl
             } );
 
         return result;
+    }
+
+    private Map<String, MacroDescriptor> getRegisteredMacrosInSystem()
+    {
+        return macroDescriptorService.getAll().stream().collect( Collectors.toMap( MacroDescriptor::getName, Function.identity() ) );
     }
 }

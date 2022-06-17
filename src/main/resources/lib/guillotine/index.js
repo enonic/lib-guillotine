@@ -33,7 +33,8 @@ eventLib.listener({
     type: 'application',
     localOnly: false,
     callback: function (event) {
-        if ('STOPPED' === event.data.eventType || 'STARTED' === event.data.eventType) {
+        let eventType = event.data.eventType;
+        if ('STOPPED' === eventType || 'STARTED' === eventType || 'UNINSTALLED' === eventType) {
             invalidate();
         }
     }
@@ -55,7 +56,7 @@ eventLib.listener({
     }
 });
 
-function createInternalSchema(siteId, branch, schemaOptions) {
+function createSiteSchema(siteId, branch, schemaOptions) {
     let siteConfigs = utilLib.forceArray(getSite(siteId, branch).data.siteConfig);
     let applicationKeys = siteConfigs.map(siteConfigEntry => siteConfigEntry.applicationKey);
 
@@ -70,12 +71,12 @@ function createInternalSchema(siteId, branch, schemaOptions) {
     if (schemaOptions) {
         if (schemaOptions.applications) {
             let apps = {};
-            utilLib.forceArray(schemaOptions.applications).forEach(applicationKey => {
+            utilLib.forceArray(schemaOptions.applications).concat(applicationKeys).forEach(applicationKey => {
                 apps[applicationKey] = applicationKey;
             });
             let uniqueAppKeys = Object.keys(apps);
             if (uniqueAppKeys.length) {
-                options.applications = options.applications.concat(uniqueAppKeys);
+                options.applications = uniqueAppKeys;
             }
         }
         if (schemaOptions.allowPaths) {
@@ -111,7 +112,7 @@ function getSchema(siteId, branch, schemaOptions) {
     Java.type('com.enonic.lib.guillotine.Synchronizer').sync(__.toScriptValue(function () {
         schema = schemaMap[schemaId];
         if (!schema) {
-            schema = createInternalSchema(siteId, branch, schemaOptions);
+            schema = createSiteSchema(siteId, branch, schemaOptions);
             schemaMap[schemaId] = schema;
         }
     }));
@@ -183,6 +184,12 @@ function createContext(options) {
     context.options.subscriptionEventTypes = context.options.subscriptionEventTypes || ['node.*'];
 
     context.schemaGenerator = graphQlLib.newSchemaGenerator();
+
+    const site = portalLib.getSite();
+
+    context.isGlobalMode = function () {
+        return typeof site === 'undefined' || site === null;
+    };
 
     return context;
 }
@@ -301,12 +308,19 @@ function createWebSocketData(req) {
 function execute(params) {
     const query = required(params, 'query');
     const variables = valueOrDefault(params.variables, {});
-    const siteId = valueOrDefault(params.siteId, portalLib.getSite()._id);
-    const branch = valueOrDefault(params.branch, contextLib.get().branch);
     const schemaOptions = valueOrDefault(params.schemaOptions, {});
-    const schema = valueOrDefault(params.schema, getSchema(siteId, branch, schemaOptions));
     const context = valueOrDefault(params.context, {});
 
+    let schema = params.schema;
+    if (!schema) {
+        let site = portalLib.getSite();
+        if (typeof site === 'undefined' || site === null) {
+            throw new Error('Global mode does not supported here. Please provide a schema or use this method where a site is available.');
+        }
+        let siteId = valueOrDefault(params.siteId, site._id);
+        let branch = valueOrDefault(params.branch, contextLib.get().branch);
+        schema = getSchema(siteId, branch, schemaOptions);
+    }
     return JSON.stringify(graphQlLib.execute(schema, query, variables, context));
 }
 

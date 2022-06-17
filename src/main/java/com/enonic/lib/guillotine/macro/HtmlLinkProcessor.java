@@ -127,6 +127,7 @@ public class HtmlLinkProcessor
                             type( urlType ).
                             id( id ).
                             portalRequest( portalRequest );
+
                         final String pageUrl = portalUrlService.pageUrl( pageUrlParams );
 
                         final StringBuilder replacement = new StringBuilder( "\"" + pageUrl + "\"" );
@@ -257,7 +258,7 @@ public class HtmlLinkProcessor
     {
         final Map<String, Object> projection = new LinkedHashMap<>();
 
-        projection.put( "contentId", download != null ? null : id); // only for content
+        projection.put( "contentId", download != null ? null : id ); // only for content
         projection.put( "linkRef", linkRef );
         projection.put( "uri", uri );
 

@@ -13,6 +13,27 @@ const graphQlLib = require('/lib/guillotine/graphql');
 const securityLib = require('/lib/guillotine/util/security');
 const validationLib = require('/lib/guillotine/util/validation');
 const utilLib = require('/lib/guillotine/util/util');
+const urlResolverLib = require('/lib/guillotine/util/url-helper');
+
+function transformNodeIfAttachmentsExist(node) {
+    if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
+        if (node.data && node.data['__nodeId']) {
+            removeNodeIdPropIfNeeded(node.data);
+        }
+    }
+    return node;
+}
+
+function removeNodeIdPropIfNeeded(obj) {
+    delete obj['__nodeId'];
+
+    Object.keys(obj).forEach(prop => {
+        let holderProp = obj[prop];
+        if (typeof holderProp === 'object' && !Array.isArray(holderProp)) {
+            removeNodeIdPropIfNeeded(holderProp);
+        }
+    });
+}
 
 function transformNodeIfAttachmentsExist(node) {
     if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
@@ -49,6 +70,10 @@ function generateGenericContentFields(context) {
             },
             resolve: function (env) {
                 if (env.args.type === 'siteRelative') {
+                    if (context.isGlobalMode()) {
+                        // in this case we must return non-null value, because this field is defined as nonNull
+                        return env.source._path;
+                    }
                     let sitePath = contextLib.run({
                         principals: ["role:system.admin"]
                     }, function () {
@@ -207,11 +232,7 @@ function generateGenericContentFields(context) {
                 params: graphQlLib.GraphQLString
             },
             resolve: function (env) {
-                return portalLib.pageUrl({
-                    id: env.source._id,
-                    type: env.args.type,
-                    params: env.args.params && JSON.parse(env.args.params)
-                });
+                return urlResolverLib.resolvePageUrl(env);
             }
         },
         site: {
@@ -334,13 +355,7 @@ function createGenericTypes(context) {
                     params: graphQlLib.GraphQLString
                 },
                 resolve: function (env) {
-                    return portalLib.attachmentUrl({
-                        id: env.source['__nodeId'],
-                        name: env.source.name,
-                        download: env.args.download,
-                        type: env.args.type,
-                        params: env.args.params && JSON.parse(env.args.params)
-                    });
+                    return urlResolverLib.resolveAttachmentUrlByName(env);
                 }
             }
         }
@@ -475,6 +490,8 @@ function createGenericTypes(context) {
         interfaces: [context.types.contentType],
         fields: exports.generateGenericContentFields(context)
     });
+
+    context.addDictionaryType(context.types.untypedContentType);
 
     context.types.queryContentConnectionType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('QueryContentConnection'),
