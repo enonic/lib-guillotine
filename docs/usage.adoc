@@ -46,7 +46,7 @@ Also, `draft.mysite.com` may point to `/site/default/draft/path-to/mysite` - and
 For more details about vhosts, check out the https://developer.enonic.com/docs/xp/stable/deployment/vhosts[XP documentation]
 
 
-== GraphQL Playground
+== GraphQL Playground (Not supported from version 6.0.0 of the Guillotine App)
 
 The Guillotine app ships with an embedded GraphQL browser called GraphQL Playground. This enables you to instantly access and communicate with the API. When setting up Guillotine as a library, you can choose to embed GraphQL playground or not.
 
@@ -58,6 +58,21 @@ NOTE: We recommend embedding a GraphQL browser with the API, as this greatly sim
 * The left panel allows you to edit your graphQL query
 * The center panel displays the result of the query execution
 * The right panel is used to display a documentation generated from the GraphQL API.
+
+== GraphiQL
+
+The Guillotine application starting from version 6.0.0 ships with embedded GraphiQL IDE and will be available in the menu of Content Studio for users with `system.admin` or `cms.admin` roles.
+The Guillotine application works in global mode and generates GraphQL API for all installed applications for XP instance.
+
+=== Interface
+
+* The left panel allows you to edit your GraphQL query
+* The center panel displays the result of the query execution
+* The right panel is used to display a documentation generated from the GraphQL API.
+* The toolbar is extended by the dropdown for choosing the branch and the refresh button, which allows to re-generate a schema
+* Each query is executed in a specific context, which is determined by the repository and the branch
+
+More details <<app-global-api,here>>.
 
 === Sample query
 
@@ -118,6 +133,8 @@ webSocket: {
 
 or use the `guillotineLib.createWebSocketData(req)` method which is available starting from image:images/v-5.1.0.svg[Since verision,opts=inline].
 
+Note: This function does not support in site-less (Global API) mode. In site-less mode provide `branch` and `repositoryId`. Also for GraphiQL IDE use `graphql-transport-ws` subProtocols instead of `graphql-ws`.
+
 [source,javascript]
 ----
 webSocket: {
@@ -139,7 +156,7 @@ var SCHEMA = guillotineLib.createSchema({
 
 To start handle a Websocket event XP provides the handler named `webSocketEvent`, which will be called for every Websocket event from client. More details about Websocket in XP https://developer.enonic.com/docs/xp/stable/framework/websocket[here].
 
-Starting from image:images/v-500.svg[Since verision,opts=inline] Guillotine provides the `initWebSockets` function with default events handling.
+Starting from image:images/v-500.svg[Since verision,opts=inline] Guillotine provides the `initWebSockets` function with default events handling. In site-less mode which is supported from version `5.6.0`, this function is not supported. The developer is responsible for implementing this functionality if needed.
 
 [source,javascript]
 ----
@@ -147,7 +164,7 @@ exports.webSocketEvent = guillotineLib.initWebSockets(SCHEMA);
 ----
 
 You might want to have custom subscriptions handling.
-If default events filtering is not suitable for you, then you have to create own `Subscription` type during a schema creation and implement a custom `webSocketEvent` handler how it was done before.
+If default events filtering is not suitable for you, then you have to implement a custom `webSocketEvent` handler.
 
 == Accessing GraphQL with Javascript
 

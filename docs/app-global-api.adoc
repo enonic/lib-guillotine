@@ -1,0 +1,132 @@
+== Guillotine App in the Global API mode
+
+Guillotine application is available on Enonic Market as a standalone application. Starting from version 6.0.0 Guillotine application can not be added to a site anymore and it will work in global mode and generate dynamic GraphQL API for all installed applications for XP instance. Once installed, the application will be available in Content Studio in the left menu for users with `system.admin` or `cms.admin` roles.
+
+Since the Guillotine application is no longer added to the site, there are a few limitations:
+
+- not possible to customize the list of `applications` for which GraphQL API is generated. GraphQL API is generated for all installed applications on XP instance.
+- not possible to customize the `allowPaths`.
+- not possible to customize the `subscriptionEventTypes`. Only `node.*` events are supported.
+
+== Interface
+
+The landing page of the Guillotine application is GraphiQL IDE which is extended for custom purposes.
+
+* The left panel allows you to edit your GraphQL query
+* The center panel displays the result of the query execution
+* The right panel is used to display a documentation generated from the GraphQL API.
+* The toolbar is extended by the dropdown for choosing the branch and the refresh button, which allows to re-generate a schema
+* Each query is executed in a specific context, which is determined by the repository and the branch
+
+image::images/graphiql-ide.png[Installation]
+
+== Endpoint
+
+Guillotine application exposes two endpoints:
+
+1. `/admin/site/preview/{repo}/{branch}` - used by Content Studio
+2. `/site/{repo}/{branch}` - for production use
+
+This allows you to work with the GraphQL API using all the features of the Site Engine.
+
+Both endpoints handle `POST` and `GET` methods, where the `GET` method applicable only for `Subscriptions` via WebSockets.
+
+Below you can see an example how to create a vhost mapping:
+
+.Vhost mapping
+[source,properties]
+----
+mapping.hmdb-draft-api.host = guillotineapi.com
+mapping.hmdb-draft-api.source = /
+mapping.hmdb-draft-api.target = /site/hmdb/draft
+mapping.hmdb-draft-api.idProvider.system = default
+----
+
+=== Query example
+
+.GraphQL request Body
+
+[source,json]
+----
+{
+  "query": "query getPlaylist {\n guillotine {\n query(query: \"type='com.enonic.app.hmdb:playlist'\") {\n ... on com_enonic_app_hmdb_Playlist {\n  _id\n }\n }\n }\n}",
+  "variables": null,
+  "operationName": "getPlaylist"
+}
+----
+
+.POST request using Curl
+[source,curl]
+----
+curl -X POST -H "Content-Type: application/json" -d @req.json http://guillotineapi.com:8080/ | json_pp
+----
+
+.Response
+[source,json]
+----
+{
+   "data" : {
+      "guillotine" : {
+         "query" : [
+            {
+               "_id" : "531e40c9-6e5b-4259-b9e0-0d3144b2382a"
+            }
+         ]
+      }
+   }
+}
+----
+
+=== Subscription example
+
+.Handshake request
+
+[source,curl]
+----
+curl -X GET -i -N -H "Connection: Upgrade" \
+                  -H "Upgrade: websocket" \
+                  -H "Host: guillotineapi.com:8080" \
+                  -H "Origin: http://guillotineapi.com:8080" \
+                  -H "Sec-WebSocket-Protocol: graphql-transport-ws" \
+                  -H "Sec-WebSocket-Key: c29tZWtleQ==" \
+                  -H "Sec-WebSocket-Version: 13" \
+                  --http1.1 \
+                 http://guillotineapi.com:8080/
+----
+
+.Handshake response
+
+[soucre,curl]
+----
+HTTP/1.1 101 Switching Protocols
+Date: Fri, 24 Jun 2022 15:09:08 GMT
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Sec-WebSocket-Protocol: graphql-transport-ws
+Connection: Upgrade
+Sec-WebSocket-Accept: eXT5yQBZ/TOhFBUi6nLY8cfzs1s=
+Upgrade: WebSocket
+----
+
+To send a message to the WS server in the terminal let's use https://www.npmjs.com/package/wscat[wscat], if WebSocket Cat is not installed, please use the following command:
+
+[source]
+----
+npm install -g wscat
+----
+
+Then type in the terminal the following command:
+
+[source,curl]
+----
+> wscat -c ws://guillotineapi.com:8080/
+Connected (press CTRL+C to quit)
+> {"id":"myid","type":"subscribe","payload":{"query":"subscription {\n  event {\n    type\n    dataAsJson\n  }\n}","variables":null}}
+< {"type":"next","id":"myid","payload":{"data":{"event":{"type":"node.updated","dataAsJson":{"nodes":{"0":{"id":"b028f04b-b020-4ef1-92eb-d4e657359dae","path":"/content/hmdb/dir","branch":"draft","repo":"com.enonic.cms.hmdb"}}}}}}}
+< {"type":"next","id":"myid","payload":{"data":{"event":{"type":"node.renamed","dataAsJson":{"nodes":{"0":{"id":"b028f04b-b020-4ef1-92eb-d4e657359dae","path":"/content/hmdb/dir-renamed","branch":"draft","repo":"com.enonic.cms.hmdb","newPath":"/content/hmdb/dir-renamed"}}}}}}}
+----
+
+
+
+

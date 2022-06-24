@@ -144,7 +144,7 @@ These are only examples. You could also modify the type `Query` and add an entir
 
 Starting from image:images/v-5.1.0.svg[Since verision,opts=inline] Guillotine provides two new methods to simplify work with subscriptions and execution of a GraphQL query:
 
-- `createWebSocketData(req)` - create data object for websocket from request
+- `createWebSocketData(req)` - create data object for websocket from request. In site-less mode which is supported from version `5.6.0`, this function is not supported. The developer is responsible for implementing this functionality if needed.
 
 [source,javascript]
 ----
@@ -154,7 +154,7 @@ webSocket: {
 }
 ----
 
-- `execute(params)` - This method allows you to execute a GraphQL query. To execute this method, it's enough to pass `query` and `variables`. In this case, a schema will be created for each branch of the site and can be further customised using the `schemaOptions` parameter. This schema will be automatically updated when the application is added to the site or when it is removed and re-deployed. Schemas created outside of this method have to be updated manually.
+- `execute(params)` - This method allows you to execute a GraphQL query. To execute this method, it's enough to pass `query` and `variables`. In this case, a schema will be created for each branch of the site and can be further customised using the `schemaOptions` parameter. This schema will be automatically updated when the application is added to the site or when it is removed and re-deployed. Schemas created outside of this method have to be updated manually. In site less mode which is supported from version `5.6.0`, this function is not supported, therefore use `graphqlLib.execute` instead.
 
 List of properties for `params` object:
 

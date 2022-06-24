@@ -7,6 +7,8 @@ generates a GraphQL API specific to your site.
 This gives you direct, typed and documented access to all content within the site. 
 Including the ability to follow references, child items and access media directly.
 
+Starting from version 5.6.0 Guillotine library can be used without site. More details https://developer.enonic.com/docs/guillotine/stable/app-global-api[here].
+
 == Documentation
 
 For the full documentation of the Guillotine project, visit the Enonic Developer Portal: https://developer.enonic.com/docs/guillotine
@@ -18,6 +20,10 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 |Version
 |XP Version
 |Dependency
+
+|5.6.0
+|7.7.0
+|com.enonic.lib:lib-guillotine:5.6.0
 
 |5.5.0
 |7.7.0

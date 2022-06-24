@@ -17,6 +17,10 @@
       "document": "api"
     },
     {
+      "title": "Global API",
+      "document": "app-global-api"
+    },
+    {
       "title": "Release Notes",
       "document": "release"
     }

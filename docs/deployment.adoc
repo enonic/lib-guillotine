@@ -24,6 +24,8 @@ You now have a GraphQL endpoint!
 
 image::images/configuration.png[Installation,768,576]
 
+Staring form version 6.0.0 Guillotine application can not be added to site anymore. More details <<app-global-api#,here>>.
+
 === Endpoint
 
 Once installed, your endpoint will be available at a fixed location contextual to your site: /_/com.enonic.app.guillotine/graphql
