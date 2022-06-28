@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -38,13 +39,22 @@ import static org.mockito.Mockito.when;
 
 public class HtmlLinkProcessorTest
 {
+    private StyleDescriptorService styleDescriptorService;
+
+    private PortalUrlService portalUrlService;
+
+    @BeforeEach
+    public void before()
+    {
+        this.styleDescriptorService = Mockito.mock( StyleDescriptorService.class );
+        this.portalUrlService = Mockito.mock( PortalUrlService.class );
+
+        when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( StyleDescriptors.empty() );
+    }
+
     @Test
     public void test()
     {
-        StyleDescriptorService styleDescriptorService = Mockito.mock( StyleDescriptorService.class );
-        PortalUrlService portalUrlService = Mockito.mock( PortalUrlService.class );
-
-        when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( StyleDescriptors.empty() );
         when( portalUrlService.imageUrl( any( ImageUrlParams.class ) ) ).thenReturn( "imageUrl" );
 
         HtmlLinkProcessor instance = new HtmlLinkProcessor( styleDescriptorService, portalUrlService );
@@ -95,10 +105,6 @@ public class HtmlLinkProcessorTest
     @Test
     public void testProcessOriginalImage()
     {
-        StyleDescriptorService styleDescriptorService = Mockito.mock( StyleDescriptorService.class );
-        PortalUrlService portalUrlService = Mockito.mock( PortalUrlService.class );
-
-        when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( StyleDescriptors.empty() );
         when( portalUrlService.attachmentUrl( any( AttachmentUrlParams.class ) ) ).thenReturn( "imageUrl" );
 
         HtmlLinkProcessor instance = new HtmlLinkProcessor( styleDescriptorService, portalUrlService );
@@ -118,10 +124,6 @@ public class HtmlLinkProcessorTest
         String html =
             "<p><a href=\"content://a8b374a2-c532-45eb-9aa1-73d1c37cd681\" target=\"_blank\" title=\"Tooltip\">Text 1</a></p>\n\n<p><a href=\"media://download/09b3af0e-6da3-4bcf-88d9-11cbe9c41283\" title=\"media tooltip\">media text</a></p>";
 
-        StyleDescriptorService styleDescriptorService = Mockito.mock( StyleDescriptorService.class );
-        PortalUrlService portalUrlService = Mockito.mock( PortalUrlService.class );
-
-        when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( StyleDescriptors.empty() );
         when( portalUrlService.pageUrl( any( PageUrlParams.class ) ) ).thenReturn( "generatedContentUrl" );
         when( portalUrlService.attachmentUrl( any( AttachmentUrlParams.class ) ) ).thenReturn( "generatedMediaUrl" );
 
@@ -142,6 +144,65 @@ public class HtmlLinkProcessorTest
         assertNull( links.get( 1 ).get( "contentId" ) );
         assertNotNull( links.get( 1 ).get( "linkRef" ) );
         assertNotNull( links.get( 1 ).get( "media" ) );
+    }
+
+    @Test
+    public void testProcessLinkWithQueryStringOrFragment()
+    {
+        when( portalUrlService.pageUrl( any( PageUrlParams.class ) ) ).thenReturn( "contentBaseUrl" );
+
+        String queryParam = "query=k1%3Dv1%26k2%3Dv2"; // k1=v1&k2=v2
+        String fragmentParam = "fragment=some-fragment";
+
+        HtmlLinkProcessor instance = new HtmlLinkProcessor( styleDescriptorService, portalUrlService );
+
+        final List<Map<String, Object>> links = new ArrayList<>();
+
+        String processedHtml = instance.process(
+            "<p><a href=\"content://content-id?" + String.join( "&", List.of( queryParam, fragmentParam ) ) + "\">Text</a></p>\n", "server",
+            createPortalRequest(), null, null, image -> {
+            }, links::add );
+
+        assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k1=v1&amp;k2=v2#some-fragment\"" ) );
+
+        // test with only query
+        processedHtml = instance.process(
+            "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server",
+            createPortalRequest(), null, null, image -> {
+            }, links::add );
+
+        assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k1=v1&amp;k2=v2\"" ) );
+
+        // test with only fragment
+        processedHtml = instance.process(
+            "<p><a href=\"content://content-id?" + fragmentParam + "\">Text</a></p>\n", "server",
+            createPortalRequest(), null, null, image -> {
+            }, links::add );
+
+        assertTrue( processedHtml.contains( "href=\"contentBaseUrl#some-fragment\"" ) );
+
+
+        // test with unsupported symbols in query and fragment
+        queryParam = "query=k%3Dh%C3%A5ndkl%C3%A6r"; // query=k=håndklær
+        fragmentParam = "fragment=h%C3%A5ndkl%C3%A6r"; // fragment=håndklær
+
+        processedHtml = instance.process(
+            "<p><a href=\"content://content-id?" + String.join( "&", List.of( queryParam, fragmentParam ) ) + "\">Text</a></p>\n", "server",
+            createPortalRequest(), null, null, image -> {
+            }, links::add );
+
+        assertTrue( processedHtml.contains( "href=\"contentBaseUrl\"" ) );
+
+        // try to pass håndklær, where `å` and `æ` are encoded twice
+        // query=encodeFn('k=h' + encodeFn('å') + 'ndkl' + encodeFn('æ') + 'r')
+        queryParam = "query=k%3Dh%25C3%25A5ndkl%25C3%25A6r";
+
+        processedHtml = instance.process(
+            "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server",
+            createPortalRequest(), null, null, image -> {
+            }, links::add );
+
+        assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k=h%C3%A5ndkl%C3%A6r\"" ) );
     }
 
     private PortalRequest createPortalRequest()
