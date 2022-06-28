@@ -17,6 +17,7 @@ import com.enonic.xp.macro.MacroDescriptors;
 import com.enonic.xp.macro.MacroService;
 import com.enonic.xp.portal.PortalRequest;
 import com.enonic.xp.portal.RenderMode;
+import com.enonic.xp.portal.url.PageUrlParams;
 import com.enonic.xp.portal.url.PortalUrlService;
 import com.enonic.xp.site.Site;
 import com.enonic.xp.site.SiteConfig;
@@ -52,6 +53,7 @@ public class ProcessHtmlServiceImplTest
 
         when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( styleDescriptors );
         when( macroDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( MacroDescriptors.empty() );
+        when( portalUrlService.pageUrl( any( PageUrlParams.class ) ) ).thenReturn( "baseContentUrl" );
 
         ProcessHtmlServiceImpl instance =
             new ProcessHtmlServiceImpl( styleDescriptorService, portalUrlService, macroService, macroDescriptorService );
