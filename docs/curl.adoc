@@ -1,0 +1,94 @@
+== Using cURL to access the API
+This section describes how developers may use the popular cURL command line utility to test the API
+
+NOTE: cURL must be installed on your device for the examples below to work
+
+NOTE: The examples below assume you have installed the https://market.enonic.com/vendors/enonic/headless-movie-db[Headless Movie Database] demo app running on your local machine.
+
+== Query example
+
+.Create the file req.json
+[source,json]
+----
+{
+  "query": "query getPlaylist {\n guillotine {\n query(query: \"type='com.enonic.app.hmdb:playlist'\") {\n ... on com_enonic_app_hmdb_Playlist {\n  _id\n }\n }\n }\n}",
+  "variables": null,
+  "operationName": "getPlaylist"
+}
+----
+
+.POST request using cURL
+[source,curl]
+----
+curl -X POST -H "Content-Type: application/json" -d @req.json http://localhost:8080/site/hmdb/draft | json_pp
+----
+
+.Response
+[source,json]
+----
+{
+   "data" : {
+      "guillotine" : {
+         "query" : [
+            {
+               "_id" : "531e40c9-6e5b-4259-b9e0-0d3144b2382a"
+            }
+         ]
+      }
+   }
+}
+----
+
+== Subscription example
+
+.Handshake request
+
+[source,curl]
+----
+curl -X GET -i -N -H "Connection: Upgrade" \
+                  -H "Upgrade: websocket" \
+                  -H "Host: guillotineapi.com:8080" \
+                  -H "Origin: http://guillotineapi.com:8080" \
+                  -H "Sec-WebSocket-Protocol: graphql-transport-ws" \
+                  -H "Sec-WebSocket-Key: c29tZWtleQ==" \
+                  -H "Sec-WebSocket-Version: 13" \
+                  --http1.1 \
+                 http://guillotineapi.com:8080/
+----
+
+.Handshake response
+
+[source,curl]
+----
+HTTP/1.1 101 Switching Protocols
+Date: Fri, 24 Jun 2022 15:09:08 GMT
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Sec-WebSocket-Protocol: graphql-transport-ws
+Connection: Upgrade
+Sec-WebSocket-Accept: eXT5yQBZ/TOhFBUi6nLY8cfzs1s=
+Upgrade: WebSocket
+----
+
+To send a message to the WS server in the terminal let's use https://www.npmjs.com/package/wscat[wscat], if WebSocket Cat is not installed, please use the following command:
+
+[source]
+----
+npm install -g wscat
+----
+
+Then type in the terminal the following command:
+
+[source,curl]
+----
+> wscat -c ws://localhost:8080/site/hmdb/draft
+Connected (press CTRL+C to quit)
+> {"id":"myid","type":"subscribe","payload":{"query":"subscription {\n  event {\n    type\n    dataAsJson\n  }\n}","variables":null}}
+< {"type":"next","id":"myid","payload":{"data":{"event":{"type":"node.updated","dataAsJson":{"nodes":{"0":{"id":"b028f04b-b020-4ef1-92eb-d4e657359dae","path":"/content/hmdb/dir","branch":"draft","repo":"com.enonic.cms.hmdb"}}}}}}}
+< {"type":"next","id":"myid","payload":{"data":{"event":{"type":"node.renamed","dataAsJson":{"nodes":{"0":{"id":"b028f04b-b020-4ef1-92eb-d4e657359dae","path":"/content/hmdb/dir-renamed","branch":"draft","repo":"com.enonic.cms.hmdb","newPath":"/content/hmdb/dir-renamed"}}}}}}}
+----
+
+
+
+

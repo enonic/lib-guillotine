@@ -1,0 +1,77 @@
+= Extending the schema
+
+The default Guillotine provides fields based on the available schemas.
+
+Some times, you might want to add/modify/delete fields (new retrieval methods, search in a separate database, virtual fields, etc...).
+
+The Guillotine schema is entirely configurable. When creating a schema, you can define a listener for a GraphQL type.
+This listener will be called before the type is created and given the possibility to modify the type creation parameters.
+
+== Example: Adding fields
+
+In this example, we have the Author and Post types. But we wish to apply the following modifications:
+
+* Author should have a new field "fullName" that is the concatenation of firstName and lastName
+* Author data field "email" should require admin rights to be retrieved.
+* Author data field "birthDate" should not be accessible through the GraphQL API.
+* Author should have a new field "posts" returning all the blog posts written by an author
+
+./services/graphql/graphql.js
+[source,javascript]
+----
+var contentLib = require('/lib/xp/content');
+var guillotineLib = require('/lib/guillotine');
+var graphQlLib = require('/lib/graphql');
+
+var schema = guillotineLib.createSchema({
+    creationCallbacks: {         
+        'com_enonic_app_myapp_Author_Data': function(context, params){ <1>
+            params.fields.fullName = {  <2>
+                 type: graphQlLib.GraphQLString,
+                 resolve: function (env) {
+                     return env.source.firstName + ' ' + env.source.lastName;
+                 }
+             };
+            params.fields.email.resolve = function (env) { <3>
+                return authLib.hasRole('system.admin') ? env.source.email : null
+            };            
+            delete params.fields.birthDate;  <4>
+        },  
+        'com_enonic_app_myapp_Author': function(context, params){ <1>
+            params.fields.posts = { <5>
+                type: graphQlLib.list(graphQlLib.reference('com_enonic_app_myapp_Post')),
+                resolve: function (env) {
+                    return contentLib.query({
+                        contentTypes: [app.name + ":Post"],
+                        filters: {
+                            hasValue: {
+                                field: "data.author",
+                                values: [env.source._id]
+                            }
+                        }
+                    }).hits;
+                }
+            };
+        }
+    }
+);
+
+exports.post = function (req) {
+    var body = JSON.parse(req.body);
+    var result = graphQlLib.execute(schema, body.query, body.variables);
+    return {
+        contentType: 'application/json',
+        body: JSON.stringify(result)
+    };
+};
+----
+<1> Passes a callback that will be called before the creation of the specified GraphQL type.
+It receives the Guillotine context and the object type creation parameters. Starting from version image:images/v-540.svg[Since version,opts=inline] interface types are also customizable.
+<2> Adds a new string field "fullName" concatenating two other fields.
+The resolution function will query contents of type post having the current author ID as field "data.author"
+<3> Overwrites the resolution function of an existing field "email"
+<4> Deletes an existing field "birthDate"
+<5> Adds a new field "posts" returning a list of posts.
+
+
+These are only examples. You could also modify the type `Query` and add an entire new API next to the Headless CMS API.

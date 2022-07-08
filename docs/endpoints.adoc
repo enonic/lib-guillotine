@@ -1,0 +1,35 @@
+= Endpoints
+
+This section describes the available API endpoints and how to access and expose them.
+
+== Draft and master
+
+The Guillotine application exposes two endpoints per content project:
+
+* `/site/<project-name>/draft` - draft items
+* `/site/<project-name>/master` - published items
+
+As an example, when running the Enonic SDK on your local machine, you may access the items of the `blog` project with the following URLs:
+
+* `http://localhost:8080/site/blog/draft` - Drafts API 
+* `http://localhost:8080/site/blog/master` - Live API 
+
+The endpoints handle both `POST` and `GET` methods, but the `GET` method are only applicable for `Subscriptions` via WebSockets.
+
+NOTE: In order to support the `Query playground` admin interface, Guillotine also exposes the same API in the following location: admin/site/preview/{project}/{branch}`.
+
+== Exposing API via Vhosts
+
+By default, the API's are not be publicly available. You can use Vhosts to expose your APIs when needed:
+
+As an example, `myapi.com` may be configured to point to the internal path `/site/myproject/master` - this way end-users will only see myapi.com
+
+.Sample Vhost mapping
+[source,properties]
+----
+mapping.my-api.host = myapi.com
+mapping.my-api.source = /
+mapping.my-api.target = /site/myproject/master
+----
+
+For more details about vhosts, check out the https://developer.enonic.com/docs/xp/stable/deployment/vhosts[XP documentation]

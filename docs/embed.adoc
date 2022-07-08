@@ -1,0 +1,68 @@
+= Embedding
+
+Guillotine is also available as a standalone library which may be embedded into your Enonic application. This gives you extensive control over the API.
+
+Follow the instructions below to embed Guillotine in your application:
+
+== Add library
+     
+Add the following dependency to your project (where `<version>` is the actual version you want to use, see available versions on https://market.enonic.com/vendors/enonic/guillotine-headless-lib[Enonic Market]):
+
+.build.gradle
+[source,gradle]
+----
+dependencies {
+  include 'com.enonic.lib:lib-guillotine:<version>'
+}
+----
+
+== Creating an endpoint
+ 
+When using the Guillotine library, you control where and how your API is exposed relative to your site. For instance:
+
+Service:: i.e. https://mysite.com/_/service/<app-name>/<service-name>
+Mapping:: i.e. https://mysite.com/<mapping>
+Filter:: i.e. https://mysite.com (GraphQL uses POST method, so it may even be combined with GET on the same URL pattern)
+
+The various approaches are described below:
+
+=== As a service
+
+By using XP's web service approach, your endpoint will automatically by exposed on a safe path within your site. 
+
+* Create an Enonic XP service file `/services/graphql/graphql.js` with the following content:
+ 
+./services/graphql/graphql.js
+[source,javascript]
+----
+var guillotineLib = require('/lib/guillotine'); // <1>
+var graphQlLib = require('/lib/graphql'); // <1>
+
+var schema = guillotineLib.createSchema(); // <2>
+
+exports.post = function (req) { // <3>
+ var body = JSON.parse(req.body); // <4>
+ var result = JSON.stringify(graphQlLib.execute(schema, body.query, body.variables)); // <5>
+ return {
+     contentType: 'application/json',
+     body: JSON.stringify(result)
+ };
+};
+----
+<1> The GraphQL library is already a dependency in Guillotine and does not need explicitly need to be added to your Gradle file
+<2> Creates the GraphQL schema the first time the service is called. 
+<3> Handles POST requests
+<4> Parses the JSON body to retrieve the GraphQL query and variables
+<5> Executes the query and variables against the schema created
+
+You now have a GraphQL endpoint!
+
+=== As a mapping
+
+Coming soon
+
+=== As a filter
+
+Coming soon
+
+

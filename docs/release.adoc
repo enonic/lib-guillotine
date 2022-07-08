@@ -1,12 +1,18 @@
 = Release Notes
 
-== Version 5.6
+== Version 6
+Breaking change::
+* Guillotine app can no longer be added to a site to generate a contextual API.
+* Embed the guillotine library in your existing application to replicate this functionality.
 
-- Site-less mode support
+Project level API:: 
+* Guillotine is no longer limited to be deployed in the context of a site
+* The Guillotine API is now automatically provisioned to project branch root i.e. /site/<branch>/<myproject>
+* The GraphQL types are now generated from all available schemas in the Enonic instance, making it a global schema
 
 == Version 5.5
 
-- Support links metadata for rich text fields
+- Support link processing for rich text fields
 
 == Version 5.4
 

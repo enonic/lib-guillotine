@@ -1,0 +1,51 @@
+= Integrate with an existing GraphQL schema
+
+You may have an existing GraphQL schema in your Enonic application, and wish to serve Guillotine from the same schema.
+
+
+== Example
+
+./services/graphql/graphql.js
+[source,javascript]
+----
+var guillotineLib = require('/lib/guillotine');
+var graphQlLib = require('/lib/graphql');
+
+var schema = createSchema();
+
+exports.post = function (req) {
+    var body = JSON.parse(req.body);
+    var result = graphQlLib.execute(schema, body.query, body.variables);
+    return {
+        contentType: 'application/json',
+        body: JSON.stringify(result)
+    };
+};
+
+function createSchema() {
+    var context = guillotineLib.createContext(); <1>
+    return context.schemaGenerator.createSchema({
+        query: createRootQueryType(context),
+        dictionary: context.dictionary <2>
+    });
+}
+
+function createRootQueryType(context) {
+    return context.schemaGenerator.createObjectType({
+        name: 'Query',
+        fields: {
+            guillotine: {
+                type: guillotineLib.createHeadlessCmsType(context), <3>
+                resolve: function () {
+                    return {};
+                }
+            }
+        }
+    });
+}
+----
+<1> Creates the context necessary to create Guillotine types.
+<2> Passes the dictionary to the schema creation. The use of a dictionary is necessary to define interface implementations.
+<3> Creates the Guillotine Headless CMS type
+
+

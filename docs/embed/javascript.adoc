@@ -1,0 +1,40 @@
+= Accessing via JavaScript client
+
+This section describes how to access the Guillotine API directly from a JavaScript client.
+
+== Example: Fetch content by path
+
+To use your GraphQL service, your client will send all its requests to the same service. The service is expecting to receive a POST request with inside its body:
+
+* A mandatory "query" String
+* Optional "operationName" String
+* An optional "variables" Object
+
+
+.Example: Fetch data from a javascript client
+[source,javascript]
+----
+const query = `query($path:ID!){
+    guillotine {
+        get(key:$path) {
+            displayName
+            type
+        }
+    }
+}`;
+
+const variables = {
+    'path': '/mysite/mycontentpath'
+};
+
+fetch('{{graphqlServiceUrl}}', {
+    method: 'POST',
+    body: JSON.stringify({
+        query: query,
+        variables: variables
+    }),
+    credentials: 'same-origin'
+})
+    .then(response => response.json())
+    .then(console.log);
+----
