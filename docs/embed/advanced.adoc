@@ -1,22 +1,100 @@
+:imagesdir: ..
+
 = Low level API
 
 This section describes the various functions available for mounting and configuring the Guillotine library into your Enonic application.
 
 == Functions
 
-Starting from image:images/v-5.1.0.svg[Since version,opts=inline] Guillotine provides two new methods to simplify work with subscriptions and execution of a GraphQL query:
+=== createSchema
 
-- `createWebSocketData(req)` - create data object for websocket from request. In site-less mode which is supported from version `5.6.0`, this function is not supported. The developer is responsible for implementing this functionality if needed.
+The `createSchema(options)` function creates the GraphQL schema with custom options.
 
+.Schema options
+|===
+|Name | Description
+
+|applications: String or Array.<String>
+|List of application keys for which GraphQL objects will be generated from content types. By default current application. Property is optional.
+
+|allowPaths:String or Array.<String>
+|Allowed content paths in addition to this site in the default mode. In the site-less mode will be used only provided `allowPaths`. Property is optional.
+
+|subscriptionEventTypes:String or Array.<String>
+|Specifies event type patterns to be listened by GraphQL Subscription. Property is optional. By default will be listened `node.*` events.
+|===
+
+.Example of creation schema
 [source,javascript]
 ----
-webSocket: {
-    data: guillotineLib.createWebSocketData(req),
-    subProtocols: ['graphql-ws']
+const guillotineLib = require('/lib/guillotine');
+
+const SCHEMA = guillotineLib.createSchema({
+    applications: ['com.enonic.app.hmdb', app.name],
+    subscriptionEventTypes: ['myapp.eventName', 'node.*']
+});
+----
+
+=== createHeadlessCmsType
+The `createHeadlessCmsType(context)` function creates the Guillotine <<../api#_headlesscms, Headless CMS>> type.
+
+.Example of usage
+[source,javascript]
+----
+const guillotineLib = require('/lib/guillotine');
+
+function createRootQueryType(context) {
+    return context.schemaGenerator.createObjectType({
+        name: 'Query',
+        fields: {
+            guillotine: {
+                type: guillotineLib.createHeadlessCmsType(context),
+                resolve: function () {
+                    return {};
+                }
+            }
+        }
+    });
 }
 ----
 
-- `execute(params)` - This method allows you to execute a GraphQL query. To execute this method, it's enough to pass `query` and `variables`. In this case, a schema will be created for each branch of the site and can be further customised using the `schemaOptions` parameter. This schema will be automatically updated when the application is added to the site or when it is removed and re-deployed. Schemas created outside of this method have to be updated manually. In site less mode which is supported from version `5.6.0`, this function is not supported, therefore use `graphqlLib.execute` instead.
+=== createContext
+The `createContext(options)` function creates the context necessary to create Guillotine types.
+
+Context options contains the same list options which are used for <<createSchema,schema options>> and can be extended by custom options.
+
+An instance of `context` object exposes the following functions:
+
+|===
+|Name | Description
+
+|addDictionaryType(obj: GraphQLObject): void
+|Adds GraphQL object to dictionary. Each content type which implements any interface must be added to dictionary to define its implementations.
+
+|putContentTypeType(name: string, obj: GraphQLObject): void
+|Collects GraphQL object in map to quick access to it.
+
+|uniqueName:String or Array.<String>
+|Generates unique name for object type, if type with provided name already exists then to the end of the name will be added `_<count>`, where `count` is number of type with provided name.
+
+|getOption(name: string): Object
+|Returns option by name.
+
+|putOption(name: string, value: object): void
+|Adds a new option to context.
+|===
+
+.Example of usage
+[source,javascript]
+----
+const guillotineLib = require('/lib/guillotine');
+
+const context = guillotineLib.createContext();
+----
+
+=== execute
+
+image:images/v-500.svg[Since version,opts=inline] The `execute(params)` function allows to execute a GraphQL query.
 
 List of properties for `params` object:
 
@@ -39,8 +117,8 @@ List of properties for `params` object:
 |Branch. Property is optional.
 |Branch from request.
 
-|schema:SCHEMA
-|GraphQL SCHEMA. Property is optional.
+|schema:GraphQLSchema
+|GraphQL schema. Property is optional.
 |
 
 |schemaOptions:Object
@@ -66,6 +144,11 @@ List of properties for `schemaOptions` object:
 |subscriptionEventTypes:String or Array.<String>
 |Specifies event type patterns to be listened by GraphQL Subscription. Property is optional.
 |===
+
+If the `schema` parameter is not provided to the function, then a schema will be created for each branch (`draft` or `master`) of the site which will be automatically updated when the any application is added/removed/re-deployed to the site.
+The developer is responsible for implementation of the update of the schemas created outside of this function.
+This function can not be used in site-less mode which is supported from version `5.6.0`, use `graphqlLib.execute` instead.
+
 
 .Basic usage
 [source,javascript]
@@ -145,61 +228,42 @@ exports.post = function (req) {
 };
 ----
 
+=== initWebSockets
 
+image:images/v-500.svg[Since version,opts=inline] The `initWebSockets(schema)` function is used to use default handling of `Subscription` via WebSocket. Only `node.*` events are listened to by default for current site, branch and repository. To customize which events must be listened use `subscriptionEventTypes` option during schema creation. This function is not supported in site-less mode, the
+developer is responsible for implementing this functionality if needed.
 
-== TODO
+.Schema options
+|===
+|Name | Description
 
-Cleanup?
+|schema: GraphQLSchema
+|GraphQL schema. This parameter must be provided if `schema` was created not using `execute` function. Property is optional.
+|===
 
-.Setting contextual `branch`, `repositoryId` and `siteId` in the `data` object for WebSocket request:
+To start handle a WebSocket event XP provides the handler named https://developer.enonic.com/docs/xp/stable/framework/websocket[webSocketEvent], which will be called for every WebSocket event from client.
+
+.Example of usage
+[source,javascript]
+----
+const guillotineLib = require('/lib/guillotine');
+
+const SCHEMA = guillotineLib.createSchema();
+
+exports.webSocketEvent = guillotineLib.initWebSockets(SCHEMA);
+----
+
+=== createWebSocketData
+
+image:images/v-500.svg[Since version,opts=inline] Creates WebSocket data object from request with `branch`, `repositoryId` and `site` properties. In site-less mode which is supported from version `5.6.0`, this function is not supported.
+The developer is responsible for implementing this functionality if needed.
 
 [source,javascript]
 ----
-const portalLib = require('/lib/xp/portal');
+const guillotineLib = require('/lib/guillotine');
 
-webSocket: {
-    data: {
-        branch: req.branch,
-        repositoryId: req.repositoryId,
-        siteId: portalLib.getSite()._id
-    },
-    subProtocols: ['graphql-ws']
-}
-----
-
-or use the `guillotineLib.createWebSocketData(req)` method which is available starting from image:images/v-5.1.0.svg[Since verision,opts=inline].
-
-Note: This function does not support in site-less (Global API) mode. In site-less mode provide `branch` and `repositoryId`. Also for GraphiQL IDE use `graphql-transport-ws` subProtocols instead of `graphql-ws`.
-
-[source,javascript]
-----
 webSocket: {
     data: guillotineLib.createWebSocketData(req),
     subProtocols: ['graphql-ws']
 }
 ----
-
-Only `node.*` events are listened to by default. In order to configure which events should be listened to by an application or a site the `subscriptionEventTypes` option must be specified on schema creation, in this case default config will be overwritten.
-
-[source,javascript]
-----
-var guillotineLib = require('/lib/guillotine');
-
-var SCHEMA = guillotineLib.createSchema({
-    subscriptionEventTypes: ['myapp.eventName', 'node.*']
-});
-----
-
-To start handle a Websocket event XP provides the handler named `webSocketEvent`, which will be called for every Websocket event from client. More details about Websocket in XP https://developer.enonic.com/docs/xp/stable/framework/websocket[here].
-
-Starting from image:images/v-500.svg[Since verision,opts=inline] Guillotine provides the `initWebSockets` function with default events handling. In site-less mode which is supported from version `5.6.0`, this function is not supported. The developer is responsible for implementing this functionality if needed.
-
-[source,javascript]
-----
-exports.webSocketEvent = guillotineLib.initWebSockets(SCHEMA);
-----
-
-You might want to have custom subscriptions handling.
-If default events filtering is not suitable for you, then you have to implement a custom `webSocketEvent` handler.
-
-
