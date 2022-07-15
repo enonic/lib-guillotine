@@ -1,9 +1,0 @@
-{
-  "versions": [
-    {
-      "label": "stable",
-      "checkout": "master",
-      "latest": true
-    }
-  ]
-}
