@@ -14,26 +14,7 @@ const securityLib = require('/lib/guillotine/util/security');
 const validationLib = require('/lib/guillotine/util/validation');
 const utilLib = require('/lib/guillotine/util/util');
 const urlResolverLib = require('/lib/guillotine/util/url-helper');
-
-function transformNodeIfAttachmentsExist(node) {
-    if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
-        if (node.data && node.data['__nodeId']) {
-            removeNodeIdPropIfNeeded(node.data);
-        }
-    }
-    return node;
-}
-
-function removeNodeIdPropIfNeeded(obj) {
-    delete obj['__nodeId'];
-
-    Object.keys(obj).forEach(prop => {
-        let holderProp = obj[prop];
-        if (typeof holderProp === 'object' && !Array.isArray(holderProp)) {
-            removeNodeIdPropIfNeeded(holderProp);
-        }
-    });
-}
+const xDataTypesLib = require('/lib/guillotine/dynamic/x-data-types');
 
 function transformNodeIfAttachmentsExist(node) {
     if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
@@ -151,17 +132,9 @@ function generateGenericContentFields(context) {
             }
         },
         x: {
-            type: graphQlLib.list(context.types.extraDataType),
+            type: context.types.extraDataType,
             resolve: function (env) {
-                var extraDatas = [];
-                Object.keys(env.source.x).forEach(function (applicationKey) {
-                    var applicationExtraData = env.source.x[applicationKey];
-                    Object.keys(applicationExtraData).forEach(function (mixinLocalName) {
-                        var mixin = applicationExtraData[mixinLocalName];
-                        extraDatas.push({name: applicationKey + ':' + mixinLocalName, data: mixin});
-                    });
-                });
-                return extraDatas;
+                return env.source.x;
             }
         },
         xAsJson: {
@@ -314,6 +287,7 @@ function createGenericTypes(context) {
     genericContentTypesLib.generateTypes(context);
     formTypesLib.generateTypes(context);
     pageTypesLib.generateTypes(context);
+    xDataTypesLib.createXDataConfigType(context);
 
     context.types.publishInfoType = graphQlLib.createObjectType(context, {
         name: context.uniqueName('PublishInfo'),
@@ -357,19 +331,6 @@ function createGenericTypes(context) {
                 resolve: function (env) {
                     return urlResolverLib.resolveAttachmentUrlByName(env);
                 }
-            }
-        }
-    });
-
-    context.types.extraDataType = graphQlLib.createObjectType(context, {
-        name: context.uniqueName('ExtraData'),
-        description: 'Extra data.',
-        fields: {
-            name: {
-                type: graphQlLib.GraphQLString
-            },
-            data: {
-                type: graphQlLib.GraphQLString
             }
         }
     });
