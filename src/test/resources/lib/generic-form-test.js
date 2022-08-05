@@ -12,14 +12,14 @@ exports.testGenerateFormItemObjectType = function () {
             maximum: 1
         }
     });
-    testingLib.assertEquals('Attachment', objectType.name);
+    testingLib.assertEquals('Attachment', objectType.getName());
 
     objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
-        formItemType: "Input",
-        name: "dateTimeField",
-        label: "DateTime Field",
+        formItemType: 'Input',
+        name: 'dateTimeField',
+        label: 'DateTime Field',
         maximize: true,
-        inputType: "DateTime",
+        inputType: 'DateTime',
         occurrences: {
             maximum: 1,
             minimum: 0
@@ -27,52 +27,116 @@ exports.testGenerateFormItemObjectType = function () {
         config: {
             timezone: [
                 {
-                    value: "true"
+                    value: 'true'
                 }
             ]
         }
     });
-    testingLib.assertEquals('DateTime', objectType.name);
+    testingLib.assertEquals('DateTime', objectType.getName());
 
     objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
-        formItemType: "Input",
-        name: "dateTimeField",
-        label: "DateTime Field",
+        formItemType: 'Input',
+        name: 'dateTimeField',
+        label: 'DateTime Field',
         maximize: true,
-        inputType: "DateTime",
+        inputType: 'DateTime',
         occurrences: {
             maximum: 1,
             minimum: 0
         },
         config: {}
     });
-    testingLib.assertEquals('LocalDateTime', objectType.name);
+    testingLib.assertEquals('LocalDateTime', objectType.getName());
 
     objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
-        formItemType: "Input",
-        name: "timeField",
-        label: "Time Field",
+        formItemType: 'Input',
+        name: 'timeField',
+        label: 'Time Field',
         maximize: true,
-        inputType: "Time",
+        inputType: 'Time',
         occurrences: {
             maximum: 1,
             minimum: 0
         },
         config: {}
     });
-    testingLib.assertEquals('LocalTime', objectType.name);
+    testingLib.assertEquals('LocalTime', objectType.getName());
 
     objectType = formLib.generateFormItemObjectType({schemaGenerator}, 'namePrefix', {
-        formItemType: "Input",
-        name: "dateField",
-        label: "Date Field",
+        formItemType: 'Input',
+        name: 'dateField',
+        label: 'Date Field',
         maximize: true,
-        inputType: "Date",
+        inputType: 'Date',
         occurrences: {
             maximum: 1,
             minimum: 0
         },
         config: {}
     });
-    testingLib.assertEquals('Date', objectType.name);
+    testingLib.assertEquals('Date', objectType.getName());
+
+
+    objectType = formLib.generateFormItemObjectType({
+        uniqueName: v => v,
+        schemaGenerator
+    }, 'namePrefix', {
+        formItemType: 'ItemSet',
+        name: 'testItemSet',
+        label: 'ItemSet Field',
+        occurrences: {
+            maximum: 1,
+            minimum: 0
+        },
+        items: [
+            {
+                formItemType: 'Input',
+                name: 'timeField',
+                label: 'Time Field',
+                maximize: true,
+                inputType: 'Time',
+                occurrences: {
+                    maximum: 1,
+                    minimum: 0
+                },
+                config: {},
+            },
+        ]
+    });
+    testingLib.assertEquals('namePrefix_TestItemSet', objectType.getName());
+
+    objectType = formLib.generateFormItemObjectType({
+        uniqueName: v => v,
+        schemaGenerator
+    }, 'namePrefix', {
+        formItemType: 'OptionSet',
+        name: 'testOptionSet',
+        label: 'OptionSet Field',
+        occurrences: {
+            maximum: 1,
+            minimum: 1,
+        },
+        selection: {
+            maximum: 1,
+        },
+        options: [
+            {
+                name: 'text',
+                label: 'Text',
+                items: [
+                    {
+                        name: 'description',
+                        label: 'Description',
+                        inputType: 'HtmlArea',
+                        occurrences: {
+                            maximum: 1,
+                            minimum: 0
+                        },
+                        config: {},
+                    }
+                ],
+            },
+        ],
+    });
+    testingLib.assertEquals('namePrefix_TestOptionSet', objectType.getName());
 };
