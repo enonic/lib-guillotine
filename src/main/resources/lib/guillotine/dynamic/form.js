@@ -57,14 +57,14 @@ function generateFormItemObjectType(context, namePrefix, formItem) {
 }
 
 function generateItemSetObjectType(context, namePrefix, itemSet) {
-    let name = namePrefix + '_' + namingLib.generateCamelCase(itemSet.label, true);
-    let createItemSetTypeParams = {
+    const name = namePrefix + '_' + namingLib.generateCamelCase(itemSet.name, true);
+    const createItemSetTypeParams = {
         name: context.uniqueName(name),
         description: itemSet.label,
         fields: {}
     };
 
-    let formItems = getFormItems(itemSet.items);
+    const formItems = getFormItems(itemSet.items);
 
     validationLib.validateUniqueNamesOfTypeFields(name, formItems);
 
@@ -134,9 +134,9 @@ function generateInputObjectType(context, input) {
 }
 
 function generateOptionSetObjectType(context, namePrefix, optionSet) {
-    let name = namePrefix + '_' + namingLib.generateCamelCase(optionSet.label, true);
-    let optionSetEnum = generateOptionSetEnum(context, optionSet, name);
-    let createOptionSetTypeParams = {
+    const name = namePrefix + '_' + namingLib.generateCamelCase(optionSet.name, true);
+    const optionSetEnum = generateOptionSetEnum(context, optionSet, name);
+    const createOptionSetTypeParams = {
         name: context.uniqueName(name),
         description: optionSet.label,
         fields: {
