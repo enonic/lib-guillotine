@@ -21,9 +21,9 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 |XP Version
 |Dependency
 
-|5.6.0
+|6.0.0
 |7.7.0
-|com.enonic.lib:lib-guillotine:5.6.0
+|com.enonic.lib:lib-guillotine:6.0.0
 
 |5.5.0
 |7.7.0
@@ -88,12 +88,21 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 
 == Breaking changes
 
+=== 6.0
+
+- Guillotine app can no longer be added to a site to generate a contextual API.
+- Embed the guillotine library in your existing application to replicate this functionality.
+- `ExtraData` type became a dynamic type with fields that are generated based on form descriptors of the x-data and grouped by application key.
+- Naming for `ItemSet` and `OptionSet` types were changed, from:
+  * `<applicationKey>_<contentTypeName>_<itemSetLabel>` to `<applicationKey>_<contentTypeName>_<itemSetName>`
+  * `<applicationKey>_<contentTypeName>_<optionSetLabel>` to `<applicationKey>_<contentTypeName>_<optionSetName>`
+
 === 5.0
 - Naming for component types like Part, Page and Layout was changed:
 
 from "<ComponentType>ComponentDataDescriptorConfig" to "<ComponentType>_<applicationKey>_<descriptorName>" and
 
-from "ComponentType>ComponentDataApplicationConfig" to "<ComponentType>_<applicationKey>_ComponentDataApplicationConfig"
+from "<ComponentType>ComponentDataApplicationConfig" to "<ComponentType>_<applicationKey>_ComponentDataApplicationConfig"
 
 - Type "Attachment" is returned instead of "String" for a form item of type "AttachmentUploader"
 - Fields "dataAsJson" and "pageAsJson" of type "Content" return "JSON" instead of "String"

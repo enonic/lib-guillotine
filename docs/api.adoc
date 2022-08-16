@@ -151,8 +151,8 @@ Interface of all contents.
 |dataAsJson: JSON
 |Content data
 
-|[.line-through]#x: [<<ExtraData>>]#
-|Content extra data. *This field is deprecated and will be removed starting from version 6.0.0.*
+|x: [<<ExtraData>>]
+|Content extra data.
 
 |xAsJson: JSON
 |Content extra data
@@ -612,11 +612,155 @@ Direct Known Subtypes: FormInput
 |===
 |Name(Arguments):Type | Description
 
-|name: String
-|Mixin name
+|media: <<XData_media_ApplicationConfig>>
+|X-Data for `media` application
 
-|data: String
-|Mixin value
+|base: <<XData_base_ApplicationConfig>>
+|X-Data for `base` application
+
+|<applicationKey>: XData_<applicationKey>_ApplicationConfig
+|X-Data for `<applicationKey>` application
+
+|===
+
+=== XData_media_ApplicationConfig
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|imageInfo: <<XData_media_imageInfo_DataConfig>>
+|Related X-Data config
+
+|cameraInfo: <<XData_media_cameraInfo_DataConfig>>
+|Related X-Data config
+
+|===
+
+=== XData_media_imageInfo_DataConfig
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|pixelSize: Int
+|Pixel size
+
+|imageHeight: Int
+|Image height
+
+|imageWidth: Int
+|Image width
+
+|contentType: String
+|Content type
+
+|description: String
+|Description
+
+|byteSize: Int
+|Byte size
+
+|colorSpace(offset: Int, first: Int): [String]
+|Color space
+
+|===
+
+=== XData_media_cameraInfo_DataConfig
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|date: LocalDateTime
+|Date
+
+|make: String
+|Make
+
+|model: String
+|Model
+
+|lens: String
+|Lens
+
+|iso: String
+|ISO
+
+|focalLength: String
+|Focal length
+
+|focalLength35: String
+|Focal length 35
+
+|exposureBias: String
+|Exposure bias
+
+|aperture(offset: Int, first: Int): [String]
+|Aperture
+
+|shutterTime: String
+|Shutter time
+
+|flash: String
+|Flash
+
+|autoFlashCompensation: String
+|Auto flash compensation
+
+|whiteBalance: String
+|White balance
+
+|exposureProgram: String
+|Exposure program
+
+|shootingMode: String
+|Shooting mode
+
+|meteringMode: String
+|Metering mode
+
+|exposureMode: String
+|Exposure mode
+
+|focusDistance: String
+|Focus distance
+
+|orientation: String
+|Orientation
+
+|===
+
+==== XData_base_ApplicationConfig
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|gpsInfo: <<XData_base_gpsInfo_DataConfig>>
+|GPS information
+
+|===
+
+=== XData_base_gpsInfo_DataConfig
+
+==== Fields
+
+|===
+|Name(Arguments):Type | Description
+
+|geoPoint: GeoPoint
+|GeoPoint
+
+|direction: String
+|Direction
+
+|altitude: String
+|Altitude
 
 |===
 

@@ -4,10 +4,13 @@
 Breaking change::
 * Guillotine app can no longer be added to a site to generate a contextual API.
 * Embed the guillotine library in your existing application to replicate this functionality.
+* Naming for `ItemSet` and `OptionSet` types were changed, from:
+- `<applicationKey>_<contentTypeName>_<itemSetLabel>` to `<applicationKey>_<contentTypeName>_<itemSetName>`
+- `<applicationKey>_<contentTypeName>_<optionSetLabel>` to `<applicationKey>_<contentTypeName>_<optionSetName>`
 
 Project level API:: 
 * Guillotine is no longer limited to be deployed in the context of a site
-* The Guillotine API is now automatically provisioned to project branch root i.e. /site/<branch>/<myproject>
+* The Guillotine API is now automatically provisioned to project branch root i.e. `/site/<branch>/<myproject>`
 * The GraphQL types are now generated from all available schemas in the Enonic instance, making it a global schema
 
 == Version 5.5
@@ -99,7 +102,7 @@ A new default WS event handler `guillotineLib.initWebSockets(SCHEMA)` has also b
 
 Type renaming:: Component types like Part, Page and Layout was changed:
 from `<ComponentType>ComponentDataDescriptorConfig` to `<ComponentType>_<applicationKey>_<descriptorName>`, and
-from `ComponentType>ComponentDataApplicationConfig` to `<ComponentType>_<applicationKey>_ComponentDataApplicationConfig`.
+from `<ComponentType>ComponentDataApplicationConfig` to `<ComponentType>_<applicationKey>_ComponentDataApplicationConfig`.
 
 Attachment type:: is now returned instead of String for `AttachmentUploader` input types.
 
