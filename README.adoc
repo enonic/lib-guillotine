@@ -3,7 +3,7 @@
 Guillotine library exposes the read-only part of the Enonic Content API, 
 including access to the Enonic query language. 
 Guillotine dynamically analyzes all available content types in applications and 
-generates a GraphQL API specific to your site. 
+generates a GraphQL API specific to your site or to your XP instances in the siteless mode.
 This gives you direct, typed and documented access to all content within the site. 
 Including the ability to follow references, child items and access media directly.
 
@@ -18,6 +18,10 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 |Version
 |XP Version
 |Dependency
+
+|6.0.0
+|7.9.0
+|com.enonic.lib:lib-guillotine:6.0.0
 
 |5.5.0
 |7.7.0
@@ -82,12 +86,19 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 
 == Breaking changes
 
+=== 6.0
+
+- `ExtraData` type became a dynamic type with fields that are generated based on form descriptors of the x-data and grouped by application key.
+- Naming for `ItemSet` and `OptionSet` types were changed, from:
+* `<applicationKey>_<contentTypeName>_<itemSetLabel>` to `<applicationKey>_<contentTypeName>_<itemSetName>`
+* `<applicationKey>_<contentTypeName>_<optionSetLabel>` to `<applicationKey>_<contentTypeName>_<optionSetName>`
+
 === 5.0
 - Naming for component types like Part, Page and Layout was changed:
 
 from "<ComponentType>ComponentDataDescriptorConfig" to "<ComponentType>_<applicationKey>_<descriptorName>" and
 
-from "ComponentType>ComponentDataApplicationConfig" to "<ComponentType>_<applicationKey>_ComponentDataApplicationConfig"
+from "<ComponentType>ComponentDataApplicationConfig" to "<ComponentType>_<applicationKey>_ComponentDataApplicationConfig"
 
 - Type "Attachment" is returned instead of "String" for a form item of type "AttachmentUploader"
 - Fields "dataAsJson" and "pageAsJson" of type "Content" return "JSON" instead of "String"
