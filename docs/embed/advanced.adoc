@@ -147,7 +147,7 @@ List of properties for `schemaOptions` object:
 
 If the `schema` parameter is not provided to the function, then a schema will be created for each branch (`draft` or `master`) of the site which will be automatically updated when the any application is added/removed/re-deployed to the site.
 The developer is responsible for implementation of the update of the schemas created outside of this function.
-This function can not be used in site-less mode which is supported from version `5.6.0`, use `graphqlLib.execute` instead.
+This function can not be used in site-less mode which is supported from version `6.0.0`, use `graphqlLib.execute` instead.
 
 
 .Basic usage
@@ -255,7 +255,7 @@ exports.webSocketEvent = guillotineLib.initWebSockets(SCHEMA);
 
 === createWebSocketData
 
-image:images/v-500.svg[Since version,opts=inline] Creates WebSocket data object from request with `branch`, `repositoryId` and `site` properties. In site-less mode which is supported from version `5.6.0`, this function is not supported.
+image:images/v-500.svg[Since version,opts=inline] Creates WebSocket data object from request with `branch`, `repositoryId` and `site` properties. In site-less mode which is supported from version `6.0.0`, this function is not supported.
 The developer is responsible for implementing this functionality if needed.
 
 [source,javascript]
