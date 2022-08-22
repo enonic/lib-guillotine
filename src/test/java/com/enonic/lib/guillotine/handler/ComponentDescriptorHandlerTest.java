@@ -12,6 +12,7 @@ import com.enonic.lib.guillotine.mapper.ComponentDescriptorMapper;
 import com.enonic.lib.guillotine.mapper.MacroDescriptorMapper;
 import com.enonic.xp.app.ApplicationKey;
 import com.enonic.xp.app.ApplicationKeys;
+import com.enonic.xp.form.FieldSet;
 import com.enonic.xp.form.Form;
 import com.enonic.xp.form.Input;
 import com.enonic.xp.inputtype.InputTypeName;
@@ -38,6 +39,7 @@ import com.enonic.xp.testing.mock.MockServiceRegistry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -148,6 +150,21 @@ public class ComponentDescriptorHandlerTest
             key( DescriptorKey.from( "app-guillotine:layoutDescriptor" ) ).
             config( Form.create().build() ).
             regions( RegionDescriptors.create().build() ).
+            config( Form.create().
+                addFormItem( Input.create().
+                    inputType( InputTypeName.TEXT_LINE ).
+                    label( "inputField" ).
+                    name( "inputField" ).
+                    build() ).
+                addFormItem( FieldSet.create().
+                    name( "layoutName" ).
+                    label( "FieldSetLabel" ).
+                    addFormItem( Input.create().
+                        inputType( InputTypeName.TEXT_LINE ).
+                        label( "inputFieldInFieldSet" ).
+                        name( "inputFieldInFieldSet" ).
+                        build() ).build() ).
+                build() ).
             build() );
 
         final ComponentDescriptorHandler instance = new ComponentDescriptorHandler();
@@ -171,6 +188,13 @@ public class ComponentDescriptorHandlerTest
 
         assertEquals( "layoutDescriptor", actualJson.path( "name" ).asText() );
         assertEquals( "app-guillotine", actualJson.path( "applicationKey" ).asText() );
+
+        final JsonNode form = actualJson.get( "form" );
+
+        assertTrue( form.isArray() );
+        assertEquals( 2, form.size() );
+        assertEquals( "inputField", form.get( 0 ).path( "name" ).asText() );
+        assertEquals( "inputFieldInFieldSet", form.get( 1 ).path( "name" ).asText() );
     }
 
     @Test
