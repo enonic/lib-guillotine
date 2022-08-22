@@ -177,17 +177,10 @@ abstract class FormDescriptorMapperBase
 
     protected void serializeLayout( final MapGenerator gen, final FieldSet fieldSet )
     {
-        gen.map();
-        gen.value( "formItemType", "Layout" );
-        gen.value( "name", fieldSet.getName() );
-        gen.value( "label", fieldSet.getLabel() );
-        gen.array( "items" );
         for ( FormItem formItem : fieldSet )
         {
             serializeItem( gen, formItem );
         }
-        gen.end();
-        gen.end();
     }
 
     protected void serializeFormItemSet( final MapGenerator gen, final FormItemSet itemSet )
