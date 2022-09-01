@@ -166,21 +166,20 @@ public class HtmlLinkProcessorTest
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k1=v1&amp;k2=v2#some-fragment\"" ) );
 
         // test with only query
-        processedHtml = instance.process(
-            "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server",
-            createPortalRequest(), null, null, image -> {
-            }, links::add );
+        processedHtml =
+            instance.process( "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server", createPortalRequest(),
+                              null, null, image -> {
+                }, links::add );
 
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k1=v1&amp;k2=v2\"" ) );
 
         // test with only fragment
-        processedHtml = instance.process(
-            "<p><a href=\"content://content-id?" + fragmentParam + "\">Text</a></p>\n", "server",
-            createPortalRequest(), null, null, image -> {
-            }, links::add );
+        processedHtml =
+            instance.process( "<p><a href=\"content://content-id?" + fragmentParam + "\">Text</a></p>\n", "server", createPortalRequest(),
+                              null, null, image -> {
+                }, links::add );
 
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl#some-fragment\"" ) );
-
 
         // test with unsupported symbols in query and fragment
         queryParam = "query=k%3Dh%C3%A5ndkl%C3%A6r"; // query=k=håndklær
@@ -197,10 +196,10 @@ public class HtmlLinkProcessorTest
         // query=encodeFn('k=h' + encodeFn('å') + 'ndkl' + encodeFn('æ') + 'r')
         queryParam = "query=k%3Dh%25C3%25A5ndkl%25C3%25A6r";
 
-        processedHtml = instance.process(
-            "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server",
-            createPortalRequest(), null, null, image -> {
-            }, links::add );
+        processedHtml =
+            instance.process( "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server", createPortalRequest(),
+                              null, null, image -> {
+                }, links::add );
 
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k=h%C3%A5ndkl%C3%A6r\"" ) );
     }

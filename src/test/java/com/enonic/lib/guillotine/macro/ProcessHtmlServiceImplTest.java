@@ -56,7 +56,7 @@ public class ProcessHtmlServiceImplTest
         when( portalUrlService.pageUrl( any( PageUrlParams.class ) ) ).thenReturn( "baseContentUrl" );
 
         ProcessHtmlServiceImpl instance =
-            new ProcessHtmlServiceImpl( styleDescriptorService, portalUrlService, macroService, macroDescriptorService );
+            new ProcessHtmlServiceImpl( styleDescriptorService, portalUrlService, macroService, macroDescriptorService);
 
         PortalRequest request = new PortalRequest();
 
