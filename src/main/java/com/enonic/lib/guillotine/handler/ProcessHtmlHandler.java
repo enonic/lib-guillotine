@@ -27,7 +27,6 @@ import com.enonic.xp.script.bean.BeanContext;
 import com.enonic.xp.script.bean.ScriptBean;
 import com.enonic.xp.site.Site;
 import com.enonic.xp.site.SiteConfig;
-import com.enonic.xp.style.ImageStyle;
 
 public class ProcessHtmlHandler
     implements ScriptBean
@@ -83,37 +82,41 @@ public class ProcessHtmlHandler
         final Map<String, MacroDescriptor> registeredMacros =
             request.getSite() != null ? getRegisteredMacrosInSystemForSite( request.getSite() ) : getRegisteredMacrosInSystem();
 
-        htmlParams.setLinkProcessor( linkProjection -> {
-            linkProjection.makeDefault();
+        htmlParams.useCustomMacrosProcessing( true );
+        htmlParams.customHtmlProcessor( processor -> {
+            processor.processDefault( ( element, properties ) -> {
+                if ( "a".equals( element.getTagName() ) )
+                {
+                    final String linkEditorRef = UUID.randomUUID().toString();
+                    element.setAttribute( "data-link-ref", linkEditorRef );
+                    links.add( buildLinkProjection( linkEditorRef, properties, element ) );
+                }
+                if ( "img".equals( element.getTagName() ) )
+                {
+                    final String imgEditorRef = UUID.randomUUID().toString();
+                    element.setAttribute( "data-image-ref", imgEditorRef );
+                    images.add( buildImageProjection( imgEditorRef, properties ) );
+                }
+            } );
 
+            processor.getDocument().select( "figcaption:empty" ).
+                forEach( HtmlElement::remove );
 
-            final HtmlElement element = linkProjection.getElement();
-            final String linkEditorRef = UUID.randomUUID().toString();
-            element.setAttribute( "data-link-ref", linkEditorRef );
-            links.add( buildLinkProjection( linkProjection.getContentId(), linkEditorRef, element.getAttribute( "href" ),
-                                            linkProjection.getMode() ) );
+            String html = macroServiceSupplier.get().evaluateMacros( processor.getDocument().getInnerHtml(), macro -> {
+                if ( !registeredMacros.containsKey( macro.getName() ) )
+                {
+                    return macro.toString();
+                }
+
+                final MacroDecorator macroDecorator = MacroDecorator.from( macro );
+
+                processedMacros.add( macroDecorator );
+
+                return new MacroEditorSerializer( macroDecorator ).serialize();
+            } );
+
+            return html;
         } );
-
-        htmlParams.setImageProcessor( imageProjection -> {
-            imageProjection.makeDefault();
-
-            final String imgEditorRef = UUID.randomUUID().toString();
-            imageProjection.getElement().setAttribute( "data-image-ref", imgEditorRef );
-            images.add( buildImageProjection( imageProjection.getContentId(), imgEditorRef, imageProjection.getImageStyle() ) );
-        } );
-
-        htmlParams.setMacrosProcessor( html -> macroServiceSupplier.get().evaluateMacros( html, macro -> {
-            if ( !registeredMacros.containsKey( macro.getName() ) )
-            {
-                return macro.toString();
-            }
-
-            final MacroDecorator macroDecorator = MacroDecorator.from( macro );
-
-            processedMacros.add( macroDecorator );
-
-            return new MacroEditorSerializer( macroDecorator ).serialize();
-        } ) );
 
         String processedHtml = portalUrlServiceSupplier.get().processHtml( htmlParams );
 
@@ -135,40 +138,51 @@ public class ProcessHtmlHandler
         return new HtmlEditorResultMapper( builder.build() );
     }
 
-    private Map<String, Object> buildLinkProjection( String id, String linkRef, String uri, String download )
+    private Map<String, Object> buildLinkProjection( String linkRef, Map<String, String> properties, HtmlElement element )
     {
         final Map<String, Object> projection = new LinkedHashMap<>();
 
-        projection.put( "contentId", download != null ? null : id ); // only for content
-        projection.put( "linkRef", linkRef );
-        projection.put( "uri", uri );
+        String mode = properties.get( "mode" );
 
-        if ( download != null )
+        projection.put( "contentId", mode != null ? null : properties.get( "contentId" ) ); // only for content
+        projection.put( "linkRef", linkRef );
+        projection.put( "uri", properties.get( "uri" ) );
+
+        if ( mode != null )
         {
             Map<String, Object> mediaAsMap = new LinkedHashMap<>();
-            mediaAsMap.put( "intent", download );
-            mediaAsMap.put( "contentId", id );
+            mediaAsMap.put( "intent", mode );
+            mediaAsMap.put( "contentId", properties.get( "contentId" ) );
             projection.put( "media", mediaAsMap ); // only for media
         }
 
         return projection;
     }
 
-    private Map<String, Object> buildImageProjection( final String id, final String imgEditorRef, final ImageStyle imageStyle )
+    private Map<String, Object> buildImageProjection( final String imgEditorRef, final Map<String, String> properties )
     {
         final Map<String, Object> imageProjection = new LinkedHashMap<>();
 
-        imageProjection.put( "imageId", id );
+        imageProjection.put( "imageId", properties.get( "contentId" ) );
         imageProjection.put( "imageRef", imgEditorRef );
 
         final Map<String, Object> styleProjection = new LinkedHashMap<>();
 
-        if ( imageStyle != null )
+        if ( properties.containsKey( "style:name" ) )
         {
-            styleProjection.put( "name", imageStyle.getName() );
-            styleProjection.put( "aspectRatio", imageStyle.getAspectRatio() );
-            styleProjection.put( "filter", imageStyle.getFilter() );
+            styleProjection.put( "name", properties.get( "style:name" ) );
+        }
+        if ( properties.containsKey( "style:aspectRatio" ) )
+        {
+            styleProjection.put( "aspectRatio", properties.get( "style:aspectRatio" ) );
+        }
+        if ( properties.containsKey( "style:filter" ) )
+        {
+            styleProjection.put( "filter", properties.get( "style:filter" ) );
+        }
 
+        if ( !styleProjection.isEmpty() )
+        {
             imageProjection.put( "style", styleProjection );
         }
 
