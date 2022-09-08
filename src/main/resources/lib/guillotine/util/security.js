@@ -1,5 +1,6 @@
 const authLib = require('/lib/xp/auth');
 const portalLib = require('/lib/xp/portal');
+const getSiteLib = require('/lib/guillotine/util/site-helper');
 
 function isSiteContext() {
     return !!portalLib.getSite();
@@ -38,9 +39,13 @@ function filterForbiddenContent(content, context) {
 }
 
 function adaptQuery(query, context) {
+    if (context.isGlobalMode()) {
+        return query;
+    }
     const allowedNodePaths = getAllowedNodePaths(context);
     const queryPrefix = allowedNodePaths.map(nodePath => '_path = "' + nodePath + '" OR _path LIKE "' + nodePath + '/*"').join(" OR ");
-    return context.isGlobalMode() ? query : '(' + queryPrefix + ')' + (query ? ' AND (' + query + ')' : '');
+
+    return '(' + queryPrefix + ')' + (query ? ' AND (' + query + ')' : '');
 }
 
 function getAllowedNodePaths(context) {
@@ -48,9 +53,8 @@ function getAllowedNodePaths(context) {
 }
 
 function getAllowedContentPaths(context) {
-    return context.options.allowPaths.concat(context.isGlobalMode() ? [] : portalLib.getSite()._path);
+    return context.options.allowPaths.concat(portalLib.getSite()._path);
 }
-
 
 exports.isSiteContext = isSiteContext;
 exports.isAllowedSiteContext = isAllowedSiteContext;
