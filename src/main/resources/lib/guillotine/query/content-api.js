@@ -8,6 +8,7 @@ const securityLib = require('/lib/guillotine/util/security');
 const validationLib = require('/lib/guillotine/util/validation');
 const wildcardLib = require('/lib/guillotine/util/wildcard');
 const factoryUtil = require('/lib/guillotine/util/factory');
+const getSiteLib = require('/lib/guillotine/util/site-helper');
 
 function createContentApiType(context) {
     return graphQlLib.createObjectType(context, {
@@ -110,6 +111,14 @@ function createContentApiType(context) {
             getSite: {
                 type: graphQlLib.reference('portal_Site'),
                 resolve: function (env) {
+                    if (context.isGlobalMode()) {
+                        if (env.context && env.context['__siteKey']) {
+                            return contentLib.getSite({
+                                key: env.context['__siteKey']
+                            });
+                        }
+                        return null;
+                    }
                     return portalLib.getSite();
                 }
             },
@@ -212,14 +221,33 @@ function createContentApiType(context) {
     });
 }
 
+function getContentKey(env, context) {
+    if (context.isGlobalMode()) {
+        if (env.context && env.context['__siteKey']) {
+            return wildcardLib.replaceSitePath(env.args.key, getSiteLib.getSiteFromQueryContext(env.context)._path);
+        }
+        return null;
+    } else {
+        return wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
+    }
+}
+
 function getContent(env, context) {
     if (env.args.key) {
-        const key = context.isGlobalMode() ? env.args.key : wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
+        const key = getContentKey(env, context);
+        if (!key) {
+            return null;
+        }
         const content = contentLib.get({
             key: key
         });
         return content && securityLib.filterForbiddenContent(content, context);
     } else {
+        if (context.isGlobalMode() && env.context && env.context['__siteKey']) {
+            return contentLib.get({
+                key: env.context['__siteKey']
+            });
+        }
         return portalLib.getContent();
     }
 }

@@ -15,6 +15,7 @@ const validationLib = require('/lib/guillotine/util/validation');
 const utilLib = require('/lib/guillotine/util/util');
 const urlResolverLib = require('/lib/guillotine/util/url-helper');
 const xDataTypesLib = require('/lib/guillotine/dynamic/x-data-types');
+const getSiteLib = require('/lib/guillotine/util/site-helper');
 
 function transformNodeIfAttachmentsExist(node) {
     if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
@@ -51,16 +52,18 @@ function generateGenericContentFields(context) {
             },
             resolve: function (env) {
                 if (env.args.type === 'siteRelative') {
-                    if (context.isGlobalMode()) {
-                        // in this case we must return non-null value, because this field is defined as nonNull
-                        return env.source._path;
-                    }
-                    let sitePath = contextLib.run({
+                    const sitePath = contextLib.run({
                         principals: ["role:system.admin"]
                     }, function () {
+                        if (context.isGlobalMode()) {
+                            if (env.context && env.context['__siteKey']) {
+                                return getSiteLib.getSiteFromQueryContext(env.context)._path;
+                            }
+                            return env.source._path;
+                        }
                         return portalLib.getSite()._path;
                     });
-                    let normalizedPath = env.source._path.replace(sitePath, '');
+                    const normalizedPath = env.source._path.replace(sitePath, '');
                     return normalizedPath.startsWith("/") ? normalizedPath.substring(1) : normalizedPath;
                 } else {
                     return env.source._path;
@@ -399,7 +402,7 @@ function createGenericTypes(context) {
                     var contents = contentLib.query({
                         start: env.args.offset,
                         count: env.args.first,
-                        query: securityLib.adaptQuery(env.args.query),
+                        query: securityLib.adaptQuery(env.args.query, context),
                         sort: env.args.sort,
                         contentTypes: [env.source.name]
                     }).hits;
@@ -420,7 +423,7 @@ function createGenericTypes(context) {
                     var queryResult = contentLib.query({
                         start: start,
                         count: env.args.first,
-                        query: securityLib.adaptQuery(env.args.query),
+                        query: securityLib.adaptQuery(env.args.query, context),
                         sort: env.args.sort,
                         contentTypes: [env.source.name]
 
