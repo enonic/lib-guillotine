@@ -16,26 +16,7 @@ const utilLib = require('/lib/guillotine/util/util');
 const urlResolverLib = require('/lib/guillotine/util/url-helper');
 const xDataTypesLib = require('/lib/guillotine/dynamic/x-data-types');
 const getSiteLib = require('/lib/guillotine/util/site-helper');
-
-function transformNodeIfAttachmentsExist(node) {
-    if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
-        if (node.data && node.data['__nodeId']) {
-            removeNodeIdPropIfNeeded(node.data);
-        }
-    }
-    return node;
-}
-
-function removeNodeIdPropIfNeeded(obj) {
-    delete obj['__nodeId'];
-
-    Object.keys(obj).forEach(prop => {
-        let holderProp = obj[prop];
-        if (typeof holderProp === 'object' && !Array.isArray(holderProp)) {
-            removeNodeIdPropIfNeeded(holderProp);
-        }
-    });
-}
+const nodeTransformer = require('/lib/guillotine/util/node-transformer');
 
 function generateGenericContentFields(context) {
     return {
@@ -130,8 +111,7 @@ function generateGenericContentFields(context) {
         dataAsJson: {
             type: graphQlLib.Json,
             resolve: function (env) {
-                const node = JSON.parse(JSON.stringify(env.source));
-                return transformNodeIfAttachmentsExist(node).data;
+                return transformNodeIfAttachmentsExist(env.source).data;
             }
         },
         x: {
@@ -176,8 +156,8 @@ function generateGenericContentFields(context) {
             resolve: function (env) {
                 const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
                 const nodeId = pageTemplate == null ? env.source._id : pageTemplate._id;
-                var context = contextLib.get();
-                var node = nodeLib.connect({
+                const context = contextLib.get();
+                const node = nodeLib.connect({
                     repoId: context.repository,
                     branch: context.branch
                 }).get(nodeId);
@@ -186,6 +166,14 @@ function generateGenericContentFields(context) {
                 if (env.args.resolveFragment !== false) {
                     components = pageTypesLib.inlineFragmentComponents(components);
                 }
+
+                if (node.hasOwnProperty('attachment') && node.attachment.length) {
+                    components.forEach(component => {
+                        nodeTransformer.addRecursiveNodeId(component, nodeId);
+                        component['__nodeId'] = nodeId;
+                    });
+                }
+
                 return components;
             }
         },
@@ -497,6 +485,17 @@ function createGenericTypes(context) {
             }
         }
     });
+}
+
+function transformNodeIfAttachmentsExist(source) {
+    if (source && source.hasOwnProperty('attachments') && Object.keys(source.attachments).length > 0) {
+        const node = JSON.parse(JSON.stringify(source));
+        if (node.data && node.data['__nodeId']) {
+            nodeTransformer.removeNodeIdPropIfNeeded(node.data);
+        }
+        return node;
+    }
+    return source;
 }
 
 exports.generateGenericContentFields = generateGenericContentFields;

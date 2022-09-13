@@ -17,6 +17,8 @@ public class ProcessHtmlParams
 
     private String imageSizes;
 
+    private String contentId;
+
     public String getValue()
     {
         return value;
@@ -69,6 +71,17 @@ public class ProcessHtmlParams
     public ProcessHtmlParams setImageSizes( final String imageSizes )
     {
         this.imageSizes = imageSizes;
+        return this;
+    }
+
+    public String getContentId()
+    {
+        return contentId;
+    }
+
+    public ProcessHtmlParams setContentId( final String contentId )
+    {
+        this.contentId = contentId;
         return this;
     }
 }
