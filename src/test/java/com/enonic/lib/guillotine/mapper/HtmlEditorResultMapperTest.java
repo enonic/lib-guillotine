@@ -49,7 +49,7 @@ class HtmlEditorResultMapperTest
             param( "attr1", "val11" ).
             param( "attr1", "val12" ).
             param( "attr2", "val2" ).
-            build() ), macroDescriptor ).serialize();
+            build(), "nodeId"), macroDescriptor ).serialize();
 
         HtmlEditorProcessedResult input = HtmlEditorProcessedResult.create().
             setProcessedHtml(
@@ -87,6 +87,7 @@ class HtmlEditorResultMapperTest
         assertEquals( "val2", macroConfig.path( "attr2" ).asText() );
 
         assertTrue( macroConfig.path( "body" ).asText().isEmpty() );
+        assertEquals( "nodeId", macroConfig.path( "__nodeId" ).asText() );
         assertFalse( macrosAsJson.path( "ref" ).asText().isEmpty() );
         assertEquals( "mymacro", macrosAsJson.path( "name" ).asText() );
     }

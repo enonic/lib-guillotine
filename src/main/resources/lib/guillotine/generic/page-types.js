@@ -8,6 +8,7 @@ const componentTypesLib = require('/lib/guillotine/dynamic/component-types');
 const utilLib = require('/lib/guillotine/util/util');
 const macroTypesLib = require('/lib/guillotine/dynamic/macro-types');
 const macroLib = require('/lib/guillotine/macro');
+const nodeTransformer = require('/lib/guillotine/util/node-transformer');
 
 function generateTypes(context) {
     macroTypesLib.createMacroDataConfigType(context);
@@ -137,7 +138,9 @@ function generateTypes(context) {
             macrosAsJson: {
                 type: graphQlLib.Json,
                 resolve: function (env) {
-                    return env.source.macrosAsJson;
+                    const macro = JSON.parse(JSON.stringify(env.source.macrosAsJson));
+                    nodeTransformer.removeNodeIdPropIfNeeded(macro);
+                    return macro;
                 }
             },
             macros: {
@@ -192,7 +195,7 @@ function generateTypes(context) {
             configAsJson: {
                 type: graphQlLib.Json,
                 resolve: function (env) {
-                    return env.source.config;
+                    return getConfigAsJsonForComponent(env.source);
                 }
             },
             template: {
@@ -217,7 +220,7 @@ function generateTypes(context) {
             configAsJson: {
                 type: graphQlLib.Json,
                 resolve: function (env) {
-                    return env.source.config;
+                    return getConfigAsJsonForComponent(env.source);
                 }
             }
 
@@ -237,7 +240,7 @@ function generateTypes(context) {
             configAsJson: {
                 type: graphQlLib.Json,
                 resolve: function (env) {
-                    return env.source.config;
+                    return getConfigAsJsonForComponent(env.source);
                 }
             }
 
@@ -274,8 +277,9 @@ function generateTypes(context) {
                     processHtml: context.types.processHtmlType
                 },
                 resolve: function (env) {
-                    let params = {
-                        value: env.source.value
+                    const params = {
+                        value: env.source.value,
+                        contentId: env.source.__nodeId,
                     };
                     if (env.args.processHtml) {
                         params['type'] = env.args.processHtml.type;
@@ -441,6 +445,16 @@ function prefixContentComponentPaths(container, prefix) {
                 }
             });
         });
+    }
+}
+
+function getConfigAsJsonForComponent(source) {
+    if (source.hasOwnProperty('__nodeId')) {
+        const config = JSON.parse(JSON.stringify(source));
+        nodeTransformer.removeNodeIdPropIfNeeded(config);
+        return config;
+    } else {
+        return source.config;
     }
 }
 

@@ -9,6 +9,7 @@ const validationLib = require('/lib/guillotine/util/validation');
 const wildcardLib = require('/lib/guillotine/util/wildcard');
 const factoryUtil = require('/lib/guillotine/util/factory');
 const getSiteLib = require('/lib/guillotine/util/site-helper');
+const nodeTransformer = require('/lib/guillotine/util/node-transformer');
 
 function createContentApiType(context) {
     return graphQlLib.createObjectType(context, {
@@ -256,20 +257,9 @@ function transformNodeIfExistsAttachments(node) {
     if (node && node.hasOwnProperty('attachments') && Object.keys(node.attachments).length > 0) {
         if (node.data) {
             node.data['__nodeId'] = node._id;
-            addRecursiveNodeId(node.data, node._id);
+            nodeTransformer.addRecursiveNodeId(node.data, node._id);
         }
     }
-}
-
-function addRecursiveNodeId(holder, nodeId) {
-    Object.keys(holder).forEach(prop => {
-        let holderElement = holder[prop];
-
-        if (typeof holderElement === 'object' && !Array.isArray(holderElement)) {
-            holderElement['__nodeId'] = nodeId;
-            addRecursiveNodeId(holderElement, nodeId);
-        }
-    });
 }
 
 exports.createContentApiType = createContentApiType;

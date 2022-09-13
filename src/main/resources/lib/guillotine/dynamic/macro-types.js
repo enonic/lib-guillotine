@@ -41,7 +41,7 @@ function createMacroDataConfigType(context) {
         });
 
         let macroDataConfigType = libs.graphQL.createObjectType(context, {
-            name: macroDataConfigTypeName,
+            name: context.uniqueName(macroDataConfigTypeName),
             description: `Macro descriptor data config for application ['${descriptor.applicationKey}'] and descriptor ['${descriptor.name}']`,
             fields: macroDataConfigFields
         });
@@ -55,14 +55,14 @@ function createMacroDataConfigType(context) {
     });
 
     context.types.macroConfigType = libs.graphQL.createObjectType(context, {
-        name: 'MacroConfig',
+        name: context.uniqueName('MacroConfig'),
         description: `Macro config type.`,
         interfaces: [context.types.macroType],
         fields: macroConfigTypeFields
     });
 
     context.types.macroType = libs.graphQL.createObjectType(context, {
-        name: 'Macro',
+        name: context.uniqueName('Macro'),
         description: `Macro type.`,
         interfaces: [context.types.macroType],
         fields: {

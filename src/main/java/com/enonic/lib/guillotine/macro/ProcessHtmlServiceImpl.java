@@ -66,13 +66,13 @@ public class ProcessHtmlServiceImpl
 
         final List<MacroDecorator> processedMacros = new ArrayList<>();
 
-        builder.setProcessedHtml( macroService.evaluateMacros( processedHtml, ( macro ) -> {
+        builder.setProcessedHtml( macroService.evaluateMacros( processedHtml, macro -> {
             if ( !registeredMacros.containsKey( macro.getName() ) )
             {
                 return macro.toString();
             }
 
-            final MacroDecorator macroDecorator = MacroDecorator.from( macro );
+            final MacroDecorator macroDecorator = MacroDecorator.from( macro, params.getContentId() );
 
             processedMacros.add( macroDecorator );
 

@@ -64,6 +64,11 @@ public class ProcessHtmlHandler
             htmlParams.setImageSizes( params.getMap().get( "imageSizes" ).toString() );
         }
 
+        if ( params.getMap().containsKey( "contentId" ) )
+        {
+            htmlParams.setContentId( params.getMap().get( "contentId" ).toString() );
+        }
+
         final ProcessHtmlService processHtmlService =
             new ProcessHtmlServiceImpl( styleDescriptorServiceSupplier.get(), portalUrlServiceSupplier.get(), macroServiceSupplier.get(),
                                         macroDescriptorServiceSupplier.get() );

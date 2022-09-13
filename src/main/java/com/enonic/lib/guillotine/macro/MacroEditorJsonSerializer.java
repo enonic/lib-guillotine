@@ -45,6 +45,7 @@ public class MacroEditorJsonSerializer
         final Map<String, Object> macroData = new LinkedHashMap<>();
 
         macroData.put( "body", macro.getMacro().getBody() );
+        macroData.put( "__nodeId", macro.getNodeId() );
 
         final ImmutableMultimap<String, String> params = macro.getMacro().getParameters();
 

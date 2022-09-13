@@ -8,17 +8,20 @@ public class MacroDecorator
 {
     private final Macro macro;
 
+    private final String nodeId;
+
     private final String id;
 
-    private MacroDecorator( final Macro macro )
+    private MacroDecorator( final Macro macro, final String nodeId )
     {
         this.macro = macro;
+        this.nodeId = nodeId;
         this.id = UUID.randomUUID().toString();
     }
 
-    public static MacroDecorator from( final Macro macro )
+    public static MacroDecorator from( final Macro macro, final String nodeId )
     {
-        return new MacroDecorator( macro );
+        return new MacroDecorator( macro, nodeId );
     }
 
     public Macro getMacro()
@@ -29,5 +32,10 @@ public class MacroDecorator
     public String getId()
     {
         return id;
+    }
+
+    public String getNodeId()
+    {
+        return nodeId;
     }
 }

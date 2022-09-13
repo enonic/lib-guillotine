@@ -207,19 +207,11 @@ function generateFormItemResolveFunction(formItem) {
             let value = env.source[formItem.name];
 
             if (value && 'HtmlArea' === formItem.inputType) {
-                let processHtmlParams = {
-                    value: value
-                };
-                if (env.args.processHtml) {
-                    processHtmlParams['type'] = env.args.processHtml.type;
-                    processHtmlParams['imageWidths'] = env.args.processHtml.imageWidths;
-                    processHtmlParams['imageSizes'] = env.args.processHtml.imageSizes;
-                }
-                value = macroLib.processHtml(processHtmlParams);
+                value = macroLib.processHtml(createProcessHtmlParams(value, env));
             }
             if (value && 'Input' === formItem.formItemType) {
                 if ('AttachmentUploader' === formItem.inputType) {
-                    let attachments = contentLib.getAttachments(env.source['__nodeId']);
+                    const attachments = contentLib.getAttachments(env.source['__nodeId']);
                     if (attachments && attachments[value]) {
                         let attachment = attachments[value];
                         attachment['__nodeId'] = env.source['__nodeId'];
@@ -227,7 +219,7 @@ function generateFormItemResolveFunction(formItem) {
                         value = attachment;
                     }
                 } else if (['ContentSelector', 'MediaUploader', 'ImageSelector', 'MediaSelector'].indexOf(formItem.inputType) !== -1) {
-                    let content = contentLib.get({key: value});
+                    const content = contentLib.get({key: value});
                     if (content && content.hasOwnProperty('attachments') && Object.keys(content.attachments).length > 0) {
                         Object.keys(content.attachments).forEach((key) => {
                             content.attachments[key]['__nodeId'] = content._id;
@@ -247,15 +239,7 @@ function generateFormItemResolveFunction(formItem) {
             }
             if ('HtmlArea' === formItem.inputType) {
                 values = values.map(function (value) {
-                    let processHtmlParams = {
-                        value: value
-                    };
-                    if (env.args.processHtml) {
-                        processHtmlParams['type'] = env.args.processHtml.type;
-                        processHtmlParams['imageWidths'] = env.args.processHtml.imageWidths
-                        processHtmlParams['imageSizes'] = env.args.processHtml.imageSizes;
-                    }
-                    return macroLib.processHtml(processHtmlParams);
+                    return macroLib.processHtml(createProcessHtmlParams(value, env));
                 });
             }
             if ('Input' === formItem.formItemType) {
@@ -289,6 +273,18 @@ function generateFormItemResolveFunction(formItem) {
     }
 }
 
+function createProcessHtmlParams(html, env) {
+    const params = {
+        value: html,
+        contentId: env.source.__nodeId,
+    };
+    if (env.args.processHtml) {
+        params['type'] = env.args.processHtml.type;
+        params['imageWidths'] = env.args.processHtml.imageWidths;
+        params['imageSizes'] = env.args.processHtml.imageSizes;
+    }
+    return params;
+}
 
 exports.getFormItems = getFormItems;
 exports.generateFormItemObjectType = generateFormItemObjectType;
