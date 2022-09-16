@@ -89,7 +89,7 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 === 6.0
 
 - `ExtraData` type became a dynamic type with fields that are generated based on form descriptors of the x-data and grouped by application key.
-- Naming for `ItemSet` and `OptionSet` types were changed, from:
+- Naming for `ItemSet` and `OptionSet` types was changed, from:
 * `<applicationKey>_<contentTypeName>_<itemSetLabel>` to `<applicationKey>_<contentTypeName>_<itemSetName>`
 * `<applicationKey>_<contentTypeName>_<optionSetLabel>` to `<applicationKey>_<contentTypeName>_<optionSetName>`
 
