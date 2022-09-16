@@ -3,7 +3,7 @@
 Guillotine library exposes the read-only part of the Enonic Content API, 
 including access to the Enonic query language. 
 Guillotine dynamically analyzes all available content types in applications and 
-generates a GraphQL API specific to your site or to your XP instances in the siteless mode.
+generates a GraphQL API specific to your site or all repositories in the siteless mode.
 This gives you direct, typed and documented access to all content within the site. 
 Including the ability to follow references, child items and access media directly.
 
