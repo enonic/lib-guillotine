@@ -1,4 +1,5 @@
 const contentLib = require('/lib/xp/content');
+const contextLib = require('/lib/xp/context');
 const portalLib = require('/lib/xp/portal');
 const graphQlConnectionLib = require('/lib/graphql-connection');
 
@@ -22,7 +23,7 @@ function createContentApiType(context) {
                     key: graphQlLib.GraphQLID
                 },
                 resolve: (env) => {
-                    let node = getContent(env, context);
+                    const node = getContent(env, context, false);
                     transformNodeIfExistsAttachments(node);
                     return node;
                 }
@@ -37,7 +38,7 @@ function createContentApiType(context) {
                 },
                 resolve: function (env) {
                     validationLib.validateArguments(env.args);
-                    let parent = getContent(env, context);
+                    const parent = getContent(env, context, true);
                     if (parent) {
                         let hits = contentLib.getChildren({
                             key: parent._id,
@@ -64,7 +65,7 @@ function createContentApiType(context) {
                 },
                 resolve: function (env) {
                     validationLib.validateArguments(env.args);
-                    let parent = getContent(env, context);
+                    const parent = getContent(env, context, true);
                     if (parent) {
                         let start = env.args.after ? parseInt(graphQlConnectionLib.decodeCursor(env.args.after)) + 1 : 0;
                         let getChildrenResult = contentLib.getChildren({
@@ -99,7 +100,7 @@ function createContentApiType(context) {
                     key: graphQlLib.GraphQLID
                 },
                 resolve: function (env) {
-                    let content = getContent(env, context);
+                    const content = getContent(env, context, false);
                     if (content) {
                         return contentLib.getPermissions({
                             key: content._id
@@ -222,32 +223,32 @@ function createContentApiType(context) {
     });
 }
 
-function getContentKey(env, context) {
-    if (context.isGlobalMode()) {
-        if (env.context && env.context['__siteKey']) {
-            return wildcardLib.replaceSitePath(env.args.key, getSiteLib.getSiteFromQueryContext(env.context)._path);
-        }
+function getContentByKey(key, context, returnRootContent) {
+    const content = contentLib.get({
+        key: key
+    });
+    if (content && content._path === '/' && returnRootContent === false) {
         return null;
-    } else {
-        return wildcardLib.replaceSitePath(env.args.key, portalLib.getSite()._path);
     }
+    return securityLib.filterForbiddenContent(content, context);
 }
 
-function getContent(env, context) {
+function getContent(env, context, returnRootContent) {
     if (env.args.key) {
-        const key = getContentKey(env, context);
-        if (!key) {
-            return null;
-        }
-        const content = contentLib.get({
-            key: key
-        });
-        return content && securityLib.filterForbiddenContent(content, context);
+        const site = context.isGlobalMode() && env.context && env.context['__siteKey']
+                     ? getSiteLib.getSiteFromQueryContext(env.context)
+                     : portalLib.getSite();
+
+        const key = site ? wildcardLib.replaceSitePath(env.args.key, site._path) : env.args.key;
+
+        return getContentByKey(key, context, returnRootContent);
     } else {
-        if (context.isGlobalMode() && env.context && env.context['__siteKey']) {
-            return contentLib.get({
-                key: env.context['__siteKey']
-            });
+        if (context.isGlobalMode()) {
+            if (env.context && env.context['__siteKey']) {
+                return getContentByKey(env.context['__siteKey'], context, returnRootContent);
+            } else if (returnRootContent === true) {
+                return contextLib.run({}, () => contentLib.get({key: '/'}));
+            }
         }
         return portalLib.getContent();
     }

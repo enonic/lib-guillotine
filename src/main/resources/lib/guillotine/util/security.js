@@ -1,6 +1,5 @@
 const authLib = require('/lib/xp/auth');
 const portalLib = require('/lib/xp/portal');
-const getSiteLib = require('/lib/guillotine/util/site-helper');
 
 function isSiteContext() {
     return !!portalLib.getSite();
@@ -27,6 +26,9 @@ function canAccessCmsData() {
 }
 
 function filterForbiddenContent(content, context) {
+    if (!content) {
+        return null;
+    }
     if (context.isGlobalMode()) {
         return content;
     }
