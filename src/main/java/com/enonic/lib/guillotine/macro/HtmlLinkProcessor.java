@@ -4,10 +4,12 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -294,20 +296,21 @@ public class HtmlLinkProcessor
 
     private StyleDescriptors getStyleDescriptors( final PortalRequest portalRequest )
     {
-        final ImmutableList.Builder<ApplicationKey> applicationKeyList = new ImmutableList.Builder<ApplicationKey>().
-            add( SYSTEM_APPLICATION_KEY );
         if ( portalRequest != null )
         {
             final Site site = portalRequest.getSite();
             if ( site != null )
             {
-                final ImmutableSet<ApplicationKey> siteApplicationKeySet = site.getSiteConfigs().getApplicationKeys();
-                applicationKeyList.addAll( siteApplicationKeySet );
-            }
-        }
+                final Set<ApplicationKey> applicationKeys = new HashSet<>();
+                applicationKeys.add( SYSTEM_APPLICATION_KEY );
+                applicationKeys.add( ApplicationKey.SYSTEM );
+                applicationKeys.addAll( site.getSiteConfigs().getApplicationKeys() );
 
-        final ApplicationKeys applicationKeys = ApplicationKeys.from( applicationKeyList.build() );
-        return styleDescriptorService.getByApplications( applicationKeys );
+                return styleDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) );
+            }
+            return styleDescriptorService.getAll();
+        }
+        return StyleDescriptors.empty();
     }
 
     private ImageStyle getImageStyle( final Map<String, ImageStyle> imageStyleMap, final Map<String, String> urlParams )
