@@ -81,14 +81,10 @@ public class HtmlLinkProcessorTest
         assertTrue( result.contains( "srcset=\"imageUrl 1024w,imageUrl 2048w\"" ) );
         assertTrue( result.contains( "sizes=\"(max-width: 1024px) 1024px\"" ) );
 
-        when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn(
-            StyleDescriptors.from( StyleDescriptor.create().
-                addStyleElement( ImageStyle.create().
-                    name( "editor-style-image-cinema" ).
-                    aspectRatio( "16:9" ).
-                    build() ).
-                application( ApplicationKey.from( "myapp" ) ).
-                build() ) );
+        when( styleDescriptorService.getByApplications( any( ApplicationKeys.class ) ) ).thenReturn( StyleDescriptors.from(
+            StyleDescriptor.create().addStyleElement(
+                ImageStyle.create().name( "editor-style-image-cinema" ).aspectRatio( "16:9" ).build() ).application(
+                ApplicationKey.from( "myapp" ) ).build() ) );
 
         result = instance.process( "" + "<figure class=\"editor-style-image-cinema\">" +
                                        "<img alt=\"matrix.jpg\" class=\"custom-class\" src=\"image://content-id?style=editor-style-image-cinema\" />" +
@@ -166,21 +162,20 @@ public class HtmlLinkProcessorTest
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k1=v1&amp;k2=v2#some-fragment\"" ) );
 
         // test with only query
-        processedHtml = instance.process(
-            "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server",
-            createPortalRequest(), null, null, image -> {
-            }, links::add );
+        processedHtml =
+            instance.process( "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server", createPortalRequest(),
+                              null, null, image -> {
+                }, links::add );
 
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k1=v1&amp;k2=v2\"" ) );
 
         // test with only fragment
-        processedHtml = instance.process(
-            "<p><a href=\"content://content-id?" + fragmentParam + "\">Text</a></p>\n", "server",
-            createPortalRequest(), null, null, image -> {
-            }, links::add );
+        processedHtml =
+            instance.process( "<p><a href=\"content://content-id?" + fragmentParam + "\">Text</a></p>\n", "server", createPortalRequest(),
+                              null, null, image -> {
+                }, links::add );
 
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl#some-fragment\"" ) );
-
 
         // test with unsupported symbols in query and fragment
         queryParam = "query=k%3Dh%C3%A5ndkl%C3%A6r"; // query=k=håndklær
@@ -197,15 +192,45 @@ public class HtmlLinkProcessorTest
         // query=encodeFn('k=h' + encodeFn('å') + 'ndkl' + encodeFn('æ') + 'r')
         queryParam = "query=k%3Dh%25C3%25A5ndkl%25C3%25A6r";
 
-        processedHtml = instance.process(
-            "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server",
-            createPortalRequest(), null, null, image -> {
+        processedHtml = instance.process( "<p><a href=\"content://content-id?" + queryParam + "\">Text</a></p>\n", "server",
+                                          createPortalRequest(), null, null, image -> {
             }, links::add );
 
         assertTrue( processedHtml.contains( "href=\"contentBaseUrl?k=h%C3%A5ndkl%C3%A6r\"" ) );
     }
 
+    @Test
+    public void testProcessHtmlGlobalMode()
+    {
+        when( portalUrlService.imageUrl( any( ImageUrlParams.class ) ) ).thenReturn( "imageUrl?filter=styleFilter" );
+        when( styleDescriptorService.getAll() ).thenReturn( StyleDescriptors.from( StyleDescriptor.create().addStyleElement(
+            ImageStyle.create().name( "editor-style-image-cinema" ).aspectRatio( "16:9" ).filter( "styleFilter" ).build() ).application(
+            ApplicationKey.from( "myapp" ) ).build() ) );
+
+        HtmlLinkProcessor instance = new HtmlLinkProcessor( styleDescriptorService, portalUrlService );
+
+        String result = instance.process( "" + "<figure class=\"editor-style-image-cinema\">" +
+                                              "<img alt=\"matrix.jpg\" src=\"image://content-id?style=editor-style-image-cinema\" />" +
+                                              "<figcaption>Caption</figcaption>" + "</figure>", "server", createPortalRequestWithoutSite(), null, null,
+                                          image -> {
+                                          }, link -> {
+            } );
+
+        assertTrue( result.contains( "<img alt=\"matrix.jpg\" src=\"imageUrl?filter=styleFilter\" data-image-ref=" ) );
+    }
+
     private PortalRequest createPortalRequest()
+    {
+        PortalRequest request = createPortalRequestWithoutSite();
+
+        request.setSite( Site.create().name( "site" ).parentPath( ContentPath.ROOT ).language( Locale.ENGLISH ).siteConfigs(
+            SiteConfigs.create().add( SiteConfig.create().application( ApplicationKey.from( "myapp" ) ).config(
+                new PropertyTree() ).build() ).build() ).build() );
+
+        return request;
+    }
+
+    private PortalRequest createPortalRequestWithoutSite()
     {
         PortalRequest request = new PortalRequest();
 
@@ -213,17 +238,6 @@ public class HtmlLinkProcessorTest
         request.setBranch( Branch.from( "draft" ) );
         request.setApplicationKey( ApplicationKey.from( "myapp" ) );
         request.setBaseUri( "/site" );
-        request.setSite( Site.create().
-            name( "site" ).
-            parentPath( ContentPath.ROOT ).
-            language( Locale.ENGLISH ).
-            siteConfigs( SiteConfigs.create().
-                add( SiteConfig.create().
-                    application( ApplicationKey.from( "myapp" ) ).
-                    config( new PropertyTree() ).
-                    build() ).
-                build() ).
-            build() );
 
         return request;
     }
