@@ -303,7 +303,6 @@ public class HtmlLinkProcessor
             {
                 final Set<ApplicationKey> applicationKeys = new HashSet<>();
                 applicationKeys.add( SYSTEM_APPLICATION_KEY );
-                applicationKeys.add( ApplicationKey.SYSTEM );
                 applicationKeys.addAll( site.getSiteConfigs().getApplicationKeys() );
 
                 return styleDescriptorService.getByApplications( ApplicationKeys.from( applicationKeys ) );
