@@ -9,6 +9,7 @@ const utilLib = require('/lib/guillotine/util/util');
 const macroTypesLib = require('/lib/guillotine/dynamic/macro-types');
 const macroLib = require('/lib/guillotine/macro');
 const nodeTransformer = require('/lib/guillotine/util/node-transformer');
+const getSiteLib = require('/lib/guillotine/util/site-helper');
 
 function generateTypes(context) {
     macroTypesLib.createMacroDataConfigType(context);
@@ -341,13 +342,13 @@ function generateTypes(context) {
     });
 }
 
-function resolvePageTemplate(content) {
+function resolvePageTemplate(content, queryContext) {
     if ('portal:page-template' === content.type) {
         return content;
     }
 
     if (!content.page || Object.keys(content.page).length === 0) {
-        return getDefaultPageTemplate(content);
+        return getDefaultPageTemplate(content, queryContext);
     }
 
     if (content.page && content.page.template) {
@@ -357,25 +358,14 @@ function resolvePageTemplate(content) {
     return null;
 }
 
-function resolvePageTemplateId(content) {
-    if ('portal:page-template' === content.type) {
-        return content._id;
+function getDefaultPageTemplate(content, queryContext) {
+    let site = portalLib.getSite();
+
+    if (queryContext && queryContext['__siteKey']) {
+        site = getSiteLib.getSiteFromQueryContext(queryContext);
     }
 
-    if (!content.page || Object.keys(content.page).length === 0) {
-        const template = getDefaultPageTemplate(content);
-        return template == null ? null : template._id;
-    }
-
-    if (content.page && content.page.template) {
-        return content.page.template;
-    }
-}
-
-function getDefaultPageTemplate(content) {
-    const site = portalLib.getSite();
-
-    if (typeof site === 'undefined' || site === null) {
+    if (!site) {
         return null;
     }
 
@@ -460,6 +450,5 @@ function getConfigAsJsonForComponent(source) {
 
 exports.generateTypes = generateTypes;
 exports.resolvePageTemplate = resolvePageTemplate;
-exports.resolvePageTemplateId = resolvePageTemplateId;
 exports.inlineFragmentComponents = inlineFragmentComponents;
 exports.inlineFragmentContentComponents = inlineFragmentContentComponents;

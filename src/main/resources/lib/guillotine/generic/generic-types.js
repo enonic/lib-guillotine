@@ -144,7 +144,7 @@ function generateGenericContentFields(context) {
         pageTemplate: {
             type: graphQlLib.reference('Content'),
             resolve: (env) => {
-                return pageTypesLib.resolvePageTemplate(env.source);
+                return pageTypesLib.resolvePageTemplate(env.source, env.context);
             }
         },
         components: {
@@ -154,7 +154,7 @@ function generateGenericContentFields(context) {
                 resolveFragment: graphQlLib.GraphQLBoolean,
             },
             resolve: function (env) {
-                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source) : null;
+                const pageTemplate = env.args.resolveTemplate === true ? pageTypesLib.resolvePageTemplate(env.source, env.context) : null;
                 const nodeId = pageTemplate == null ? env.source._id : pageTemplate._id;
                 const context = contextLib.get();
                 const node = nodeLib.connect({
