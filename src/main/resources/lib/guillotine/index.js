@@ -166,6 +166,9 @@ function createContext(options) {
             }
             return uniqueName;
         },
+        hasOption: function (name) {
+            return this.options.hasOwnProperty(name);
+        },
         getOption: function (name) {
             return this.options[name];
         },
@@ -185,10 +188,19 @@ function createContext(options) {
 
     context.schemaGenerator = graphQlLib.newSchemaGenerator();
 
-    const site = portalLib.getSite();
-
     context.isGlobalMode = function () {
-        return typeof site === 'undefined' || site === null;
+        try {
+            if (context.hasOption('__globalModeOn')) {
+                return context.getOption('__globalModeOn');
+            }
+
+            const site = portalLib.getSite();
+            const globalModeOn = typeof site === 'undefined' || site === null;
+            context.putOption('__globalModeOn', globalModeOn);
+            return globalModeOn;
+        } catch (e) {
+            return true;
+        }
     };
 
     return context;
