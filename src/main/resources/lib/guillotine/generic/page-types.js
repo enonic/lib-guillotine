@@ -357,31 +357,10 @@ function resolvePageTemplate(content) {
     return null;
 }
 
-function resolvePageTemplateId(content) {
-    if ('portal:page-template' === content.type) {
-        return content._id;
-    }
-
-    if (!content.page || Object.keys(content.page).length === 0) {
-        const template = getDefaultPageTemplate(content);
-        return template == null ? null : template._id;
-    }
-
-    if (content.page && content.page.template) {
-        return content.page.template;
-    }
-}
-
 function getDefaultPageTemplate(content) {
-    const site = portalLib.getSite();
-
-    if (typeof site === 'undefined' || site === null) {
-        return null;
-    }
-
     const bean = __.newBean('com.enonic.lib.guillotine.handler.GetDefaultPageTemplateBean');
-    bean.siteId = site._id;
-    bean.contentType = content.type;
+    bean.setContentId(content._id);
+    bean.setContentType(content.type);
     const template = bean.execute();
     return template == null ? null : __.toNativeObject(template);
 }
@@ -460,6 +439,5 @@ function getConfigAsJsonForComponent(source) {
 
 exports.generateTypes = generateTypes;
 exports.resolvePageTemplate = resolvePageTemplate;
-exports.resolvePageTemplateId = resolvePageTemplateId;
 exports.inlineFragmentComponents = inlineFragmentComponents;
 exports.inlineFragmentContentComponents = inlineFragmentContentComponents;
