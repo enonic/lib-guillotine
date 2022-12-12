@@ -50,6 +50,48 @@ function adaptQuery(query, context) {
     return '(' + queryPrefix + ')' + (query ? ' AND (' + query + ')' : '');
 }
 
+function adaptDslQuery(dslQuery, context) {
+    if (context.isGlobalMode()) {
+        return dslQuery;
+    }
+    const allowedNodePaths = getAllowedNodePaths(context);
+    const dslExpressions = [];
+    allowedNodePaths.forEach(nodePath => {
+        dslExpressions.push({
+            term: {
+                field: '_path',
+                value: nodePath,
+            }
+        });
+        dslExpressions.push({
+            like: {
+                field: '_path',
+                value: `${nodePath}/*`,
+            }
+        });
+    });
+    return dslQuery != null
+           ?
+        {
+            boolean: {
+                must: [
+                    dslQuery,
+                    {
+                        boolean: {
+                            should: dslExpressions,
+                        }
+                    }
+                ]
+            }
+        }
+           :
+        {
+            boolean: {
+                should: dslExpressions,
+            }
+        };
+}
+
 function getAllowedNodePaths(context) {
     return getAllowedContentPaths(context).map(contentPath => '/content' + contentPath);
 }
@@ -65,3 +107,4 @@ exports.isCmsAdmin = isCmsAdmin;
 exports.canAccessCmsData = canAccessCmsData;
 exports.filterForbiddenContent = filterForbiddenContent;
 exports.adaptQuery = adaptQuery;
+exports.adaptDslQuery = adaptDslQuery;

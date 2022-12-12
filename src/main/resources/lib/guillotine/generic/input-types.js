@@ -312,6 +312,321 @@ function createInputTypes(context) {
             }
         }
     });
+
+    context.types.dslExpressionValueInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('DSLExpressionValueInput'),
+        description: 'DSLExpressionValueInput type',
+        fields: {
+            string: {
+                type: graphQlLib.GraphQLString,
+            },
+            double: {
+                type: graphQlLib.GraphQLFloat,
+            },
+            long: {
+                type: graphQlLib.GraphQLInt,
+            },
+            boolean: {
+                type: graphQlLib.GraphQLBoolean,
+            },
+            localDate: {
+                type: graphQlLib.Date,
+            },
+            localDateTime: {
+                type: graphQlLib.LocalDateTime,
+            },
+            localTime: {
+                type: graphQlLib.LocalTime,
+            },
+            instant: {
+                type: graphQlLib.DateTime,
+            },
+        }
+    });
+
+    context.types.termExpressionDslInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('TermDSLExpressionInput'),
+        description: 'TermDSLExpressionInput type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+            value: {
+                type: graphQlLib.nonNull(context.types.dslExpressionValueInputType),
+            },
+        },
+    });
+
+    context.types.likeDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('LikeDSLExpressionInput'),
+        description: 'LikeDSLExpressionInput type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+            value: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+        }
+    });
+
+    context.types.inDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('InDSLExpressionInput'),
+        description: 'InDSLExpressionInput type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+            stringValues: {
+                type: graphQlLib.list(graphQlLib.GraphQLString),
+            },
+            doubleValues: {
+                type: graphQlLib.list(graphQlLib.GraphQLFloat),
+            },
+            longValues: {
+                type: graphQlLib.list(graphQlLib.GraphQLInt),
+            },
+            booleanValues: {
+                type: graphQlLib.list(graphQlLib.GraphQLBoolean),
+            },
+            localDateValues: {
+                type: graphQlLib.list(graphQlLib.Date),
+            },
+            localDateTimeValues: {
+                type: graphQlLib.list(graphQlLib.LocalDateTime),
+            },
+            localTimeValues: {
+                type: graphQlLib.list(graphQlLib.LocalTime),
+            },
+            instantValues: {
+                type: graphQlLib.list(graphQlLib.DateTime),
+            },
+        }
+    });
+
+    context.types.existsDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('ExistsDSLExpressionInput'),
+        description: 'ExistsDSLExpressionInput type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+        }
+    });
+
+    context.types.stemmedDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('StemmedDSLExpressionInput'),
+        description: 'StemmedDSLExpressionInput type',
+        fields: {
+            fields: {
+                type: graphQlLib.nonNull(graphQlLib.list(graphQlLib.GraphQLString)),
+            },
+            query: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            language: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            operator: {
+                type: context.types.dslOperatorType,
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+        }
+    });
+
+    context.types.fulltextDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('FulltextDSLExpressionInput'),
+        description: 'FulltextDSLExpressionInput type',
+        fields: {
+            fields: {
+                type: graphQlLib.nonNull(graphQlLib.list(graphQlLib.GraphQLString)),
+            },
+            query: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            operator: {
+                type: context.types.dslOperatorType,
+            },
+        }
+    });
+
+    context.types.ngramDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('NgramDSLExpressionInput'),
+        description: 'NgramDSLExpressionInput type',
+        fields: {
+            fields: {
+                type: graphQlLib.nonNull(graphQlLib.list(graphQlLib.GraphQLString)),
+            },
+            query: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            operator: {
+                type: context.types.dslOperatorType,
+            },
+        }
+    });
+
+    context.types.pathMatchDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('PathMatchDSLExpressionInput'),
+        description: 'PathMatchDSLExpressionInput type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            path: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            minimumMatch: {
+                type: graphQlLib.GraphQLInt,
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+        }
+    });
+
+    context.types.matchAllDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('MatchAllDSLExpressionInput'),
+        description: 'MatchAllDSLExpressionInput type',
+        fields: {
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            }
+        }
+    });
+
+    context.types.rangeDslExpressionInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('RangeDSLExpressionInput'),
+        description: 'RangeDSLExpressionInput type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            lt: {
+                type: context.types.dslExpressionValueInputType,
+            },
+            lte: {
+                type: context.types.dslExpressionValueInputType,
+            },
+            gt: {
+                type: context.types.dslExpressionValueInputType,
+            },
+            gte: {
+                type: context.types.dslExpressionValueInputType,
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+        }
+    });
+
+    context.types.booleanExpressionDslInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('BooleanDSLExpressionInput'),
+        description: 'BooleanDSLExpressionInput type',
+        fields: {
+            should: {
+                type: graphQlLib.list(graphQlLib.reference('QueryDSLInput')),
+            },
+            must: {
+                type: graphQlLib.list(graphQlLib.reference('QueryDSLInput')),
+            },
+            mustNot: {
+                type: graphQlLib.list(graphQlLib.reference('QueryDSLInput')),
+            },
+            filter: {
+                type: graphQlLib.list(graphQlLib.reference('QueryDSLInput')),
+            },
+            boost: {
+                type: graphQlLib.GraphQLFloat,
+            },
+        }
+    });
+
+    context.types.queryDslInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('QueryDSLInput'),
+        description: 'QueryDSLInput type',
+        fields: {
+            boolean: {
+                type: context.types.booleanExpressionDslInputType,
+            },
+            ngram: {
+                type: context.types.ngramDslExpressionInputType,
+            },
+            stemmed: {
+                type: context.types.stemmedDslExpressionInputType,
+            },
+            fulltext: {
+                type: context.types.fulltextDslExpressionInputType,
+            },
+            matchAll: {
+                type: context.types.matchAllDslExpressionInputType,
+            },
+            pathMatch: {
+                type: context.types.pathMatchDslExpressionInputType,
+            },
+            range: {
+                type: context.types.rangeDslExpressionInputType,
+            },
+            term: {
+                type: context.types.termExpressionDslInputType,
+            },
+            like: {
+                type: context.types.likeDslExpressionInputType,
+            },
+            in: {
+                type: context.types.inDslExpressionInputType,
+            },
+            exists: {
+                type: context.types.existsDslExpressionInputType,
+            },
+        }
+    });
+
+    context.types.geoPointDslInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('GeoPointSortDslInput'),
+        description: 'GeoPoint Sort Dsl input type',
+        fields: {
+            lat: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLFloat),
+            },
+            lon: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLFloat),
+            },
+        }
+    });
+
+    context.types.sortDslInputType = context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('SortDslInput'),
+        description: 'Sort Dsl input type',
+        fields: {
+            field: {
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+            },
+            direction: {
+                type: context.types.dslSortDirectionType,
+            },
+            location: {
+                type: context.types.geoPointDslInputType,
+            },
+            unit: {
+                type: context.types.dslGeoPointDistanceType,
+            },
+        }
+    });
 }
 
 exports.createInputTypes = createInputTypes;

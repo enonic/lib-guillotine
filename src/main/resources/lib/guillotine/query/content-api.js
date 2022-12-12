@@ -204,6 +204,44 @@ function createContentApiType(context) {
                     };
                 }
             },
+            queryDsl: {
+                type: graphQlLib.list(context.types.contentType),
+                args: {
+                    query: context.types.queryDslInputType,
+                    offset: graphQlLib.GraphQLInt,
+                    first: graphQlLib.GraphQLInt,
+                    sort: graphQlLib.list(context.types.sortDslInputType),
+                },
+                resolve: function (env) {
+                    validationLib.validateDslQuery(env);
+                    const result = contentLib.query(createQueryDslParams(env, context));
+                    const hits = result.hits;
+                    hits.forEach(node => transformNodeIfExistsAttachments(node));
+                    return hits;
+                }
+            },
+            queryDslConnection: {
+                type: context.types.queryDslContentConnectionType,
+                args: {
+                    query: graphQlLib.nonNull(context.types.queryDslInputType),
+                    offset: graphQlLib.GraphQLInt,
+                    first: graphQlLib.GraphQLInt,
+                    aggregations: graphQlLib.list(context.types.aggregationInputType),
+                    sort: graphQlLib.list(context.types.sortDslInputType),
+                },
+                resolve: function (env) {
+                    validationLib.validateDslQuery(env);
+                    const queryResult = contentLib.query(createQueryDslParams(env, context));
+                    const hits = queryResult.hits;
+                    hits.forEach(node => transformNodeIfExistsAttachments(node));
+                    return {
+                        total: queryResult.total,
+                        start: start,
+                        hits: hits,
+                        aggregationsAsJson: queryResult.aggregations
+                    };
+                }
+            },
             getType: {
                 type: context.types.contentTypeType,
                 args: {
@@ -261,6 +299,27 @@ function transformNodeIfExistsAttachments(node) {
             nodeTransformer.addRecursiveNodeId(node.data, node._id);
         }
     }
+}
+
+function createQueryDslParams(env, context) {
+    const queryParams = {
+        start: env.args.offset,
+        count: env.args.first,
+    };
+    if (env.args.aggregations) {
+        const aggregations = {};
+        env.args.aggregations.forEach(aggregation => {
+            factoryUtil.createAggregation(aggregations, aggregation);
+        });
+        queryParams.aggregations = aggregations;
+    }
+    if (env.args.query) {
+        queryParams.query = securityLib.adaptDslQuery(factoryUtil.createDslQuery(env.args.query), context);
+    }
+    if (env.args.sort) {
+        queryParams.sort = factoryUtil.createDslSort(env.args.sort);
+    }
+    return queryParams;
 }
 
 exports.createContentApiType = createContentApiType;
