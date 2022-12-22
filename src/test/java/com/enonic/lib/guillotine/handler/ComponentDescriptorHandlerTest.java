@@ -3,7 +3,6 @@ package com.enonic.lib.guillotine.handler;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,8 +32,7 @@ import com.enonic.xp.region.PartDescriptors;
 import com.enonic.xp.region.RegionDescriptors;
 import com.enonic.xp.resource.ResourceKey;
 import com.enonic.xp.script.serializer.JsonMapGenerator;
-import com.enonic.xp.testing.mock.MockBeanContext;
-import com.enonic.xp.testing.mock.MockServiceRegistry;
+import com.enonic.xp.testing.ScriptTestSupport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,9 +43,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ComponentDescriptorHandlerTest
+    extends ScriptTestSupport
 {
-    private MockServiceRegistry serviceRegistry;
-
     private PartDescriptorService partDescriptorService;
 
     private LayoutDescriptorService layoutDescriptorService;
@@ -56,36 +53,29 @@ public class ComponentDescriptorHandlerTest
 
     private MacroDescriptorService macroDescriptorService;
 
-    @BeforeEach
-    public void setUp()
+    @Override
+    protected void initialize()
+        throws Exception
     {
+        super.initialize();
+
         this.partDescriptorService = mock( PartDescriptorService.class );
         this.layoutDescriptorService = mock( LayoutDescriptorService.class );
         this.pageDescriptorService = mock( PageDescriptorService.class );
         this.macroDescriptorService = mock( MacroDescriptorService.class );
 
-        this.serviceRegistry = new MockServiceRegistry();
-
-        serviceRegistry.register( PartDescriptorService.class, this.partDescriptorService );
-        serviceRegistry.register( LayoutDescriptorService.class, this.layoutDescriptorService );
-        serviceRegistry.register( PageDescriptorService.class, this.pageDescriptorService );
-        serviceRegistry.register( MacroDescriptorService.class, this.macroDescriptorService );
-    }
-
-    final MockBeanContext newBeanContext( final ResourceKey key )
-    {
-        return new MockBeanContext( key, this.serviceRegistry );
+        addService( PartDescriptorService.class, this.partDescriptorService );
+        addService( LayoutDescriptorService.class, this.layoutDescriptorService );
+        addService( PageDescriptorService.class, this.pageDescriptorService );
+        addService( MacroDescriptorService.class, this.macroDescriptorService );
     }
 
     @Test
     void testGetByApplicationForPage()
     {
-        final PageDescriptors pageDescriptors = PageDescriptors.from( PageDescriptor.create().
-            displayName( "pageDescriptor" ).
-            key( DescriptorKey.from( "app-guillotine:pageDescriptor" ) ).
-            config( Form.create().build() ).
-            regions( RegionDescriptors.create().build() ).
-            build() );
+        final PageDescriptors pageDescriptors = PageDescriptors.from(
+            PageDescriptor.create().displayName( "pageDescriptor" ).key( DescriptorKey.from( "app-guillotine:pageDescriptor" ) ).config(
+                Form.create().build() ).regions( RegionDescriptors.create().build() ).build() );
 
         final ComponentDescriptorHandler instance = new ComponentDescriptorHandler();
         instance.initialize( newBeanContext( ResourceKey.from( "app-guillotine:/test" ) ) );
@@ -113,11 +103,9 @@ public class ComponentDescriptorHandlerTest
     @Test
     void testGetByApplicationForPart()
     {
-        final PartDescriptors descriptors = PartDescriptors.from( PartDescriptor.create().
-            displayName( "partDescriptor" ).
-            key( DescriptorKey.from( "app-guillotine:partDescriptor" ) ).
-            config( Form.create().build() ).
-            build() );
+        final PartDescriptors descriptors = PartDescriptors.from(
+            PartDescriptor.create().displayName( "partDescriptor" ).key( DescriptorKey.from( "app-guillotine:partDescriptor" ) ).config(
+                Form.create().build() ).build() );
 
         final ComponentDescriptorHandler instance = new ComponentDescriptorHandler();
         instance.initialize( newBeanContext( ResourceKey.from( "app-guillotine:/test" ) ) );
@@ -145,27 +133,13 @@ public class ComponentDescriptorHandlerTest
     @Test
     void testGetByApplicationForLayout()
     {
-        final LayoutDescriptors descriptors = LayoutDescriptors.from( LayoutDescriptor.create().
-            displayName( "layoutDescriptor" ).
-            key( DescriptorKey.from( "app-guillotine:layoutDescriptor" ) ).
-            config( Form.create().build() ).
-            regions( RegionDescriptors.create().build() ).
-            config( Form.create().
-                addFormItem( Input.create().
-                    inputType( InputTypeName.TEXT_LINE ).
-                    label( "inputField" ).
-                    name( "inputField" ).
-                    build() ).
-                addFormItem( FieldSet.create().
-                    name( "layoutName" ).
-                    label( "FieldSetLabel" ).
-                    addFormItem( Input.create().
-                        inputType( InputTypeName.TEXT_LINE ).
-                        label( "inputFieldInFieldSet" ).
-                        name( "inputFieldInFieldSet" ).
-                        build() ).build() ).
-                build() ).
-            build() );
+        final LayoutDescriptors descriptors = LayoutDescriptors.from( LayoutDescriptor.create().displayName( "layoutDescriptor" ).key(
+            DescriptorKey.from( "app-guillotine:layoutDescriptor" ) ).config( Form.create().build() ).regions(
+            RegionDescriptors.create().build() ).config( Form.create().addFormItem(
+            Input.create().inputType( InputTypeName.TEXT_LINE ).label( "inputField" ).name( "inputField" ).build() ).addFormItem(
+            FieldSet.create().name( "layoutName" ).label( "FieldSetLabel" ).addFormItem(
+                Input.create().inputType( InputTypeName.TEXT_LINE ).label( "inputFieldInFieldSet" ).name(
+                    "inputFieldInFieldSet" ).build() ).build() ).build() ).build() );
 
         final ComponentDescriptorHandler instance = new ComponentDescriptorHandler();
         instance.initialize( newBeanContext( ResourceKey.from( "app-guillotine:/test" ) ) );
@@ -200,17 +174,9 @@ public class ComponentDescriptorHandlerTest
     @Test
     void testGetMacroDescriptors()
     {
-        final MacroDescriptors descriptors = MacroDescriptors.from( MacroDescriptor.create().
-            displayName( "testMacro" ).
-            key( MacroKey.from( "com.app:testMacro" ) ).
-            form( Form.create().
-                addFormItem( Input.create().
-                    name( "fieldName" ).
-                    label( "Label" ).
-                    inputType( InputTypeName.TEXT_LINE ).
-                    build() ).
-                build() ).
-            build() );
+        final MacroDescriptors descriptors = MacroDescriptors.from(
+            MacroDescriptor.create().displayName( "testMacro" ).key( MacroKey.from( "com.app:testMacro" ) ).form( Form.create().addFormItem(
+                Input.create().name( "fieldName" ).label( "Label" ).inputType( InputTypeName.TEXT_LINE ).build() ).build() ).build() );
 
         final ComponentDescriptorHandler instance = new ComponentDescriptorHandler();
         instance.initialize( newBeanContext( ResourceKey.from( "com.app:/test" ) ) );

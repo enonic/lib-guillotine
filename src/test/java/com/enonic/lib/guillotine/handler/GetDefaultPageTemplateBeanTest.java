@@ -1,19 +1,16 @@
 package com.enonic.lib.guillotine.handler;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.enonic.xp.content.ContentId;
 import com.enonic.xp.content.ContentPath;
-import com.enonic.xp.content.ContentService;
 import com.enonic.xp.lib.content.mapper.ContentMapper;
 import com.enonic.xp.page.GetDefaultPageTemplateParams;
 import com.enonic.xp.page.PageTemplate;
 import com.enonic.xp.page.PageTemplateService;
 import com.enonic.xp.resource.ResourceKey;
 import com.enonic.xp.site.Site;
-import com.enonic.xp.testing.mock.MockBeanContext;
-import com.enonic.xp.testing.mock.MockServiceRegistry;
+import com.enonic.xp.testing.ScriptTestSupport;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,26 +18,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class GetDefaultPageTemplateBeanTest
+    extends ScriptTestSupport
 {
-    private MockServiceRegistry serviceRegistry;
-
-    private ContentService contentService;
-
     private PageTemplateService pageTemplateService;
 
-    private MockBeanContext newBeanContext( final ResourceKey key )
+    @Override
+    protected void initialize()
+        throws Exception
     {
-        return new MockBeanContext( key, this.serviceRegistry );
-    }
+        super.initialize();
 
-    @BeforeEach
-    public void setUp()
-    {
-        this.contentService = mock( ContentService.class );
         this.pageTemplateService = mock( PageTemplateService.class );
-        this.serviceRegistry = new MockServiceRegistry();
-        serviceRegistry.register( ContentService.class, this.contentService );
-        serviceRegistry.register( PageTemplateService.class, this.pageTemplateService );
+
+        addService( PageTemplateService.class, this.pageTemplateService );
     }
 
     @Test

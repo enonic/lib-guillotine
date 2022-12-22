@@ -2,7 +2,6 @@ package com.enonic.lib.guillotine.handler;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -19,26 +18,25 @@ import com.enonic.xp.schema.xdata.XDataName;
 import com.enonic.xp.schema.xdata.XDataService;
 import com.enonic.xp.schema.xdata.XDatas;
 import com.enonic.xp.script.serializer.JsonMapGenerator;
-import com.enonic.xp.testing.mock.MockBeanContext;
-import com.enonic.xp.testing.mock.MockServiceRegistry;
+import com.enonic.xp.testing.ScriptTestSupport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class XDataHandlerTest
+    extends ScriptTestSupport
 {
-    private MockServiceRegistry serviceRegistry;
-
     private XDataService xDataService;
 
-    @BeforeEach
-    public void setUp()
+    @Override
+    protected void initialize()
+        throws Exception
     {
+        super.initialize();
+
         this.xDataService = Mockito.mock( XDataService.class );
 
-        this.serviceRegistry = new MockServiceRegistry();
-
-        serviceRegistry.register( XDataService.class, this.xDataService );
+        addService( XDataService.class, this.xDataService );
     }
 
     @Test
@@ -63,7 +61,7 @@ public class XDataHandlerTest
         Mockito.when( this.xDataService.getByApplication( Mockito.any( ApplicationKey.class ) ) ).thenReturn( xDatas );
 
         final XDataHandler instance = new XDataHandler();
-        instance.initialize( new MockBeanContext( ResourceKey.from( "app-guillotine:/test" ), this.serviceRegistry ) );
+        instance.initialize( newBeanContext( ResourceKey.from( "app-guillotine:/test" ) ) );
 
         final XDatasMapper xDataMapper = instance.getXDataByApplicationKeys( List.of( applicationKey.getName() ) );
 
