@@ -214,7 +214,7 @@ function createContentApiType(context) {
                 },
                 resolve: function (env) {
                     validationLib.validateDslQuery(env);
-                    const result = contentLib.query(createQueryDslParams(env, context));
+                    const result = contentLib.query(createQueryDslParams(env, env.args.offset, context));
                     const hits = result.hits;
                     hits.forEach(node => transformNodeIfExistsAttachments(node));
                     return hits;
@@ -224,21 +224,27 @@ function createContentApiType(context) {
                 type: context.types.queryDslContentConnectionType,
                 args: {
                     query: graphQlLib.nonNull(context.types.queryDslInputType),
-                    offset: graphQlLib.GraphQLInt,
+                    after: graphQlLib.GraphQLString,
                     first: graphQlLib.GraphQLInt,
                     aggregations: graphQlLib.list(context.types.aggregationInputType),
+                    highlight: context.types.highlightInputType,
                     sort: graphQlLib.list(context.types.sortDslInputType),
                 },
                 resolve: function (env) {
                     validationLib.validateDslQuery(env);
-                    const queryResult = contentLib.query(createQueryDslParams(env, context));
+
+                    const start = env.args.after ? parseInt(graphQlConnectionLib.decodeCursor(env.args.after)) + 1 : 0;
+
+                    const queryResult = contentLib.query(createQueryDslParams(env, start, context));
+
                     const hits = queryResult.hits;
                     hits.forEach(node => transformNodeIfExistsAttachments(node));
                     return {
                         total: queryResult.total,
                         start: start,
                         hits: hits,
-                        aggregationsAsJson: queryResult.aggregations
+                        aggregationsAsJson: queryResult.aggregations,
+                        highlightAsJson: queryResult.highlight,
                     };
                 }
             },
@@ -301,11 +307,17 @@ function transformNodeIfExistsAttachments(node) {
     }
 }
 
-function createQueryDslParams(env, context) {
+function createQueryDslParams(env, start, context) {
     const queryParams = {
-        start: env.args.offset,
+        start: start,
         count: env.args.first,
     };
+    if (env.args.query) {
+        queryParams.query = securityLib.adaptDslQuery(factoryUtil.createDslQuery(env.args.query), context);
+    }
+    if (env.args.sort) {
+        queryParams.sort = factoryUtil.createDslSort(env.args.sort);
+    }
     if (env.args.aggregations) {
         const aggregations = {};
         env.args.aggregations.forEach(aggregation => {
@@ -313,11 +325,8 @@ function createQueryDslParams(env, context) {
         });
         queryParams.aggregations = aggregations;
     }
-    if (env.args.query) {
-        queryParams.query = securityLib.adaptDslQuery(factoryUtil.createDslQuery(env.args.query), context);
-    }
-    if (env.args.sort) {
-        queryParams.sort = factoryUtil.createDslSort(env.args.sort);
+    if (env.args.highlight) {
+        queryParams.highlight = factoryUtil.createHighlight(env.args.highlight);
     }
     return queryParams;
 }

@@ -18,6 +18,18 @@ function validateArgumentsForQueryField(env) {
     if (env.args.aggregations) {
         env.args.aggregations.forEach(aggregation => validateAggregation(aggregation));
     }
+
+    const highlight = env.args.highlight;
+    if (highlight) {
+        if (highlight.properties.length < 1) {
+            throw 'Highlight properties must be not empty';
+        }
+        highlight.properties.some(prop => {
+            if (prop.propertyName == null || prop.propertyName === '') {
+                throw 'Highlight propertyName is required and can not be empty';
+            }
+        });
+    }
 }
 
 function validateAggregation(aggregation) {

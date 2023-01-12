@@ -524,6 +524,9 @@ function createGenericTypes(context) {
             aggregationsAsJson: {
                 type: graphQlLib.Json,
             },
+            highlightAsJson: {
+                type: graphQlLib.Json,
+            },
         }
     });
 }
