@@ -627,6 +627,72 @@ function createInputTypes(context) {
             },
         }
     });
+
+    const highlightCommonFields = createHighlightCommonFields(context);
+
+    context.types.highlightPropertiesInputType = createHighlightPropertiesInputType(context, highlightCommonFields);
+
+    context.types.highlightInputType = createHighlightInputType(context, highlightCommonFields);
+}
+
+function createHighlightCommonFields(context) {
+    return {
+        fragmenter: {
+            type: context.types.highlightFragmenterType,
+        },
+        fragmentSize: {
+            type: graphQlLib.GraphQLInt,
+        },
+        noMatchSize: {
+            type: graphQlLib.GraphQLInt,
+        },
+        numberOfFragments: {
+            type: graphQlLib.GraphQLInt,
+        },
+        order: {
+            type: context.types.highlightOrderType,
+        },
+        preTag: {
+            type: graphQlLib.GraphQLString,
+        },
+        postTag: {
+            type: graphQlLib.GraphQLString,
+        },
+        requireFieldMatch: {
+            type: graphQlLib.GraphQLBoolean,
+        },
+    }
+}
+
+function createHighlightPropertiesInputType(context, highlightCommonFields) {
+    const fields = Object.create(highlightCommonFields);
+    fields.propertyName = {
+        type: graphQlLib.nonNull(graphQlLib.GraphQLString),
+    };
+
+    return context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('HighlightPropertiesInputType'),
+        description: 'HighlightProperties input type',
+        fields: fields,
+    });
+}
+
+function createHighlightInputType(context, highlightCommonFields) {
+    const fields = Object.create(highlightCommonFields);
+    fields.properties = {
+        type: graphQlLib.nonNull(graphQlLib.list(context.types.highlightPropertiesInputType)),
+    };
+    fields.encoder = {
+        type: context.types.highlightEncoderType,
+    };
+    fields.tagsSchema = {
+        type: context.types.highlightTagsSchemaType,
+    };
+    return context.schemaGenerator.createInputObjectType({
+        name: context.uniqueName('HighlightInputType'),
+        description: 'Highlight input type',
+        fields: fields,
+    });
 }
 
 exports.createInputTypes = createInputTypes;

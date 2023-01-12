@@ -68,6 +68,41 @@ function createEnumTypes(context) {
             'miles': 'miles',
         }
     });
+
+    context.types.highlightEncoderType = context.schemaGenerator.createEnumType({
+        name: context.uniqueName('HighlightEncoderType'),
+        description: 'Indicates if the snippet should be HTML encoded: default (no encoding) or html.',
+        values: {
+            'default': 'default',
+            'html': 'html'
+        }
+    });
+
+    context.types.highlightTagsSchemaType = context.schemaGenerator.createEnumType({
+        name: context.uniqueName('HighlightTagsSchemaType'),
+        description: 'Set to styled to use the built-in tag schema.',
+        values: {
+            'styled': 'styled',
+        }
+    });
+
+    context.types.highlightFragmenterType = context.schemaGenerator.createEnumType({
+        name: context.uniqueName('HighlightFragmenterType'),
+        description: 'Specifies how text should be broken up in highlight snippets: simple or span (default).',
+        values: {
+            'simple': 'simple',
+            'span': 'span',
+        }
+    });
+
+    context.types.highlightOrderType = context.schemaGenerator.createEnumType({
+        name: context.uniqueName('HighlightOrderType'),
+        description: 'Sorts highlighted fragments by score when set to score. Defaults to none - will be displayed in the same order in which fragments appear in the property.',
+        values: {
+            'score': 'score',
+            'none': 'none',
+        }
+    });
 }
 
 exports.createEnumTypes = createEnumTypes;

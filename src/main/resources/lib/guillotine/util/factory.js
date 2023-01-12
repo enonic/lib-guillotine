@@ -359,7 +359,33 @@ function createDslSort(inputSortDsl) {
     return sortDsl;
 }
 
+function createHighlightProperties(inputHighlight) {
+    const result = {};
+    inputHighlight.properties.forEach(highlightProperty => {
+        const propertyData = {};
+        Object.keys(highlightProperty).filter(prop => prop !== 'propertyName').forEach(prop => {
+            if (highlightProperty[prop] != null) {
+                propertyData[prop] = highlightProperty[prop];
+            }
+        });
+        result[highlightProperty['propertyName']] = propertyData;
+    });
+    return result;
+}
+
+function createHighlight(inputHighlight) {
+    const highlight = {};
+    Object.keys(inputHighlight).forEach(key => {
+        if (inputHighlight[key] != null) {
+            highlight[key] = inputHighlight[key];
+        }
+    });
+    highlight.properties = createHighlightProperties(inputHighlight);
+    return highlight;
+}
+
 exports.createAggregation = createAggregation;
 exports.createFilters = createFilters;
 exports.createDslQuery = createDslQuery;
 exports.createDslSort = createDslSort;
+exports.createHighlight = createHighlight;
