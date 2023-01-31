@@ -70,10 +70,12 @@ exports.testCreateNumberRangeAggregation = function () {
             field: "data.price",
             ranges: [
                 {
+                    key: "key1",
                     from: 0,
                     to: 50
                 },
                 {
+                    key: "key2",
                     from: 50,
                     to: 100
                 },
@@ -93,10 +95,12 @@ exports.testCreateNumberRangeAggregation = function () {
                 "field": "data.price",
                 "ranges": [
                     {
+                        "key": "key1",
                         "from": 0,
                         "to": 50
                     },
                     {
+                        "key": "key2",
                         "from": 50,
                         "to": 100
                     },
@@ -118,6 +122,7 @@ exports.testCreateDateRangeAggregation = function () {
             format: "dd-MM-yyyy",
             ranges: [
                 {
+                    key: "key1",
                     from: "now-10d"
                 }, {
                     to: "now"
@@ -135,6 +140,7 @@ exports.testCreateDateRangeAggregation = function () {
                 "format": "dd-MM-yyyy",
                 "ranges": [
                     {
+                        "key": "key1",
                         "from": "now-10d"
                     },
                     {

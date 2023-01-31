@@ -21,6 +21,9 @@ function createInputTypes(context) {
         name: context.uniqueName('NumberRangeInput'),
         description: 'Number range input type',
         fields: {
+            key: {
+                type: graphQlLib.GraphQLString
+            },
             from: {
                 type: graphQlLib.GraphQLFloat
             },
@@ -34,6 +37,9 @@ function createInputTypes(context) {
         name: context.uniqueName('DateRangeInput'),
         description: 'Date range input type',
         fields: {
+            key: {
+                type: graphQlLib.GraphQLString
+            },
             from: {
                 type: graphQlLib.GraphQLString
             },
@@ -49,10 +55,10 @@ function createInputTypes(context) {
         description: 'Geo range input type',
         fields: {
             lat: {
-                type: graphQlLib.GraphQLString
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
             },
             lon: {
-                type: graphQlLib.GraphQLString
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
             }
         }
     });
@@ -145,10 +151,10 @@ function createInputTypes(context) {
                 type: graphQlLib.GraphQLString
             },
             origin: {
-                type: context.types.geoPointInputType
+                type: graphQlLib.nonNull(context.types.geoPointInputType)
             },
             ranges: {
-                type: graphQlLib.list(context.types.numberRangeInputType)
+                type: graphQlLib.nonNull(graphQlLib.list(context.types.numberRangeInputType))
             }
         }
     });
@@ -191,7 +197,7 @@ function createInputTypes(context) {
                 type: graphQlLib.list(graphQlLib.reference('AggregationInput'))
             },
             name: {
-                type: graphQlLib.GraphQLString
+                type: graphQlLib.nonNull(graphQlLib.GraphQLString)
             },
             terms: {
                 type: context.types.termsAggregationInputType
