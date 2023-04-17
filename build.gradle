@@ -20,7 +20,7 @@ dependencies {
     compile "com.enonic.xp:lib-portal:${xpVersion}"
     compile "com.enonic.xp:lib-common:${xpVersion}"
     compile "com.enonic.xp:lib-websocket:${xpVersion}"
-    compile 'com.enonic.lib:lib-graphql:2.0.2'
+    compile 'com.enonic.lib:lib-graphql:2.0.3'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation 'org.mockito:mockito-core:5.2.0'
