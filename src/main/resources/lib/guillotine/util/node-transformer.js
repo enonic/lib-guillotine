@@ -1,8 +1,8 @@
 function addRecursiveNodeId(holder, nodeId) {
-    if (typeof holder === 'object') {
+    if (holder && typeof holder === 'object') {
         Object.keys(holder).forEach(prop => {
             const holderElement = holder[prop];
-            if (typeof holderElement === 'object') {
+            if (holderElement && typeof holderElement === 'object') {
                 if (Array.isArray(holderElement)) {
                     holderElement.forEach(p => addRecursiveNodeId(p, nodeId));
                 } else {
@@ -15,11 +15,11 @@ function addRecursiveNodeId(holder, nodeId) {
 }
 
 function removeNodeIdPropIfNeeded(obj) {
-    if (typeof obj === 'object') {
+    if (obj && typeof obj === 'object') {
         delete obj['__nodeId'];
         Object.keys(obj).forEach(prop => {
             const holderProp = obj[prop];
-            if (typeof holderProp === 'object') {
+            if (holderProp && typeof holderProp === 'object') {
                 if (Array.isArray(holderProp)) {
                     holderProp.forEach(p => removeNodeIdPropIfNeeded(p));
                 } else {
