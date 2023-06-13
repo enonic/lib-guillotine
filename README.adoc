@@ -19,6 +19,10 @@ For the full documentation of the Guillotine project, visit the Enonic Developer
 |XP Version
 |Dependency
 
+|6.2.1
+|7.12.1
+|com.enonic.lib:lib-guillotine:6.2.1
+
 |6.2.0
 |7.12.1
 |com.enonic.lib:lib-guillotine:6.2.0
