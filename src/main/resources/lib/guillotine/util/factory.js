@@ -262,17 +262,18 @@ function createDslBooleanExpression(holder, expression) {
         if (expression.should) {
             dslExpression.should = [];
             (expression.should || []).forEach(boolExpression => dslExpression.should.push(createDslQuery(boolExpression)))
-        } else if (expression.must) {
+        }
+        if (expression.must) {
             dslExpression.must = [];
             (expression.must || []).forEach(boolExpression => dslExpression.must.push(createDslQuery(boolExpression)))
-        } else if (expression.mustNot) {
+        }
+        if (expression.mustNot) {
             dslExpression.mustNot = [];
             (expression.mustNot || []).forEach(boolExpression => dslExpression.mustNot.push(createDslQuery(boolExpression)))
-        } else if (expression.filter) {
+        }
+        if (expression.filter) {
             dslExpression.filter = [];
             (expression.filter || []).forEach(boolExpression => dslExpression.filter.push(createDslQuery(boolExpression)))
-        } else {
-            throw 'Must be set property for boolean expression';
         }
         holder.boolean = dslExpression;
     }

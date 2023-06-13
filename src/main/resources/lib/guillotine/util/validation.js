@@ -84,7 +84,6 @@ function validateGraphQlDSLFields(dslQueryObject) {
 function validateGraphQlDslBooleanExpression(dslQueryObject) {
     if (dslQueryObject['boolean'] != null) {
         const booleanField = dslQueryObject['boolean'];
-        validateOnlyOneFieldMustBeNotNull(booleanField, 'Boolean');
         Object.keys(booleanField).filter(fieldName => fieldName !== 'boost').forEach(fieldName => {
             if (booleanField[fieldName] != null) {
                 booleanField[fieldName].forEach(dslQuery => validateGraphQlDSLFields(dslQuery));
