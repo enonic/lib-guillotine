@@ -56,6 +56,9 @@ function generateGenericContentFields(context) {
             resolve: (env) => contentLib.getOutboundDependencies({key: env.source._id})
                 .map(id => contentLib.get({key: id}))
         },
+        _score: {
+            type: graphQlLib.GraphQLFloat,
+        },
         creator: {
             type: context.types.principalKeyType,
             resolve: function (env) {
