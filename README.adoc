@@ -1,3 +1,10 @@
+[NOTE]
+====
+This starter is deprecated since the release of Guillotine 7.
+You can now extend the Guillotine application's API directly instead.
+Visit the https://developer.enonic.com/docs/guillotine[Guillotine documentation] for more details.
+====
+
 = Guillotine library
 
 Guillotine library exposes the read-only part of the Enonic Content API, 
